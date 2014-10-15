@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>demo zonemap</title>
+    <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/dojo/1.10.1/dojo/resources/dojo.css">
+    <link rel="stylesheet" href="http://openlayers.org/en/v3.0.0/css/ol.css" />
+    <link rel="stylesheet" href="bower_components/ol3-layerswitcher/src/ol3-layerswitcher.css" />
+    <link rel="stylesheet" href="zoomtogeolocationcontrol.css" />
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .oeMap {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #9ec9dc;
+        }
+        .ol-zoom-extent button:after{content:""}
+        .ol-zoom-extent button {
+            background-image: url('expand.png');
+            background-size: contain;
+        }
+    </style>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/2.2.1/proj4.js" type="text/javascript"></script>
+    <script src="http://epsg.io/31370.js" type="text/javascript"></script>
+    <script src="http://epsg.io/900913.js" type="text/javascript"></script>
+    <script src="http://epsg.io/4326.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <div id="widgetNode"></div>
+
+    <!-- load Dojo -->
+    <script type="text/javascript">
+        var dojoConfig = {
+            async: true,
+            packages: [{
+                name: 'src',
+                location: location.pathname.replace(/[^\/]+$/, '') + '/'
+            }]
+        };
+    </script>
+    <script src="//ajax.googleapis.com/ajax/libs/dojo/1.10.1/dojo/dojo.js"></script>
+    <script src="http://openlayers.org/en/v3.0.0/build/ol-debug.js" type="text/javascript"></script>
+    <script src="bower_components/ol3-layerswitcher/src/ol3-layerswitcher.js"></script>
+    <script src="zoomtogeolocationcontrol.js"></script>
+    <script>
+        require([
+            "src/MapController"
+        ], function (MapController) {
+            // init widget
+            var widgetUnderTest = new MapController({
+            }, 'widgetNode');
+            widgetUnderTest.startup();
+        });
+
+    </script>
+</body>
+
+</html>

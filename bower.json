@@ -4,5 +4,8 @@
   "main": "MapController.js",
   "ignore": [
     "test"
-  ]
+  ],
+  "dependencies": {
+    "ol3-layerswitcher": "https://github.com/walkermatt/ol3-layerswitcher.git"
+  }
 }

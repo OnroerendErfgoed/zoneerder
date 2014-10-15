@@ -1,7 +1,7 @@
 define([
     'dojo/_base/declare',
     'dijit/_WidgetBase',
-    'dijit/_TemplatedMixin',
+    'dijit/_TemplatedMixin'
 
 ], function (declare, WidgetBase, TemplatedMixin) {
     return declare([WidgetBase, TemplatedMixin], {
