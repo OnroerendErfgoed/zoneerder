@@ -2,9 +2,10 @@ define([
     "dojo/_base/declare",
     "dijit/_WidgetBase",
     "dijit/_TemplatedMixin",
-    "dojo/_base/lang"
+    "dojo/_base/lang",
+    "dojo/request"
 
-], function (declare, WidgetBase, TemplatedMixin, lang) {
+], function (declare, WidgetBase, TemplatedMixin, lang, request) {
     return declare([WidgetBase, TemplatedMixin], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map"></div>',
         map: null,
@@ -30,11 +31,8 @@ define([
 
             var view = new ol.View({
                 projection: pMerc,
-                center: centerVlaanderen,
-                zoom: 9,
                 maxZoom: 21,
-                minZoom: 8,
-                extent: extentVlaanderen
+                minZoom: 8
             });
 
             var map = new ol.Map({
@@ -45,19 +43,56 @@ define([
             var orthoTileLayer = this._createGrbLayer("orthoklm", "Ortho", true);
             var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
             var grbTileLayer = this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true);
+            var grb_grTileLayer = this._createGrbLayer("grb_bsk_gr", "GRB-Basiskaart in grijswaarden", true);
             var ferrarisTileLayer = this._createGrbLayer("ferrarisx", "Ferraris", true);
             var grbTransTileLayer = this._createGrbLayer("grb_bsk_nb", "GRB-Basiskaart overlay", false);
+            var grb_gbgTileLayer = this._createGrbLayer("grb_gbg", "GRB-Gebouwenlaag", false);
+            var grb_adpTileLayer = this._createGrbLayer("grb_adp", "GRB-Percelenlaag", false);
 
             var osmTileLayer = this._createOsmLayer('Open Streetmap');
 
+            var beschermdWmsLayer = new ol.layer.Tile({
+                title: "Beschermd Onroerend Erfgoed",
+                extent: extentVlaanderen,
+                source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+                    url: 'https://geo.onroerenderfgoed.be/geoserver/wms',
+                    params: {
+                        'LAYERS': 'vioe_geoportaal:beschermde_landschappen,vioe_geoportaal:beschermde_dorps_en_stadsgezichten,vioe_geoportaal:beschermde_archeologische_zones,vioe_geoportaal:beschermde_monumenten',
+                        'TILED': true
+                    }
+                })),
+                type: 'overlay',
+                visible: true
+            });
+
             var baseLayers = new ol.layer.Group({
                 title: 'Base maps',
-                layers: [orthoTileLayer, gewestplanTileLayer, grbTileLayer, osmTileLayer, ferrarisTileLayer, grbTransTileLayer]
+                layers: [
+                    orthoTileLayer,
+                    gewestplanTileLayer,
+                    grbTileLayer,
+                    grb_grTileLayer,
+                    osmTileLayer,
+                    ferrarisTileLayer
+                ]
             });
             map.addLayer(baseLayers);
+
+            var layers = new ol.layer.Group({
+                title: 'layers',
+                layers: [
+                    grbTransTileLayer,
+                    grb_gbgTileLayer,
+                    grb_adpTileLayer,
+                    beschermdWmsLayer
+                ]
+            });
+            map.addLayer(layers);
+
             orthoTileLayer.setVisible(true);
 
             map.addControl(new ol.control.LayerSwitcher());
+            map.addControl(new ol.control.FullScreen());
             map.addControl(new ol.control.ZoomToExtent({extent: extentVlaanderen, tipLabel: 'zoom naar Vlaanderen'}));
 
             // Geolocation Control
@@ -74,9 +109,48 @@ define([
                 geolocation: geolocation
             }));
 
-
-
             map.on('moveend', this._onMoveEnd);
+
+
+            var getfeatureinfoSource = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+                url: 'http://localhost:6543/mapproxy/service',
+                params: {
+                    'LAYERS': 'vioe_geoportaal:beschermde_landschappen,vioe_geoportaal:beschermde_dorps_en_stadsgezichten,vioe_geoportaal:beschermde_archeologische_zones,vioe_geoportaal:beschermde_monumenten',
+                    'TILED': true
+                },
+                crossOrigin: 'anonymous'
+            }));
+
+            map.on('click', function(evt) {
+                var viewResolution = /** @type {number} */ (view.getResolution());
+                var url = getfeatureinfoSource.getGetFeatureInfoUrl(
+                    evt.coordinate,
+                    viewResolution,
+                    'EPSG:3857',
+                    {'INFO_FORMAT': 'text/plain'}
+                );
+                if (url) {
+                    request(url ,{
+                        headers: {
+                            "X-Requested-With": null
+                        }
+                    }).then(
+                        function(text){
+                            alert(text);
+                        },
+                        function(error){
+                            console.log("An error occurred: " + error);
+                        }
+                    );
+                }
+            });
+
+            view.fitExtent(
+                extentVlaanderen,
+                /** @type {ol.Size} */ (map.getSize())
+            );
+
+
 
             console.log("projection:");
             console.log(map.getView().getProjection());
