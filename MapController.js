@@ -65,6 +65,43 @@ define([
                 visible: true
             });
 
+            var vectorSource = new ol.source.GeoJSON(
+            /** @type {olx.source.GeoJSONOptions} */ ({
+              object: {
+                'type': 'FeatureCollection',
+                'crs': {
+                  'type': 'name',
+                  'properties': {
+                    'name': 'EPSG:3857'
+                  }
+                },
+                'features': []
+              }
+            }));
+
+            var createPolygonStyleFunction = function() {
+              return function(feature, resolution) {
+                var style = new ol.style.Style({
+                  stroke: new ol.style.Stroke({
+                    color: 'blue',
+                    width: 1
+                  }),
+                  fill: new ol.style.Fill({
+                    color: 'rgba(0, 0, 255, 0.1)'
+                  })
+                });
+                return [style];
+              };
+            };
+
+            var vectorLayer = new ol.layer.Vector({
+                title: 'Selectielaag',
+                source: vectorSource,
+                style: createPolygonStyleFunction(),
+                type: 'overlay',
+                visible: true
+            });
+
             var baseLayers = new ol.layer.Group({
                 title: 'Base maps',
                 layers: [
@@ -84,7 +121,8 @@ define([
                     grbTransTileLayer,
                     grb_gbgTileLayer,
                     grb_adpTileLayer,
-                    beschermdWmsLayer
+                    beschermdWmsLayer,
+                    vectorLayer
                 ]
             });
             map.addLayer(layers);
@@ -94,6 +132,27 @@ define([
             map.addControl(new ol.control.LayerSwitcher());
             map.addControl(new ol.control.FullScreen());
             map.addControl(new ol.control.ZoomToExtent({extent: extentVlaanderen, tipLabel: 'zoom naar Vlaanderen'}));
+
+
+            var featureOverlay = new ol.FeatureOverlay({
+              style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                  color: 'rgba(255, 255, 255, 0.2)'
+                }),
+                stroke: new ol.style.Stroke({
+                  color: '#ffcc33',
+                  width: 2
+                }),
+                image: new ol.style.Circle({
+                  radius: 7,
+                  fill: new ol.style.Fill({
+                    color: '#ffcc33'
+                  })
+                })
+              })
+            });
+            featureOverlay.setMap(map);
+
 
             // Geolocation Control
             var geolocation = new ol.Geolocation({
@@ -109,6 +168,18 @@ define([
                 geolocation: geolocation
             }));
 
+            var drawToolbar = new ol.control.Toolbar({featureOverlay: featureOverlay});
+            drawToolbar.on('save', function(evt) {
+                console.log(evt.features);
+                evt.features.forEach(function (feature) {
+                    vectorSource.addFeature(feature);
+                });
+            });
+            drawToolbar.on('clear', function() {
+                console.log("on clear");
+            });
+            map.addControl(drawToolbar);
+
             map.on('moveend', this._onMoveEnd);
 
 
@@ -121,29 +192,39 @@ define([
                 crossOrigin: 'anonymous'
             }));
 
-            map.on('click', function(evt) {
-                var viewResolution = /** @type {number} */ (view.getResolution());
-                var url = getfeatureinfoSource.getGetFeatureInfoUrl(
-                    evt.coordinate,
-                    viewResolution,
-                    'EPSG:3857',
-                    {'INFO_FORMAT': 'text/plain'}
-                );
-                if (url) {
-                    request(url ,{
-                        headers: {
-                            "X-Requested-With": null
-                        }
-                    }).then(
-                        function(text){
-                            alert(text);
-                        },
-                        function(error){
-                            console.log("An error occurred: " + error);
-                        }
-                    );
-                }
-            });
+//            map.on('click', function(evt) {
+//                var viewResolution = /** @type {number} */ (view.getResolution());
+//                var url = getfeatureinfoSource.getGetFeatureInfoUrl(
+//                    evt.coordinate,
+//                    viewResolution,
+//                    'EPSG:3857',
+//                    {'INFO_FORMAT': 'text/plain'}
+//                );
+//                if (url) {
+//                    request(url ,{
+//                        headers: {
+//                            "X-Requested-With": null
+//                        }
+//                    }).then(
+//                        function(text){
+//                            alert(text);
+//                        },
+//                        function(error){
+//                            console.log("An error occurred: " + error);
+//                        }
+//                    );
+//                }
+//            });
+
+
+//            // select interaction working on "click"
+//            var selectClick = new ol.interaction.Select({
+////                condition: ol.events.condition.click,
+////                layers: [grb_adpTileLayer]
+//            });
+//            map.addInteraction(selectClick);
+//            //map.removeInteraction(select);
+
 
             view.fitExtent(
                 extentVlaanderen,
