@@ -7,30 +7,13 @@
     <link rel="stylesheet" href="bower_components/ol3-layerswitcher/src/ol3-layerswitcher.css" />
     <link rel="stylesheet" href="src/openlayers/zoomtogeolocationcontrol.css" />
     <link rel="stylesheet" href="src/openlayers/toolbarcontrol.css" />
+    <link rel="stylesheet" href="src/resources/zonemap.css" />
     <style>
         html, body {
             width: 100%;
             height: 100%;
             margin: 0;
             padding: 0;
-        }
-
-        .oeMap {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: #f2f2f2;
-        }
-        .ol-zoom-extent button:after{content:""}
-        .ol-zoom-extent button {
-            background-image: url('src/resources/img/expand.png');
-            background-size: contain;
-        }
-        .ol-rotate {
-            top: 10em;
-            left: .5em;
-            right: auto;
         }
     </style>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/2.2.1/proj4.js" type="text/javascript"></script>
@@ -41,6 +24,8 @@
 
 <body>
     <div id="widgetNode"></div>
+
+    <div id="testButton"></div>
 
     <!-- load Dojo -->
     <script type="text/javascript">
@@ -59,12 +44,23 @@
     <script src="src/openlayers/toolbarcontrol.js"></script>
     <script>
         require([
-            "src/MapController"
-        ], function (MapController) {
+            "src/ZoneMap",
+            "dijit/form/Button",
+            "dojo/domReady!"
+        ], function (ZoneMap, Button) {
             // init widget
-            var widgetUnderTest = new MapController({
+            var widgetUnderTest = new ZoneMap({
             }, 'widgetNode');
             widgetUnderTest.startup();
+
+            var testButton = new Button({
+                label: "Test"
+            }, "testButton");
+            testButton.on("click", function () {
+                alert(widgetUnderTest.getValue());
+            });
+
+            testButton.startup();
         });
 
     </script>

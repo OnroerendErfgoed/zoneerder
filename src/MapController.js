@@ -1,14 +1,13 @@
 define([
     "dojo/_base/declare",
     "dijit/_WidgetBase",
-    "dijit/_TemplatedMixin",
     "dojo/_base/lang",
     "dojo/request"
 
-], function (declare, WidgetBase, TemplatedMixin, lang, request) {
-    return declare([WidgetBase, TemplatedMixin], {
+], function (declare, WidgetBase, lang, request) {
+    return declare([WidgetBase], {
 
-        templateString: '<div data-dojo-attach-point="mapNode" class="map"></div>',
+        mapContainer: null,
 
         map: null,
 
@@ -41,7 +40,7 @@ define([
             });
 
             var map = new ol.Map({
-                target: this.mapNode,
+                target: this.mapContainer,
                 view: view
             });
 
