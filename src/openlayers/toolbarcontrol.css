@@ -1,0 +1,34 @@
+.ol-toolbar {
+    top: .5em;
+    right: 3em;
+    border: 1px solid #5491b0;
+    width: auto
+    height: 2em;
+}
+.ol-toolbar button {
+    border-radius: 2px 2px 0 0;
+    display: inline-block;
+}
+
+.ol-toolbar .ol-has-tooltip:hover [role=tooltip] {
+    top: 2.5em;
+}
+.ol-toolbar .ol-has-tooltip:focus [role=tooltip] {
+    display: none;
+}
+
+.ol-toolbar button.ol-toolbar-draw:after {
+    content: "✎";
+}
+.ol-toolbar button.ol-toolbar-modify:after {
+    content: "✍";
+}
+.ol-toolbar button.ol-toolbar-cancel:after {
+    content: "✋";
+}
+.ol-toolbar button.ol-toolbar-delete:after {
+    content: "✘";
+}
+.ol-toolbar button.ol-toolbar-save:after {
+    content: "✔";
+}

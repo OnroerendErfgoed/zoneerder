@@ -1,0 +1,12 @@
+.ol-zoom-geolocation {
+  top: 7.143em;
+  left: .5em;
+}
+.ol-zoom-geolocation button {
+  line-height: 1.4em;
+  background-image: url('../resources/img/geolocate.png');
+  background-size: contain;
+}
+/*.ol-touch .ol-zoom-geolocation {*/
+  /*top: 8.1em;*/
+/*}*/
