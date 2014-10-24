@@ -37,6 +37,10 @@ define([
 
         getValue: function () {
             return this.mapController.getValue();
+        },
+
+        setValue: function (val) {
+            this.mapController.setValue(val);
         }
 
     });

@@ -358,6 +358,22 @@ define([
                 "name": "urn:ogc:def:crs:EPSG::31370"
             };
             return JSON.stringify(geojson);
+        },
+
+        setValue: function (geojson) {
+
+            var formatter =  new ol.format.GeoJSON({
+                defaultDataProjection: 'EPSG:31370'
+            });
+            var geometry = formatter.readGeometry(geojson);
+            console.log(geometry);
+
+            var feature = new ol.Feature({
+                geometry: geometry.transform('EPSG:31370', 'EPSG:3857')
+            });
+
+            var geojsonSource = this.geoJsonLayer.getSource();
+            geojsonSource.addFeature(feature);
         }
 
     });
