@@ -10,6 +10,8 @@ define([
 
         mapController: null,
 
+        readOnly: true,
+
         postMixInProperties: function () {
             this.inherited(arguments);
         },
@@ -25,7 +27,10 @@ define([
         startup: function () {
             this.inherited(arguments);
 
-            var mapController = new MapController({mapContainer: this.mapNode});
+            var mapController = new MapController({
+                mapContainer: this.mapNode,
+                readOnly: this.readOnly
+            });
             this.mapController = mapController;
             mapController.startup();
         },

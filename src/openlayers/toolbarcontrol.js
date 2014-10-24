@@ -14,6 +14,7 @@ goog.require('ol.easing');
 goog.require('ol.pointer.PointerEventHandler');
 goog.require('ol.interaction.Draw');
 goog.require('ol.interaction.Modify');
+goog.require('ol.source.TileWMS');
 
 
 ol.control.DrawToolbarEventType = {
@@ -32,6 +33,9 @@ goog.inherits(ol.control.DrawToolbarEvent, goog.events.Event);
 ol.control.DrawToolbar = function(opt_options) {
     var options = goog.isDef(opt_options) ? opt_options : {};
     var className = goog.isDef(options.className) ? options.className : 'ol-toolbar';
+
+    //temp
+    this.mapController = goog.isDef(options.mapController) ? options.mapController : null;
 
     //draw
     var drawElement = this.createTool_('draw', 'Teken Polygoon', className);
@@ -53,10 +57,14 @@ ol.control.DrawToolbar = function(opt_options) {
     var deleteElement = this.createTool_('delete', 'Alles wissen', className);
     this.attachEvents_(deleteElement, 'delete', false);
 
+    //copyParcel
+    var copyParcelElement = this.createTool_('copyParcel', 'Kopieer perceel', className);
+    this.attachEvents_(copyParcelElement, 'copyParcel', true);
+
     var cssClasses = className + ' ' + ol.css.CLASS_UNSELECTABLE + ' ' +
         ol.css.CLASS_CONTROL;
     var element = goog.dom.createDom(goog.dom.TagName.DIV, cssClasses,
-        drawElement, modifyElement, cancelElement, saveElement, deleteElement);
+        drawElement, modifyElement, cancelElement, saveElement, deleteElement, copyParcelElement);
 
     goog.base(this, {
         element: element,
@@ -151,6 +159,10 @@ ol.control.DrawToolbar.prototype.selectTool_ = function(tool) {
         this.saveFeatures_();
         this.clearFeatures_();
     }
+    else if (tool == 'copyParcel'){
+        console.debug('start copy');
+        this.addOnclick_(map);
+    }
 };
 
 ol.control.DrawToolbar.prototype.saveFeatures_ = function() {
@@ -169,14 +181,14 @@ ol.control.DrawToolbar.prototype.clearFeatures_ = function() {
     this.featureOverlay_.getFeatures().clear();
 };
 
-ol.control.DrawToolbar.prototype.deleteAllFeatures_  = function() {
+ol.control.DrawToolbar.prototype.deleteAllFeatures_ = function() {
     this.clearFeatures_();
     this.dispatchEvent(
         new ol.control.DrawToolbarEvent(ol.control.DrawToolbarEventType.CLEAR, null, this)
     );
 };
 
-ol.control.DrawToolbar.prototype.createTool_  = function(type, tooltipLabel, baseClass) {
+ol.control.DrawToolbar.prototype.createTool_ = function(type, tooltipLabel, baseClass) {
     var toolTip = goog.dom.createDom(goog.dom.TagName.SPAN, {
         'role': 'tooltip'
     }, tooltipLabel);
@@ -188,7 +200,7 @@ ol.control.DrawToolbar.prototype.createTool_  = function(type, tooltipLabel, bas
     return element;
 };
 
-ol.control.DrawToolbar.prototype.attachEvents_  = function(tool, type, isSelectable) {
+ol.control.DrawToolbar.prototype.attachEvents_ = function(tool, type, isSelectable) {
     var elementHandler = new ol.pointer.PointerEventHandler(tool);
 
     this.registerDisposable(elementHandler);
@@ -208,6 +220,16 @@ ol.control.DrawToolbar.prototype.attachEvents_  = function(tool, type, isSelecta
             this.blur();
         }, false);
     }
+};
+
+ol.control.DrawToolbar.prototype.addOnclick_ = function(map) {
+
+    var controller = this.mapController;
+    var eventKey = map.on('click', function(evt) {
+        console.debug(evt);
+        controller.getPerceel(evt.coordinate);
+//        map.unByKey(eventKey);
+    });
 };
 
 

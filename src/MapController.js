@@ -15,6 +15,8 @@ define([
 
         geoJsonLayer: null,
 
+        readOnly: null,
+
         postMixInProperties: function () {
             this.inherited(arguments);
         },
@@ -43,6 +45,7 @@ define([
                 target: this.mapContainer,
                 view: view
             });
+            this.map = map;
 
             var orthoTileLayer = this._createGrbLayer("orthoklm", "Ortho", true);
             var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
@@ -120,30 +123,31 @@ define([
                 geolocation: geolocation
             }));
 
-            var drawToolbar = new ol.control.DrawToolbar();
-            drawToolbar.on('save', function(evt) {
-                evt.features.forEach(function (feature) {
-                    geojsonLayer.getSource().addFeature(feature);
+            if (!this.readOnly) {
+                var drawToolbar = new ol.control.DrawToolbar({mapController: this});
+                drawToolbar.on('save', function(evt) {
+                    evt.features.forEach(function (feature) {
+                        geojsonLayer.getSource().addFeature(feature);
+                    });
                 });
-            });
-            var self = this;
-            drawToolbar.on('clear', function() {
-                console.log(self.getValue());
-                geojsonLayer.getSource().clear();
-            });
-            map.addControl(drawToolbar);
+                var self = this;
+                drawToolbar.on('clear', function() {
+                    console.log(self.getValue());
+                    geojsonLayer.getSource().clear();
+                });
+                map.addControl(drawToolbar);
+            }
 
             map.on('moveend', this._onMoveEnd);
 
-
-            var getfeatureinfoSource = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-                url: 'http://localhost:6543/mapproxy/service',
-                params: {
-                    'LAYERS': 'vioe_geoportaal:beschermde_landschappen,vioe_geoportaal:beschermde_dorps_en_stadsgezichten,vioe_geoportaal:beschermde_archeologische_zones,vioe_geoportaal:beschermde_monumenten',
-                    'TILED': true
-                },
-                crossOrigin: 'anonymous'
-            }));
+//            var getfeatureinfoSource = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+//                url: 'http://localhost:6543/mapproxy/service',
+//                params: {
+//                    'LAYERS': 'vioe_geoportaal:beschermde_landschappen,vioe_geoportaal:beschermde_dorps_en_stadsgezichten,vioe_geoportaal:beschermde_archeologische_zones,vioe_geoportaal:beschermde_monumenten',
+//                    'TILED': true
+//                },
+//                crossOrigin: 'anonymous'
+//            }));
 
 //            map.on('click', function(evt) {
 //                var viewResolution = /** @type {number} */ (view.getResolution());
@@ -168,16 +172,16 @@ define([
 //                    );
 //                }
 //            });
-
-
-//            // select interaction working on "click"
-//            var selectClick = new ol.interaction.Select({
-////                condition: ol.events.condition.click,
-////                layers: [grb_adpTileLayer]
-//            });
-//            map.addInteraction(selectClick);
-//            //map.removeInteraction(select);
-
+//
+            var getfeatureinfoSource = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+                url: 'http://localhost:6543/mapproxy/service',
+                params: {
+                    'LAYERS': 'agiv_grb_adp:featureinfo',
+                    'TILED': true
+                },
+                crossOrigin: 'anonymous'
+            }));
+            this.perceelSource = getfeatureinfoSource;
 
             view.fitExtent(
                 extentVlaanderen,
@@ -186,6 +190,32 @@ define([
 
             console.log("projection:");
             console.log(map.getView().getProjection());
+        },
+
+        getPerceel: function (coordinate) {
+            var viewResolution = /** @type {number} */ (this.map.getView().getResolution());
+            var url = this.perceelSource.getGetFeatureInfoUrl(
+                coordinate,
+                viewResolution,
+                'EPSG:3857',
+                {'INFO_FORMAT': 'application/vnd.ogc.gml'}
+            );
+            if (url) {
+                request(url ,{
+                    headers: {
+                        "X-Requested-With": null
+                    }
+                }).then(
+                    function(response){
+                        console.debug(response);
+//                        var format = new ol.format.GML();
+//                        var features = format.readFeatures(response);
+                    },
+                    function(error){
+                        console.log("An error occurred: " + error);
+                    }
+                );
+            }
         },
 
         _onMoveEnd: function (evt) {
@@ -309,13 +339,7 @@ define([
         },
 
         getValue: function () {
-//            var geoFeatures = [];
             var geojsonSource = this.geoJsonLayer.getSource();
-//            geojsonSource.forEachFeature(function(feature) {
-//                var clone = feature.clone();
-//                clone.getGeometry().transform('EPSG:3857', 'EPSG:31370');
-//                geoFeatures.push(clone);
-//            });
 
             var coords = geojsonSource.getFeatures().map(function(feature) {
                 var clone = feature.clone();
@@ -333,7 +357,6 @@ define([
             geojson.crs.properties =  {
                 "name": "urn:ogc:def:crs:EPSG::31370"
             };
-            console.log(geojson);
             return JSON.stringify(geojson);
         }
 

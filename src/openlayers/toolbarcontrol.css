@@ -32,3 +32,6 @@
 .ol-toolbar button.ol-toolbar-save:after {
     content: "✔";
 }
+.ol-toolbar button.ol-toolbar-copyParcel:after {
+    content: "C";
+}
