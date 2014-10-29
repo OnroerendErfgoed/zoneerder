@@ -2,14 +2,19 @@ define([
     "dojo/_base/declare",
     "dijit/_WidgetBase",
     "dojo/_base/lang",
-    "dojo/request"
+    "dojo/request",
+    "dojo/request/xhr",
+    "dojo/_base/array",
+    "dojo/json"
 
-], function (declare, WidgetBase, lang, request) {
+], function (declare, WidgetBase, lang, request, xhr, array, JSON) {
     return declare([WidgetBase], {
 
         mapContainer: null,
 
         map: null,
+
+        mapProjection: null,
 
         baseClass: "oeMap",
 
@@ -31,12 +36,13 @@ define([
             var pMerc = ol.proj.get('EPSG:900913');
             var pWgs84 = ol.proj.get('EPSG:4326');
             var pLam = ol.proj.get('EPSG:31370');
+            this.mapProjection = pMerc;
 
             var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
             var centerVlaanderen = [483613.49323354336, 6632162.6232922375];
 
             var view = new ol.View({
-                projection: pMerc,
+                projection: this.mapProjection,
                 maxZoom: 21,
                 minZoom: 8
             });
@@ -69,11 +75,13 @@ define([
                     }
                 })),
                 type: 'overlay',
-                visible: true
+                visible: false
             });
 
-            var geojsonLayer = this._createGeojsonLayer();
+            var geojsonLayer = this._createGeojsonLayer('Selectielaag', 'blue');
             this.geoJsonLayer = geojsonLayer;
+            var oeFeaturesLayer = this._createGeojsonLayer('OE Features', 'red');
+            this.oeFeaturesLayer = oeFeaturesLayer;
 
             var baseLayers = new ol.layer.Group({
                 title: 'Base maps',
@@ -95,7 +103,8 @@ define([
                     grb_gbgTileLayer,
                     grb_adpTileLayer,
                     beschermdWmsLayer,
-                    geojsonLayer
+                    geojsonLayer,
+                    oeFeaturesLayer
                 ]
             });
             map.addLayer(layers);
@@ -173,15 +182,13 @@ define([
 //                }
 //            });
 //
-            var getfeatureinfoSource = new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+            this.perceelSource = new ol.source.ImageWMS(({
                 url: 'http://localhost:6543/mapproxy/service',
                 params: {
-                    'LAYERS': 'agiv_grb_adp:featureinfo',
-                    'TILED': true
+                    'LAYERS': 'agiv_grb_adp:featureinfo'
                 },
                 crossOrigin: 'anonymous'
             }));
-            this.perceelSource = getfeatureinfoSource;
 
             view.fitExtent(
                 extentVlaanderen,
@@ -197,7 +204,7 @@ define([
             var url = this.perceelSource.getGetFeatureInfoUrl(
                 coordinate,
                 viewResolution,
-                'EPSG:3857',
+                'EPSG:900913',
                 {'INFO_FORMAT': 'application/vnd.ogc.gml'}
             );
             if (url) {
@@ -216,6 +223,47 @@ define([
                     }
                 );
             }
+        },
+
+        getErfgoedFeatures: function () {
+            var url = 'http://localhost:6544/afbakeningen';
+            var data = {};
+            data.categorie = "objecten";
+            data.geometrie = this.getValue();
+            var response = [];
+            xhr.post(url, {
+                data: JSON.stringify(data),
+                headers: {
+                    "X-Requested-With": "",
+                    "Content-Type": "application/json"
+                },
+                sync: true
+            }).then(function (data) {
+                response = JSON.parse(data);
+            }, function (err) {
+                console.error(err);
+            });
+            return response;
+        },
+
+        highLightFeatures: function(oeObjects) {
+            console.log("-highlight-");
+            var formatter =  new ol.format.GeoJSON({
+                defaultDataProjection: 'EPSG:31370'
+            });
+            var oeFeaturesSource = this.oeFeaturesLayer.getSource();
+            array.forEach(oeObjects, function (oeObject) {
+                console.log(oeObject.naam);
+                var geometry = formatter.readGeometry(oeObject.geometrie);
+                var feature = new ol.Feature({
+                    geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
+                });
+                oeFeaturesSource.addFeature(feature);
+            });
+            this.map.getView().fitExtent(
+                oeFeaturesSource.getExtent(),
+                /** @type {ol.Size} */ (this.map.getSize())
+            );
         },
 
         _onMoveEnd: function (evt) {
@@ -246,7 +294,7 @@ define([
         },
 
         _createGrbLayer: function(grbLayerId, title, isBaselayer){
-            var pMerc = ol.proj.get('EPSG:900913');
+            var proj= this.mapProjection;
             var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
             var grbResolutions = [
                 156543.033928041,
@@ -274,14 +322,14 @@ define([
             var grbMatrixIds = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21];
 
             var grbTileGrid = new ol.tilegrid.WMTS({
-                origin: ol.extent.getTopLeft(pMerc.getExtent()),
+                origin: ol.extent.getTopLeft(proj.getExtent()),
                 resolutions: grbResolutions,
                 matrixIds: grbMatrixIds
             });
 
             var grbProperties = {
                 layer: grbLayerId,
-                projection: pMerc,
+                projection: proj,
                 format: "image/png",
                 matrixSet: 'GoogleMapsVL',
                 url: "//grb.agiv.be/geodiensten/raadpleegdiensten/geocache/wmts",
@@ -299,7 +347,7 @@ define([
             });
         },
 
-        _createGeojsonLayer: function() {
+        _createGeojsonLayer: function(title, color) {
             var vectorSource = new ol.source.GeoJSON(
             /** @type {olx.source.GeoJSONOptions} */ ({
               object: {
@@ -307,7 +355,7 @@ define([
                 'crs': {
                   'type': 'name',
                   'properties': {
-                    'name': 'EPSG:3857'
+                    'name': 'EPSG:900913'
                   }
                 },
                 'features': []
@@ -318,7 +366,7 @@ define([
               return function(feature, resolution) {
                 var style = new ol.style.Style({
                   stroke: new ol.style.Stroke({
-                    color: 'blue',
+                    color: color,
                     width: 1
                   }),
                   fill: new ol.style.Fill({
@@ -330,7 +378,7 @@ define([
             };
 
             return new ol.layer.Vector({
-                title: 'Selectielaag',
+                title: title,
                 source: vectorSource,
                 style: createPolygonStyleFunction(),
                 type: 'overlay',
@@ -343,7 +391,7 @@ define([
 
             var coords = geojsonSource.getFeatures().map(function(feature) {
                 var clone = feature.clone();
-                clone.getGeometry().transform('EPSG:3857', 'EPSG:31370');
+                clone.getGeometry().transform('EPSG:900913', 'EPSG:31370');
                 return clone.getGeometry().getCoordinates();
             });
             var multiPolygon = new ol.geom.MultiPolygon(coords);
@@ -369,11 +417,16 @@ define([
             console.log(geometry);
 
             var feature = new ol.Feature({
-                geometry: geometry.transform('EPSG:31370', 'EPSG:3857')
+                geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
             });
 
             var geojsonSource = this.geoJsonLayer.getSource();
             geojsonSource.addFeature(feature);
+
+            this.map.getView().fitExtent(
+                geojsonSource.getExtent(),
+                /** @type {ol.Size} */ (this.map.getSize())
+            );
         }
 
     });
