@@ -378,7 +378,7 @@ define([
             });
         },
 
-        getValue: function () {
+        getZone: function () {
             var geojsonSource = this.geoJsonLayer.getSource();
 
             var coords = geojsonSource.getFeatures().map(function(feature) {
@@ -400,7 +400,7 @@ define([
             return JSON.stringify(geojson);
         },
 
-        setValue: function (geojson) {
+        setZone: function (geojson) {
 
             var formatter =  new ol.format.GeoJSON({
                 defaultDataProjection: 'EPSG:31370'
@@ -417,7 +417,7 @@ define([
 
             this.olMap.getView().fitExtent(
                 geojsonSource.getExtent(),
-                /** @type {ol.Size} */ (this.map.getSize())
+                /** @type {ol.Size} */ (this.olMap.getSize())
             );
         }
 

@@ -90,12 +90,12 @@ define([
             }
         },
 
-        getValue: function () {
-            return this.mapController.getValue();
+        getZone: function () {
+            return this.mapController.getZone();
         },
 
-        setValue: function (val) {
-            this.mapController.setValue(val);
+        setZone: function (val) {
+            this.mapController.setZone(val);
         }
 
     });

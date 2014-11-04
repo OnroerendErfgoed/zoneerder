@@ -60,7 +60,7 @@
                 label: "read"
             }, "testButton");
             testButton.on("click", function () {
-                var val = widgetUnderTest.getValue();
+                var val = widgetUnderTest.getZone();
                 console.info("geojson: " + val);
                 alert(val);
             });
@@ -70,7 +70,7 @@
             }, "testButton2");
             testButton2.on("click", function () {
                 var val = '{"type":"MultiPolygon","coordinates":[[[[155997.84310894954,214679.7523824973],[156622.19237813467,213915.26709921192],[152642.21846151666,212859.26069047954],[155997.84310894954,214679.7523824973]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}} ';
-                widgetUnderTest.setValue(val);
+                widgetUnderTest.setZone(val);
             });
 
             testButton.startup();
