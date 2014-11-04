@@ -42,7 +42,6 @@ define([
             var buttonHeight = 2.2;
 
             if (zoomButtons.fullScreen) {
-                console.log('FullScreen');
                 this.map.addControl(new ol.control.FullScreen({
                     tipLabel: "Vergroot / verklein het scherm",
                     className: "full-screen"
@@ -52,7 +51,6 @@ define([
 
             }
             if (zoomButtons.zoomInOut) {
-                console.log('zoomInOut');
                 this.map.addControl(new ol.control.Zoom({
                     zoomInTipLabel: "Zoom in",
                     zoomOutTipLabel: "Zoom uit",
@@ -64,7 +62,6 @@ define([
             }
             if (zoomButtons.zoomFullExtent) {
                 if (this.fullExtent) {
-                    console.log('zoomFullExtent');
                     this.map.addControl(new ol.control.ZoomToExtent({
                         extent: this.fullExtent,
                         tipLabel: 'Zoom naar Vlaanderen',
@@ -98,7 +95,6 @@ define([
                 topPadding += buttonHeight;
             }
             if (zoomButtons.rotate) {
-                console.log('rotate');
                 this.map.addControl(new ol.control.Rotate({
                     tipLabel: "Draai de kaart naar het noorden",
                     className: "rotate"
