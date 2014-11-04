@@ -4,11 +4,17 @@ define([
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
     './MapController',
-    './ButtonController'
+    './ButtonController',
+    './Sidebar',
+    'dojo/query',
+    'dojo/NodeList-dom'
 
-], function (declare, lang, WidgetBase, TemplatedMixin, MapController, ButtonController) {
+], function (declare, lang, WidgetBase, TemplatedMixin, MapController, ButtonController, Sidebar, query) {
     return declare([WidgetBase, TemplatedMixin], {
-        templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map"></div>',
+        templateString: '<div class="zonemap">' +
+                            '<div data-dojo-attach-point="mapNode" class="map sidebar-map"></div>' +
+                            '<div data-dojo-attach-point="sidebarNode"></div>' +
+                        '</div>',
 
         mapController: null,
 
@@ -29,6 +35,7 @@ define([
             this._setDefaultParam(this.config, "readOnly", true);
             this._setDefaultParam(this.config, "buttons", {});
             this._setDefaultParam(this.config.buttons, "buttons", {});
+            this._setDefaultParam(this.config, "sidebar", false);
         },
 
         _setDefaultParam: function(object, field, defValue){
@@ -53,6 +60,12 @@ define([
                 mapButtons: this.config.buttons
             });
             buttonController.startup();
+
+            if (this.config.sidebar) {
+                var sidebar = new Sidebar({}, this.sidebarNode);
+                query(".ol-attribution").addClass("sidebar-padding");
+                sidebar.startup();
+            }
         },
 
         getValue: function () {

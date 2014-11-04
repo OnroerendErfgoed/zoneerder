@@ -1,0 +1,117 @@
+define(
+    [
+        "dojo/_base/declare",
+        "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
+        "dojo/text!./templates/Sidebar.html",
+        "dojo/query",
+        "dojo/dom-class",
+        "dojo/html"
+    ],
+function (declare, WidgetBase, TemplatedMixin, template, query, domClass, html) {
+
+    return declare([WidgetBase, TemplatedMixin],
+	{
+
+	    templateString: template,
+
+        tabContainer: null,
+
+        tabs: null,
+
+        startup: function () {
+		    this.inherited(arguments);
+
+            console.log("startup sidebar");
+
+            this.tabs = query('.sidebar-tabs', this.containerNode).at(0);
+            this.tabContainer = query('.sidebar-content', this.containerNode).at(0);
+            var sidebar = this;
+
+            query('.sidebar-tabs >li > a', this.containerNode).on("click", function(evt) {
+                evt.preventDefault();
+                var tab = this.parentNode;
+                if (domClass.contains(tab, 'active')) {
+                    sidebar.close();
+                }
+                else {
+                    sidebar.open(tab);
+                }
+            });
+        },
+
+        open: function (tab) {
+            var siderbar = this.containerNode;
+            var id = "";
+            var a = (query('a', tab).forEach(function(node){
+                id = node.hash.slice(1);
+            }));
+
+            // close all tabs & show new tab
+            query('.sidebar-pane.active', siderbar).removeClass('active');
+            query('#' + id, this.containerNode).addClass('active');
+
+            // set correct link active
+            query('.sidebar-tabs >li.active', siderbar).removeClass('active');
+            domClass.add(tab, "active");
+
+            if (domClass.contains(siderbar, 'collapsed')) {
+                // open sidebar
+                domClass.remove(siderbar, "collapsed");
+            }
+
+        },
+
+        close: function() {
+            var siderbar = this.containerNode;
+            // remove old active highlights
+            query('.sidebar-tabs >li.active', siderbar).removeClass('active');
+
+            if (!domClass.contains(siderbar, 'collapsed')) {
+                domClass.add(siderbar, "collapsed");
+            }
+        },
+
+        setTabContent: function (content, tabname){
+            if (tabname == "layers") {
+                content.placeAt(this.layerNode);
+            }
+            else if (tabname == "addlayer") {
+                content.placeAt(this.addlayerNode);
+            }
+            else if (tabname == "capazoom") {
+                content.placeAt(this.capazoomNode);
+            }
+            else if (tabname == "crabzoom") {
+                content.placeAt(this.crabzoomNode);
+            }
+            else if (tabname == "ehreport") {
+                html.set(this.erfgoedNode, content);
+                this._openReportTab();
+            }
+            else if (tabname == "grbreport") {
+                html.set(this.grbNode, content);
+                this._openReportTab();
+            }
+            else if (tabname == "rcereport") {
+                html.set(this.rceNode, content);
+                this._openReportTab();
+            }
+            else if (tabname == "help") {
+                html.set(this.helpNode, content);
+            }
+        },
+
+        _openReportTab: function () {
+            var nodes = query('.sidebar-tabs >li > a.reporticon', this.containerNode);
+            var tab = nodes[0].parentNode;
+            this.open(tab);
+        },
+
+        addTab: function () {
+
+        }
+
+	});
+
+});

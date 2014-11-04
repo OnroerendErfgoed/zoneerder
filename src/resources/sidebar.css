@@ -1,0 +1,79 @@
+.sidebar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 460px;
+    overflow: hidden;
+    z-index: 2000;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-left: 3px solid transparent;
+}
+.sidebar.collapsed {
+    width: 40px;
+}
+
+.sidebar-tabs {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 40px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: rgba(0, 60, 136, 0.5);
+    overflow: hidden;
+}
+
+.sidebar-tabs > li {
+    width: 100%;
+    height: 40px;
+    color: #fff;
+    font-size: 12pt;
+    overflow: hidden;
+    transition: all 80ms;
+}
+.sidebar-tabs > li:hover,
+.sidebar-tabs > li.active {
+    color: #fff;
+    background-color: rgba(0,60,136,0.7)
+}
+.sidebar-tabs > li > a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    line-height: 40px;
+    color: inherit;
+    text-decoration: none;
+    text-align: center;
+}
+
+.sidebar-content {
+    position: absolute;
+    right: 40px;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.90);
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 4px 0 0 4px;
+}
+
+.sidebar-pane {
+    display: none;
+    right: 40px;
+    box-sizing: border-box;
+    width: 420px;
+}
+.sidebar-pane.active {
+    display: block;
+}
+
+.sidebar .icon {
+    padding: 5px 0;
+}
+
+.sidebar a.layericon:before {
+    content: url(img/sidebar/layers-30.png);
+}
