@@ -235,12 +235,11 @@ ol.control.DrawToolbar.prototype.attachEvents_ = function(tool, type, isSelectab
 };
 
 ol.control.DrawToolbar.prototype.addOnclick_ = function(map) {
-
     var controller = this.mapController;
     var eventKey = map.on('click', function(evt) {
-        console.debug(evt);
-        controller.getPerceel(evt.coordinate);
-//        map.unByKey(eventKey);
+        var perceel = controller.getPerceel(evt.coordinate);
+        map.unByKey(eventKey);
+        controller.highLightPerceel(perceel);
     });
 };
 
