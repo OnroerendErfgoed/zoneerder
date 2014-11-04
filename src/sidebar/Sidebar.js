@@ -6,9 +6,10 @@ define(
         "dojo/text!./Sidebar.html",
         "dojo/query",
         "dojo/dom-class",
+        "dojo/dom-construct",
         "dojo/html"
     ],
-function (declare, WidgetBase, TemplatedMixin, template, query, domClass, html) {
+function (declare, WidgetBase, TemplatedMixin, template, query, domClass, domConstruct, html) {
 
     return declare([WidgetBase, TemplatedMixin],
 	{
@@ -108,7 +109,39 @@ function (declare, WidgetBase, TemplatedMixin, template, query, domClass, html) 
             this.open(tab);
         },
 
-        addTab: function () {
+        addTab: function (id, label, iconClass, description) {
+            //add tab nav to navNode
+            domConstruct.create('li', {
+                'innerHTML': '<a href="#' + id + '" role="tab" class="icon ' + iconClass + '" title="' + label + '"></a>'
+            }, this.navNode);
+
+            //add tab pane to contentNode
+            /*
+                <div class="sidebar-pane" id="Kaartlagen">
+                    <h2>Kaartlagen</h2>
+                    <p class="description">
+                        Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.
+                    </p>
+                    <div data-dojo-attach-point="layerNode"></div>
+                </div>
+             */
+			var pane = domConstruct.create('div', {
+                'class': 'sidebar-pane',
+                'id': id
+            }, this.contentNode);
+
+            domConstruct.create('h2', {
+                'innerHTML': label
+            }, pane);
+
+            domConstruct.create('p', {
+                'innerHTML': description,
+                'class': 'description'
+            }, pane);
+
+            domConstruct.create('div', {
+                'id': id + 'content'
+            }, pane);
 
         }
 

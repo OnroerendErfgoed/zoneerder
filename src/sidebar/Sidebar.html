@@ -1,17 +1,7 @@
 <div class="sidebar collapsed" data-dojo-attach-point="containerNode">
     <!-- Nav tabs -->
-    <ul class="sidebar-tabs" role="tablist">
-        <li><a href="#1" role="tab" class="icon layericon" title="Kaartlagen"></a></li>
-    </ul>
+    <ul class="sidebar-tabs" role="tablist" data-dojo-attach-point="navNode"></ul>
 
     <!-- Tab panes -->
-    <div class="sidebar-content active">
-        <div class="sidebar-pane" id="1">
-            <h2>Kaartlagen</h2>
-            <p class="description">
-                Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.
-            </p>
-            <div data-dojo-attach-point="layerNode"></div>
-        </div>
-    </div>
+    <div class="sidebar-content" data-dojo-attach-point="contentNode"></div>
 </div>

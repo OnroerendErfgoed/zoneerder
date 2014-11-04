@@ -11,8 +11,7 @@ define([
 
 ], function (declare, lang, WidgetBase, TemplatedMixin, MapController, ButtonController, Sidebar, query) {
     return declare([WidgetBase, TemplatedMixin], {
-        templateString: '<div class="zonemap">' +
-                            '<div data-dojo-attach-point="mapNode" class="map sidebar-map"></div>' +
+        templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
                         '</div>',
 
@@ -55,7 +54,7 @@ define([
             mapController.startup();
 
             var buttonController = new ButtonController({
-                map: mapController.get('map'),
+                map: mapController.olMap,
                 fullExtent: mapController.fullExtent,
                 mapButtons: this.config.buttons
             });
@@ -64,6 +63,29 @@ define([
             if (this.config.sidebar) {
                 var sidebar = new Sidebar({}, this.sidebarNode);
                 query(".ol-attribution").addClass("sidebar-padding");
+
+                sidebar.addTab('kaartlagen', 'Kaartlagen', 'layericon',
+                    'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
+
+                if (!this.config.readOnly) {
+                    sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan');
+
+                    var drawToolbar = new ol.control.DrawToolbar({
+                        mapController: mapController,
+                        target: document.getElementById('zonecontent')
+                    });
+                    drawToolbar.on('save', function (evt) {
+                        evt.features.forEach(function (feature) {
+                            mapController.geoJsonLayer.getSource().addFeature(feature);
+                        });
+                    });
+                    drawToolbar.on('clear', function () {
+                        mapController.geoJsonLayer.getSource().clear();
+                    });
+                    mapController.olMap.addControl(drawToolbar);
+                }
+
+                sidebar.addTab('help', 'Help', 'helpicon', 'help desc');
                 sidebar.startup();
             }
         },

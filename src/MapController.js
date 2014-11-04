@@ -12,7 +12,7 @@ define([
 
         mapContainer: null,
 
-        map: null,
+        olMap: null,
 
         mapProjection: null,
 
@@ -51,7 +51,7 @@ define([
                 minZoom: 8
             });
 
-            var map = new ol.Map({
+            var olMap = new ol.Map({
                 target: this.mapContainer,
                 view: view,
                 controls: ol.control.defaults({
@@ -61,7 +61,7 @@ define([
                 }),
                 logo: false
             });
-            this.map = map;
+            this.olMap = olMap;
 
             var orthoTileLayer = this._createGrbLayer("orthoklm", "Ortho", true);
             var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
@@ -91,12 +91,10 @@ define([
                 visible: false
             });
 
-            var geojsonLayer = this._createGeojsonLayer('Selectielaag', 'blue');
-            this.geoJsonLayer = geojsonLayer;
+            var geoJsonLayer = this._createGeojsonLayer('Selectielaag', 'blue');
+            this.geoJsonLayer = geoJsonLayer;
             var oeFeaturesLayer = this._createGeojsonLayer('OE Features', 'red');
             this.oeFeaturesLayer = oeFeaturesLayer;
-            var perceelLayer = this._createGeojsonLayer('Perceel', 'green');
-            this.perceelLayer = perceelLayer;
 
             var baseLayers = new ol.layer.Group({
                 title: 'Base maps',
@@ -109,7 +107,7 @@ define([
                     ferrarisTileLayer
                 ]
             });
-            map.addLayer(baseLayers);
+            olMap.addLayer(baseLayers);
 
             var layers = new ol.layer.Group({
                 title: 'layers',
@@ -118,45 +116,29 @@ define([
                     grb_gbgTileLayer,
                     grb_adpTileLayer,
                     beschermdWmsLayer,
-                    geojsonLayer,
-                    oeFeaturesLayer,
-                    perceelLayer
+                    geoJsonLayer,
+                    oeFeaturesLayer
                 ]
             });
-            map.addLayer(layers);
+            olMap.addLayer(layers);
 
             orthoTileLayer.setVisible(true);
 
-            map.addControl(new ol.control.ScaleLine());
-            map.addControl(new ol.control.Attribution({
+            olMap.addControl(new ol.control.ScaleLine());
+            olMap.addControl(new ol.control.Attribution({
                 collapsible: false
             }));
-            map.addControl(new ol.control.LayerSwitcher());
+            olMap.addControl(new ol.control.LayerSwitcher());
 
-            if (!this.readOnly) {
-                var drawToolbar = new ol.control.DrawToolbar({mapController: this});
-                drawToolbar.on('save', function(evt) {
-                    evt.features.forEach(function (feature) {
-                        geojsonLayer.getSource().addFeature(feature);
-                    });
-                });
-                var self = this;
-                drawToolbar.on('clear', function() {
-                    console.log(self.getValue());
-                    geojsonLayer.getSource().clear();
-                });
-                map.addControl(drawToolbar);
-            }
-
-            map.on('moveend', this._onMoveEnd);
+            olMap.on('moveend', this._onMoveEnd);
 
             view.fitExtent(
                 extentVlaanderen,
-                /** @type {ol.Size} */ (map.getSize())
+                /** @type {ol.Size} */ (olMap.getSize())
             );
 
             console.log("projection:");
-            console.log(map.getView().getProjection());
+            console.log(olMap.getView().getProjection());
         },
 
         startup: function () {
@@ -250,29 +232,29 @@ define([
                 });
                 oeFeaturesSource.addFeature(feature);
             });
-            this.map.getView().fitExtent(
+            this.olMap.getView().fitExtent(
                 oeFeaturesSource.getExtent(),
-                /** @type {ol.Size} */ (this.map.getSize())
+                /** @type {ol.Size} */ (this.olMap.getSize())
             );
         },
 
         highLightPerceel: function(olFeature) {
             console.log("-highlight perceel-");
-            var perceelSource = this.perceelLayer.getSource();
+            var perceelSource = this.geoJsonLayer.getSource();
             olFeature.getGeometry().transform('EPSG:31370', 'EPSG:900913');
             perceelSource.addFeature(olFeature);
 
-            this.map.getView().fitExtent(
+            this.olMap.getView().fitExtent(
                 perceelSource.getExtent(),
-                /** @type {ol.Size} */ (this.map.getSize())
+                /** @type {ol.Size} */ (this.olMap.getSize())
             );
         },
 
         _onMoveEnd: function (evt) {
-            var map = evt.map;
-            var mapview = map.getView();
+            var olMap = evt.map;
+            var mapview = olMap.getView();
             console.log("extent & center & resolution & zoom:");
-            console.log(mapview.calculateExtent(map.getSize()));
+            console.log(mapview.calculateExtent(olMap.getSize()));
             console.log(mapview.getCenter());
             console.log(mapview.getResolution());
             console.log(mapview.getZoom());
@@ -433,7 +415,7 @@ define([
             var geojsonSource = this.geoJsonLayer.getSource();
             geojsonSource.addFeature(feature);
 
-            this.map.getView().fitExtent(
+            this.olMap.getView().fitExtent(
                 geojsonSource.getExtent(),
                 /** @type {ol.Size} */ (this.map.getSize())
             );
