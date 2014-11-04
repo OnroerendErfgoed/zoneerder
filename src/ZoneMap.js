@@ -5,7 +5,7 @@ define([
     'dijit/_TemplatedMixin',
     './MapController',
     './ButtonController',
-    './Sidebar',
+    './sidebar/Sidebar',
     'dojo/query',
     'dojo/NodeList-dom'
 

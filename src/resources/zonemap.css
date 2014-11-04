@@ -1,5 +1,5 @@
 @import "buttons.css";
-@import "sidebar.css";
+@import "../sidebar/sidebar.css";
 
 .zonemap {
     width: 100%;

@@ -3,7 +3,7 @@ define(
         "dojo/_base/declare",
         "dijit/_WidgetBase",
         "dijit/_TemplatedMixin",
-        "dojo/text!./templates/Sidebar.html",
+        "dojo/text!./Sidebar.html",
         "dojo/query",
         "dojo/dom-class",
         "dojo/html"
