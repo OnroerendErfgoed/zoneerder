@@ -1,11 +1,12 @@
 define([
     'dojo/_base/declare',
+    'dojo/_base/lang',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
     './MapController',
     './ButtonController'
 
-], function (declare, WidgetBase, TemplatedMixin, MapController, ButtonController) {
+], function (declare, lang, WidgetBase, TemplatedMixin, MapController, ButtonController) {
     return declare([WidgetBase, TemplatedMixin], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map"></div>',
 
@@ -23,11 +24,17 @@ define([
 
         postCreate: function () {
             this.inherited(arguments);
-
             //Set default config
             if (!this.config) this.config = {};
-            if (!this.config.readOnly) this.config.readOnly = true;
-            if (!this.config.buttons) this.config.buttons = {};
+            this._setDefaultParam(this.config, "readOnly", true);
+            this._setDefaultParam(this.config, "buttons", {});
+            this._setDefaultParam(this.config.buttons, "buttons", {});
+        },
+
+        _setDefaultParam: function(object, field, defValue){
+            if (!lang.exists(field, object)){
+                lang.setObject(field, defValue, object);
+            }
         },
 
         startup: function () {

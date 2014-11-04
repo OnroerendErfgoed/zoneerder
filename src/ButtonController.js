@@ -1,9 +1,10 @@
 define([
     'dojo/_base/declare',
+    'dojo/_base/lang',
     'dijit/_WidgetBase',
     "dojo/query",
     "dojo/NodeList-dom"
-], function (declare, WidgetBase, query) {
+], function (declare, lang, WidgetBase, query) {
     return declare([WidgetBase], {
 
         map: null,
@@ -16,17 +17,23 @@ define([
             this.inherited(arguments);
             //Set default values
             if (!this.mapButtons) this.mapButtons = {};
-            if (this.mapButtons.fullScreen == undefined) this.mapButtons.fullScreen = false;
-            if (this.mapButtons.zoomInOut == undefined) this.mapButtons.zoomInOut = true;
-            if (!this.mapButtons.zoomFullExtent == undefined) this.mapButtons.zoomFullExtent = false;
-            if (!this.mapButtons.zoomGeolocation == undefined) this.mapButtons.zoomGeolocation = false;
-            if (!this.mapButtons.rotate == undefined) this.mapButtons.rotate = false;
+            this._setDefaultParam(this.mapButtons, "fullScreen", false);
+            this._setDefaultParam(this.mapButtons, "zoomInOut", true);
+            this._setDefaultParam(this.mapButtons, "zoomFullExtent", false);
+            this._setDefaultParam(this.mapButtons, "zoomGeolocation", false);
+            this._setDefaultParam(this.mapButtons, "rotate", false);
         },
 
         startup: function () {
             this.inherited(arguments);
             if (this.mapButtons) {
                 this._addZoomButtons(this.mapButtons);
+            }
+        },
+
+        _setDefaultParam: function(object, field, defValue){
+            if (!lang.exists(field, object)){
+                lang.setObject(field, defValue, object);
             }
         },
 
