@@ -2,15 +2,16 @@ define([
     'dojo/_base/declare',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
-    './MapController'
+    './MapController',
+    './ButtonController'
 
-], function (declare, WidgetBase, TemplatedMixin, MapController) {
+], function (declare, WidgetBase, TemplatedMixin, MapController, ButtonController) {
     return declare([WidgetBase, TemplatedMixin], {
-        templateString: '<div data-dojo-attach-point="mapNode" class="map"></div>',
+        templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map"></div>',
 
         mapController: null,
 
-        readOnly: true,
+        config: null,
 
         postMixInProperties: function () {
             this.inherited(arguments);
@@ -22,6 +23,11 @@ define([
 
         postCreate: function () {
             this.inherited(arguments);
+
+            //Set default config
+            if (!this.config) this.config = {};
+            if (!this.config.readOnly) this.config.readOnly = true;
+            if (!this.config.buttons) this.config.buttons = {};
         },
 
         startup: function () {
@@ -29,10 +35,17 @@ define([
 
             var mapController = new MapController({
                 mapContainer: this.mapNode,
-                readOnly: this.readOnly
+                readOnly: this.config.readOnly
             });
             this.mapController = mapController;
             mapController.startup();
+
+            var buttonController = new ButtonController({
+                map: mapController.get('map'),
+                fullExtent: mapController.fullExtent,
+                mapButtons: this.config.buttons
+            });
+            buttonController.startup();
         },
 
         getValue: function () {

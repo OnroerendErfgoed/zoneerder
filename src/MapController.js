@@ -16,11 +16,11 @@ define([
 
         mapProjection: null,
 
-        baseClass: "oeMap",
-
         geoJsonLayer: null,
 
         readOnly: null,
+
+        fullExtent: null,
 
         postMixInProperties: function () {
             this.inherited(arguments);
@@ -31,6 +31,9 @@ define([
         },
 
         postCreate: function () {
+            this.inherited(arguments);
+
+//            proj4.defs('EPSG:31370', "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.33657,-0.456955,1.84218,-1.2747 +units=m +no_defs");
 
             var pDef = ol.proj.get('EPSG:3857');
             var pMerc = ol.proj.get('EPSG:900913');
@@ -40,6 +43,7 @@ define([
 
             var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
             var centerVlaanderen = [483613.49323354336, 6632162.6232922375];
+            this.fullExtent = extentVlaanderen;
 
             var view = new ol.View({
                 projection: this.mapProjection,
@@ -49,7 +53,13 @@ define([
 
             var map = new ol.Map({
                 target: this.mapContainer,
-                view: view
+                view: view,
+                controls: ol.control.defaults({
+                    attribution: false,
+                    rotate: false,
+                    zoom: false
+                }),
+                logo: false
             });
             this.map = map;
 
@@ -72,7 +82,10 @@ define([
                     params: {
                         'LAYERS': 'vioe_geoportaal:beschermde_landschappen,vioe_geoportaal:beschermde_dorps_en_stadsgezichten,vioe_geoportaal:beschermde_archeologische_zones,vioe_geoportaal:beschermde_monumenten',
                         'TILED': true
-                    }
+                    },
+                    attributions: [new ol.Attribution({
+                        html: '© <a href="https://www.onroerenderfgoed.be">Onroerend Erfgoed</a>'
+                    })]
                 })),
                 type: 'overlay',
                 visible: false
@@ -114,26 +127,11 @@ define([
 
             orthoTileLayer.setVisible(true);
 
-            map.addControl(new ol.control.LayerSwitcher());
-            map.addControl(new ol.control.FullScreen());
-            map.addControl(new ol.control.ZoomToExtent({extent: extentVlaanderen, tipLabel: 'zoom naar Vlaanderen'}));
-
-            // Geolocation Control
-            var geolocation = new ol.Geolocation({
-              projection: view.getProjection(),
-              trackingOptions: {
-                enableHighAccuracy: true
-              }
-            });
-            // handle geolocation error.
-            geolocation.on('error', function(error) {
-                alert(error.message);
-            });
-            map.addControl(new ol.control.zoomtogeolocationcontrol({
-                tipLabel: 'zoom naar je geolocatie',
-                zoomLevel: 18,
-                geolocation: geolocation
+            map.addControl(new ol.control.ScaleLine());
+            map.addControl(new ol.control.Attribution({
+                collapsible: false
             }));
+            map.addControl(new ol.control.LayerSwitcher());
 
             if (!this.readOnly) {
                 var drawToolbar = new ol.control.DrawToolbar({mapController: this});
@@ -281,19 +279,21 @@ define([
         },
 
         _createOsmLayer: function (title) {
-            var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
-
             var osmSource = new ol.source.OSM({
                 url: 'https://tile.geofabrik.de/dccc92ba3f2a5a2c17189755134e6b1d/{z}/{x}/{y}.png',
-                maxZoom: 18
+                maxZoom: 18,
+                attributions: [
+                    new ol.Attribution({
+                        html: '© <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    })
+                ]
             });
 
             return new ol.layer.Tile({
                 title: title,
                 source: osmSource,
                 type: 'base',
-                visible: false,
-                extent: extentVlaanderen
+                visible: false
             });
         },
 
@@ -339,7 +339,13 @@ define([
                 url: "//grb.agiv.be/geodiensten/raadpleegdiensten/geocache/wmts",
                 style: "default",
                 version: "1.0.0",
-                tileGrid: grbTileGrid
+                tileGrid: grbTileGrid,
+                attributions: [
+                    new ol.Attribution({
+                      html: '© <a href="http://www.agiv.be" title="AGIV" class="copyrightLink copyAgiv">AGIV</a>'
+                    })
+                ]
+
             };
 
             return  new ol.layer.Tile({

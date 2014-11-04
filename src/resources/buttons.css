@@ -1,0 +1,22 @@
+.left-bar {
+    left: 0.5em;
+}
+
+.zoom .ol-zoom-in {
+  border-radius: 2px 2px 0 0;
+}
+.zoom .ol-zoom-out {
+  border-radius: 0 0 2px 2px;
+}
+
+.fullextent button {
+    background-image: url('img/expand.png');
+    background-size: contain;
+}
+
+button.full-screen-false:after {
+  content: "\2194";
+}
+button.full-screen-true:after {
+  content: "\00d7";
+}

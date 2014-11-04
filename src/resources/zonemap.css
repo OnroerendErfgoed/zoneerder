@@ -1,23 +1,13 @@
+@import "buttons.css";
 .map {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
+    background-color: #E8FFE8;
 }
-.oeMap {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: #f2f2f2;
-}
-.ol-zoom-extent button:after{content:""}
-.ol-zoom-extent button {
-    background-image: url('img/expand.png');
-    background-size: contain;
-}
-.ol-rotate {
-    top: 10em;
-    left: .5em;
-    right: auto;
+
+/* Temp fix for attribution bug */
+.ol-attribution ul {
+   max-width: 100%;
 }
