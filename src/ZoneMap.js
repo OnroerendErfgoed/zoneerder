@@ -1,15 +1,17 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/lang',
+    'dojo/_base/array',
     'dijit/_WidgetBase',
     'dijit/_TemplatedMixin',
     './MapController',
     './ButtonController',
     './sidebar/Sidebar',
     'dojo/query',
+    'dijit/form/Button',
     'dojo/NodeList-dom'
 
-], function (declare, lang, WidgetBase, TemplatedMixin, MapController, ButtonController, Sidebar, query) {
+], function (declare, lang, array, WidgetBase, TemplatedMixin, MapController, ButtonController, Sidebar, query, Button) {
     return declare([WidgetBase, TemplatedMixin], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
@@ -87,6 +89,16 @@ define([
 
                 sidebar.addTab('help', 'Help', 'helpicon', 'help desc');
                 sidebar.startup();
+
+                var myButton = new Button({
+                    label: "get features",
+                    onClick: lang.hitch(this, function(){
+                        var features = this.getFeaturesInZone();
+                        array.forEach(features, function(feature) {
+                            console.log(feature);
+                        });
+                    })
+                }, "helpcontent").startup();
             }
         },
 
@@ -96,6 +108,15 @@ define([
 
         setZone: function (val) {
             this.mapController.setZone(val);
+        },
+
+        getFeaturesInZone: function () {
+            return array.map(this.mapController.getFeatures(), function(feature){
+                var returnObject = {};
+                returnObject.id = feature.id;
+                returnObject.naam = feature.naam;
+                return returnObject;
+            });
         }
 
     });

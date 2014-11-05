@@ -22,6 +22,8 @@ define([
 
         fullExtent: null,
 
+        erfgoedFeatures: null,
+
         postMixInProperties: function () {
             this.inherited(arguments);
         },
@@ -215,17 +217,16 @@ define([
             }, function (err) {
                 console.error(err);
             });
+            this.erfgoedFeatures = response;
             return response;
         },
 
         highLightFeatures: function(oeObjects) {
-            console.log("-highlight-");
             var formatter =  new ol.format.GeoJSON({
                 defaultDataProjection: 'EPSG:31370'
             });
             var oeFeaturesSource = this.oeFeaturesLayer.getSource();
             array.forEach(oeObjects, function (oeObject) {
-                console.log(oeObject.naam);
                 var geometry = formatter.readGeometry(oeObject.geometrie);
                 var feature = new ol.Feature({
                     geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
@@ -419,6 +420,10 @@ define([
                 geojsonSource.getExtent(),
                 /** @type {ol.Size} */ (this.olMap.getSize())
             );
+        },
+
+        getFeatures: function () {
+            return this.erfgoedFeatures;
         }
 
     });
