@@ -201,7 +201,7 @@ define([
             var url = 'http://localhost:6544/afbakeningen';
             var data = {};
             data.categorie = "objecten";
-            data.geometrie = this.getValue();
+            data.geometrie = this.getZone();
             var response = [];
             xhr.post(url, {
                 data: JSON.stringify(data),
