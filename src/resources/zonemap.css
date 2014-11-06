@@ -8,6 +8,7 @@
     margin: 0;
     padding: 0;
     background-color: #E8FFE8;
+    position: relative;
 }
 
 /* Temp fix for attribution bug */
