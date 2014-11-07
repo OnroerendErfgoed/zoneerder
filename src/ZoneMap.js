@@ -7,11 +7,13 @@ define([
     './MapController',
     './ButtonController',
     './sidebar/Sidebar',
+    './services/ErfgoedService',
     'dojo/query',
     'dijit/form/Button',
     'dojo/NodeList-dom'
 
-], function (declare, lang, array, WidgetBase, TemplatedMixin, MapController, ButtonController, Sidebar, query, Button) {
+], function (declare, lang, array, WidgetBase, TemplatedMixin,
+             MapController, ButtonController, Sidebar, ErfgoedService, query, Button) {
     return declare([WidgetBase, TemplatedMixin], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
@@ -20,6 +22,8 @@ define([
         mapController: null,
 
         config: null,
+
+        erfgoedService: null,
 
         postMixInProperties: function () {
             this.inherited(arguments);
@@ -37,6 +41,10 @@ define([
             this._setDefaultParam(this.config, "buttons", {});
             this._setDefaultParam(this.config.buttons, "buttons", {});
             this._setDefaultParam(this.config, "sidebar", false);
+
+            this.erfgoedService = new ErfgoedService({
+                url: 'http://localhost:6544/afbakeningen'
+            })
         },
 
         _setDefaultParam: function(object, field, defValue){
@@ -103,7 +111,7 @@ define([
         },
 
         getZone: function () {
-            return this.mapController.getZone();
+            return JSON.stringify(this.mapController.getZone());
         },
 
         setZone: function (val) {
@@ -111,7 +119,11 @@ define([
         },
 
         getFeaturesInZone: function () {
-            return array.map(this.mapController.getFeatures(), function(feature){
+            var features = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
+            this.mapController.drawErfgoedFeatures(features);
+
+            //return light objects for list
+            return array.map(features, function(feature){
                 var returnObject = {};
                 returnObject.id = feature.id;
                 returnObject.naam = feature.naam;

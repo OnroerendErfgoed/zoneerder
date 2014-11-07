@@ -47,6 +47,10 @@ define([
             var centerVlaanderen = [483613.49323354336, 6632162.6232922375];
             this.fullExtent = extentVlaanderen;
 
+            this.geoJsonFormatter =  new ol.format.GeoJSON({
+                defaultDataProjection: 'EPSG:31370'
+            });
+
             var view = new ol.View({
                 projection: this.mapProjection,
                 maxZoom: 21,
@@ -199,33 +203,11 @@ define([
             return feature;
         },
 
-        getErfgoedFeatures: function () {
-            var url = 'http://localhost:6544/afbakeningen';
-            var data = {};
-            data.categorie = "objecten";
-            data.geometrie = this.getZone();
-            var response = [];
-            xhr.post(url, {
-                data: JSON.stringify(data),
-                headers: {
-                    "X-Requested-With": "",
-                    "Content-Type": "application/json"
-                },
-                sync: true
-            }).then(function (data) {
-                response = JSON.parse(data);
-            }, function (err) {
-                console.error(err);
-            });
-            this.erfgoedFeatures = response;
-            return response;
-        },
-
-        highLightFeatures: function(oeObjects) {
-            var formatter =  new ol.format.GeoJSON({
-                defaultDataProjection: 'EPSG:31370'
-            });
+        drawErfgoedFeatures: function(oeObjects) {
             var oeFeaturesSource = this.oeFeaturesLayer.getSource();
+            oeFeaturesSource.clear();
+            var formatter = this.geoJsonFormatter;
+
             array.forEach(oeObjects, function (oeObject) {
                 var geometry = formatter.readGeometry(oeObject.geometrie);
                 var feature = new ol.Feature({
@@ -233,6 +215,7 @@ define([
                 });
                 oeFeaturesSource.addFeature(feature);
             });
+
             this.olMap.getView().fitExtent(
                 oeFeaturesSource.getExtent(),
                 /** @type {ol.Size} */ (this.olMap.getSize())
@@ -389,24 +372,17 @@ define([
             });
             var multiPolygon = new ol.geom.MultiPolygon(coords);
 
-            var formatter =  new ol.format.GeoJSON({
-                defaultDataProjection: 'EPSG:31370'
-            });
-            var geojson = formatter.writeGeometry(multiPolygon, {featureProjection: 'EPSG:31370'});
+            var geojson = this.geoJsonFormatter.writeGeometry(multiPolygon, {featureProjection: 'EPSG:31370'});
             //hack to add crs. todo: remove when https://github.com/openlayers/ol3/issues/2078 is fixed
             geojson.crs = {type: "name"};
             geojson.crs.properties =  {
                 "name": "urn:ogc:def:crs:EPSG::31370"
             };
-            return JSON.stringify(geojson);
+            return geojson;
         },
 
         setZone: function (geojson) {
-
-            var formatter =  new ol.format.GeoJSON({
-                defaultDataProjection: 'EPSG:31370'
-            });
-            var geometry = formatter.readGeometry(geojson);
+            var geometry = this.geoJsonFormatter.readGeometry(geojson);
             console.log(geometry);
 
             var feature = new ol.Feature({
