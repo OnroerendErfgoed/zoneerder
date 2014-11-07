@@ -35,6 +35,3 @@
 .ol-toolbar button.ol-toolbar-copyParcel:after {
     content: "C";
 }
-.ol-toolbar button.ol-toolbar-getFeatures:after {
-    content: "F";
-}

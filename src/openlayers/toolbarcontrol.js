@@ -61,14 +61,10 @@ ol.control.DrawToolbar = function(opt_options) {
     var copyParcelElement = this.createTool_('copyParcel', 'Kopieer perceel', className);
     this.attachEvents_(copyParcelElement, 'copyParcel', true);
 
-    //getFeatures
-    var getFeaturesElement = this.createTool_('getFeatures', 'Haal beschermd erfgoed op', className);
-    this.attachEvents_(getFeaturesElement, 'getFeatures', false);
-
     var cssClasses = className + ' ' + ol.css.CLASS_UNSELECTABLE + ' ' +
         ol.css.CLASS_CONTROL;
     var element = goog.dom.createDom(goog.dom.TagName.DIV, cssClasses,
-        drawElement, modifyElement, cancelElement, saveElement, deleteElement, copyParcelElement, getFeaturesElement);
+        drawElement, modifyElement, cancelElement, saveElement, deleteElement, copyParcelElement);
 
     goog.base(this, {
         element: element,
@@ -167,14 +163,6 @@ ol.control.DrawToolbar.prototype.selectTool_ = function(tool) {
         console.debug('start copy');
         this.addOnclick_(map);
     }
-    else if (tool == 'getFeatures'){
-        this.queryFeatures();
-    }
-};
-
-ol.control.DrawToolbar.prototype.queryFeatures = function () {
-    var features = this.mapController.getErfgoedFeatures();
-    this.mapController.highLightFeatures(features);
 };
 
 ol.control.DrawToolbar.prototype.saveFeatures_ = function() {
