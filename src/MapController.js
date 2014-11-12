@@ -35,13 +35,17 @@ define([
         postCreate: function () {
             this.inherited(arguments);
 
-            proj4.defs('EPSG:31370', "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.33657,-0.456955,1.84218,-1.2747 +units=m +no_defs");
+//            proj4.defs('EPSG:31370', "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.33657,-0.456955,1.84218,-1.2747 +units=m +no_defs"); //custom
+            proj4.defs("EPSG:31370","+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
+            proj4.defs("EPSG:3857",  "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
+            proj4.defs("EPSG:900913","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
+            proj4.defs("EPSG:4326","+proj=longlat +datum=WGS84 +no_defs");
 
-            var pDef = ol.proj.get('EPSG:3857');
-            var pMerc = ol.proj.get('EPSG:900913');
-            var pWgs84 = ol.proj.get('EPSG:4326');
-            var pLam = ol.proj.get('EPSG:31370');
-            this.mapProjection = pMerc;
+            this.pDef = ol.proj.get('EPSG:3857');
+            this.pMerc = ol.proj.get('EPSG:900913');
+            this.pWgs84 = ol.proj.get('EPSG:4326');
+            this.pLam = ol.proj.get('EPSG:31370');
+            this.mapProjection = this.pMerc;
 
             var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
             var centerVlaanderen = [483613.49323354336, 6632162.6232922375];
@@ -215,6 +219,34 @@ define([
                 });
                 oeFeaturesSource.addFeature(feature);
             });
+
+            this.olMap.getView().fitExtent(
+                oeFeaturesSource.getExtent(),
+                /** @type {ol.Size} */ (this.olMap.getSize())
+            );
+        },
+
+        drawErfgoedGeom: function(geom) {
+//            console.log("pre test");
+//            var test = ol.proj.transform([4.71131726565774, 50.8822120240408], 'EPSG:4326', 'EPSG:3857');
+//            console.log(test);
+//            var test2 = ol.proj.transform(["4.71131726565774", "50.8822120240408"], 'EPSG:4326', 'EPSG:3857');
+//            console.log(test2);
+
+            var formatter =  new ol.format.GeoJSON({
+                defaultDataProjection: ol.proj.get('EPSG:4326')
+            });
+            var oeFeaturesSource = this.oeFeaturesLayer.getSource();
+            oeFeaturesSource.clear();
+            var geometry = formatter.readGeometry(geom, {
+                dataProjection: this.pWgs84,
+                featureProjection: this.pDef
+            });
+            var feature = new ol.Feature({
+                geometry: geometry
+//                geometry: geometry.transform('EPSG:4326', 'EPSG:900913')
+            });
+            oeFeaturesSource.addFeature(feature);
 
             this.olMap.getView().fitExtent(
                 oeFeaturesSource.getExtent(),

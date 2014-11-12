@@ -32,7 +32,7 @@ define([
                 var url = this.url;
                 var data = {
                     categorie: "objecten",
-                    geometrie: zone
+                    geometrie: JSON.stringify(zone)
                 };
                 xhr.post(url, {
                     data: JSON.stringify(data),
@@ -47,13 +47,6 @@ define([
                     console.error(err);
                 });
             }
-            return response;
-        },
-
-        getErfgoedFeature: function (uri) {
-            var response = [];
-            //get feature by uri
-            console.log("uri");
             return response;
         }
     });
