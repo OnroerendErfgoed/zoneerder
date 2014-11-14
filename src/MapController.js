@@ -395,6 +395,7 @@ define([
             //add all polygons and multiPolygons from zone layer
             array.forEach(geojsonSource.getFeatures(), function (feature) {
                 var cloneGeom = feature.clone().getGeometry();
+                cloneGeom.transform('EPSG:900913', 'EPSG:31370');
                 if (cloneGeom instanceof ol.geom.Polygon) {
                      multiPolygon.appendPolygon(cloneGeom);
                 }
@@ -419,7 +420,6 @@ define([
 
         setZone: function (geojson) {
             var geometry = this.geoJsonFormatter.readGeometry(geojson);
-            console.log(geometry);
 
             var feature = new ol.Feature({
                 geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
