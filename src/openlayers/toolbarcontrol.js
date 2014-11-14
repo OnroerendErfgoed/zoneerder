@@ -227,7 +227,7 @@ ol.control.DrawToolbar.prototype.addOnclick_ = function(map) {
     var eventKey = map.on('click', function(evt) {
         var perceel = controller.getPerceel(evt.coordinate);
         map.unByKey(eventKey);
-        controller.highLightPerceel(perceel);
+        controller.drawPerceel(perceel);
     });
 };
 

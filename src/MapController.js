@@ -35,7 +35,6 @@ define([
         postCreate: function () {
             this.inherited(arguments);
 
-//            proj4.defs('EPSG:31370', "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.33657,-0.456955,1.84218,-1.2747 +units=m +no_defs"); //custom
             proj4.defs("EPSG:31370","+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
             proj4.defs("EPSG:3857",  "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
             proj4.defs("EPSG:900913","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
@@ -182,6 +181,10 @@ define([
 
             var mock_response = "<wfs:FeatureCollection xsi:schemaLocation='https://geo.agiv.be/ogc/wfs/grb http://geo.agiv.be/Arcgis/services/grbwfs/MapServer/WFSServer?request=Descr…eFeatureType%26version=1.1.0%26typename=GRB_-_Adp_-_administratief_perceel http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd' xmlns:grb='https://geo.agiv.be/ogc/wfs/grb' xmlns:gml='http://www.opengis.net/gml' xmlns:wfs='http://www.opengis.net/wfs' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'><gml:boundedBy><gml:Envelope srsName='urn:ogc:def:crs:EPSG:6.9:31370'><gml:lowerCorner>22282.325400002301 153053.63879999891</gml:lowerCorner><gml:upperCorner>258866.46169999987 244026.45450000092</gml:upperCorner></gml:Envelope></gml:boundedBy><gml:featureMember><grb:GRB_-_Adp_-_administratief_perceel gml:id='F-1__344666'><grb:UIDN>364232</grb:UIDN><grb:OIDN>344666</grb:OIDN><grb:CAPAKEY>42016B0160/00B000</grb:CAPAKEY><grb:NISCODE>42006</grb:NISCODE><grb:TOESTDATUM>2013-01-01T00:00:00</grb:TOESTDATUM><grb:LENGTE>360.67000000000002</grb:LENGTE><grb:OPPERVL>3147.5100000000002</grb:OPPERVL><grb:SHAPE><gml:MultiSurface><gml:surfaceMember><gml:Polygon><gml:exterior><gml:LinearRing><gml:posList> 127952.15869999677 189344.60020000115 127949.53769999743 189349.15799999982 127802.93169999868 189288.80090000108 127805.05900000036 189282.25189999864 127808.7248999998 189270.96330000088 127959.84579999745 189331.23189999908 127952.15869999677 189344.60020000115</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></gml:surfaceMember></gml:MultiSurface></grb:SHAPE></grb:GRB_-_Adp_-_administratief_perceel></gml:featureMember></wfs:FeatureCollection> ";
 
+            var wfsFormatter = new ol.format.WFS({
+                featureNS: "https://geo.agiv.be/ogc/wfs/grb",
+                featureType: "GRB_-_Adp_-_administratief_perceel"
+            });
             var feature = null;
             xhr.post(url, {
                 data: data,
@@ -191,12 +194,7 @@ define([
                 },
                 sync: true
             }).then(function (response) {
-                    console.log(response);
-                var format = new ol.format.WFS({
-                    featureNS: "https://geo.agiv.be/ogc/wfs/grb",
-                    featureType: "GRB_-_Adp_-_administratief_perceel"
-                });
-                var features = format.readFeatures(response);
+                var features = wfsFormatter.readFeatures(response);
                 console.log(features);
                 feature = features[0];
 
@@ -227,12 +225,6 @@ define([
         },
 
         drawErfgoedGeom: function(geom) {
-//            console.log("pre test");
-//            var test = ol.proj.transform([4.71131726565774, 50.8822120240408], 'EPSG:4326', 'EPSG:3857');
-//            console.log(test);
-//            var test2 = ol.proj.transform(["4.71131726565774", "50.8822120240408"], 'EPSG:4326', 'EPSG:3857');
-//            console.log(test2);
-
             var formatter =  new ol.format.GeoJSON({
                 defaultDataProjection: ol.proj.get('EPSG:4326')
             });
@@ -244,7 +236,6 @@ define([
             });
             var feature = new ol.Feature({
                 geometry: geometry
-//                geometry: geometry.transform('EPSG:4326', 'EPSG:900913')
             });
             oeFeaturesSource.addFeature(feature);
 
@@ -254,16 +245,17 @@ define([
             );
         },
 
-        highLightPerceel: function(olFeature) {
-            console.log("-highlight perceel-");
+        drawPerceel: function(olFeature) {
             var perceelSource = this.geoJsonLayer.getSource();
-            olFeature.getGeometry().transform('EPSG:31370', 'EPSG:900913');
-            perceelSource.addFeature(olFeature);
-
-            this.olMap.getView().fitExtent(
-                perceelSource.getExtent(),
-                /** @type {ol.Size} */ (this.olMap.getSize())
-            );
+            var geometry = olFeature.getGeometry();
+            geometry.transform('EPSG:31370', 'EPSG:900913');
+            var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+            var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+            var xyFeature = new ol.Feature({
+                geometry: xyGeom
+                //name: 'Mijn Polygon'
+            });
+            perceelSource.addFeature(xyFeature);
         },
 
         _onMoveEnd: function (evt) {
@@ -397,19 +389,31 @@ define([
         getZone: function () {
             var geojsonSource = this.geoJsonLayer.getSource();
 
-            var coords = geojsonSource.getFeatures().map(function(feature) {
-                var clone = feature.clone();
-                clone.getGeometry().transform('EPSG:900913', 'EPSG:31370');
-                return clone.getGeometry().getCoordinates();
-            });
-            var multiPolygon = new ol.geom.MultiPolygon(coords);
+            //create empty zone multiPolygon
+            var multiPolygon = new ol.geom.MultiPolygon([], 'XY');
 
+            //add all polygons and multiPolygons from zone layer
+            array.forEach(geojsonSource.getFeatures(), function (feature) {
+                var cloneGeom = feature.clone().getGeometry();
+                if (cloneGeom instanceof ol.geom.Polygon) {
+                     multiPolygon.appendPolygon(cloneGeom);
+                }
+                else if (cloneGeom instanceof ol.geom.MultiPolygon) {
+                    array.forEach(cloneGeom.getPolygons(), function (polygon) {
+                        multiPolygon.appendPolygon(polygon);
+                    });
+                }
+            });
+
+            //transform to geojson
             var geojson = this.geoJsonFormatter.writeGeometry(multiPolygon, {featureProjection: 'EPSG:31370'});
+
             //hack to add crs. todo: remove when https://github.com/openlayers/ol3/issues/2078 is fixed
             geojson.crs = {type: "name"};
             geojson.crs.properties =  {
                 "name": "urn:ogc:def:crs:EPSG::31370"
             };
+
             return geojson;
         },
 
@@ -432,6 +436,24 @@ define([
 
         getFeatures: function () {
             return this.erfgoedFeatures;
+        },
+
+        _transformXyzToXy: function (xyzCoords) {
+            var xyCoords = [];
+            //make coordinates 'XY' instead of 'XYZ'. coordinates: Array.<Array.<Array.<ol.Coordinate>>>
+            array.forEach(xyzCoords, function (level1) {
+                var level1Array = [];
+                xyCoords.push(level1Array);
+                array.forEach(level1, function (level2) {
+                var level2Array = [];
+                level1Array.push(level2Array);
+                    array.forEach(level2, function (xyzCoords) {
+                        var xyArray = [ xyzCoords[0], xyzCoords[1] ];
+                        level2Array.push(xyArray);
+                    });
+                });
+            });
+            return xyCoords;
         }
 
     });
