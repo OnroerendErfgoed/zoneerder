@@ -127,7 +127,7 @@ define([
         },
 
         getZone: function () {
-            return JSON.stringify(this.mapController.getZone());
+            return this.mapController.getZone();
         },
 
         setZone: function (val) {
