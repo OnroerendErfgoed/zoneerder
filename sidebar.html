@@ -34,13 +34,15 @@
     <script type="text/javascript">
         var dojoConfig = {
             async: true,
-            packages: [{
-                name: 'src',
-                location: location.pathname.replace(/[^\/]+$/, '') + 'src'
-            },{
-                name: 'ol',
-                location: location.pathname.replace(/[^\/]+$/, '') + ''
-            }
+            packages: [
+                {
+                    name: 'src',
+                    location: location.pathname.replace(/[^\/]+$/, '') + 'src'
+                },
+                {
+                    name: 'crabpy_dojo',
+                    location: location.pathname.replace(/[^\/]+$/, '') + 'bower_components/crabpy_dojo'
+                }
             ]
         };
     </script>

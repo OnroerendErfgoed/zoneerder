@@ -11,10 +11,11 @@ define([
     'dojo/query',
     'dijit/form/Button',
     'dojo/dom-construct',
+    "crabpy_dojo/CrabpyWidget",
     'dojo/NodeList-dom'
 
 ], function (declare, lang, array, WidgetBase, TemplatedMixin,
-             MapController, ButtonController, Sidebar, ErfgoedService, query, Button, domConstruct) {
+             MapController, ButtonController, Sidebar, ErfgoedService, query, Button, domConstruct, CrabpyWidget) {
     return declare([WidgetBase, TemplatedMixin], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
