@@ -78,6 +78,10 @@ define([
                 sidebar.addTab('kaartlagen', 'Kaartlagen', 'layericon',
                     'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
+                sidebar.addTab('zoom', 'Zoom naar', 'zoomicon',
+                    'Hier kan je naar een perceel of adres zoomen. Het is niet verplicht om alle velden in te vullen,' +
+                        ' je kan bijvoorbeeld enkel een gemeente en straat kiezen en daar naar toe zoomen.');
+
                 if (!this.config.readOnly) {
                     sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan');
 
