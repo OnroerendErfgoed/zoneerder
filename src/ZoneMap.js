@@ -143,6 +143,7 @@ define([
                 var returnObject = {};
                 returnObject.id = feature.id;
                 returnObject.naam = feature.naam;
+                returnObject.uri = feature.uri;
                 return returnObject;
             });
         },
