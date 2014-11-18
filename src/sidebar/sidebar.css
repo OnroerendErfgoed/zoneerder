@@ -77,3 +77,4 @@
 .sidebar a.layericon:before { content: url(img/layers-30.png);}
 .sidebar a.helpicon:before  { content: url(img/help-30.png);}
 .sidebar a.zoneicon:before  { content: url(img/polygon-30.png);}
+.sidebar a.zoomicon:before  { content: url(img/zoom-30.png);}

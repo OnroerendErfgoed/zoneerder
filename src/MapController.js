@@ -454,6 +454,13 @@ define([
                 });
             });
             return xyCoords;
+        },
+
+        zoomToExtent: function (extent){
+            this.olMap.getView().fitExtent(
+                extent,
+                /** @type {ol.Size} */ (this.olMap.getSize())
+            );
         }
 
     });
