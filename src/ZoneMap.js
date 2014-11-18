@@ -86,21 +86,40 @@ define([
                     name: "location",
                     baseUrl: "https://dev-geo.onroerenderfgoed.be"
                 });
-                domConstruct.place(crabpyWidget.domNode, "zoomcontent");
+
+                var crabNode = domConstruct.create("div");
+                domConstruct.place(crabNode, "zoomcontent");
+                var crabZoomer = crabpyWidget.createCrabZoomer(crabNode);
                 var zoomButton = new Button({
                     label: "Zoom naar adres",
                     onClick: function(){
-                        var bbox = crabpyWidget.getBbox();
+                        var bbox = crabZoomer.getBbox();
                         if (bbox) {
                             var extent = ol.proj.transformExtent(bbox, 'EPSG:31370', 'EPSG:900913');
-                            console.log(extent);
                             mapController.zoomToExtent(extent);
-                            crabpyWidget.reset();
+                            crabZoomer.reset();
                             sidebar.close();
                         }
                     }
                 });
                 domConstruct.place(zoomButton.domNode, "zoomcontent");
+
+                var capakeyNode = domConstruct.create("div");
+                domConstruct.place(capakeyNode, "zoomcontent");
+                var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
+                var capakeyZoomButton = new Button({
+                    label: "Zoom naar perceel",
+                    onClick: function(){
+                        var bbox = capakeyZoomer.getBbox();
+                        if (bbox) {
+                            var extent = ol.proj.transformExtent(bbox, 'EPSG:31370', 'EPSG:900913');
+                            mapController.zoomToExtent(extent);
+                            capakeyZoomer.reset();
+                            sidebar.close();
+                        }
+                    }
+                });
+                domConstruct.place(capakeyZoomButton.domNode, "zoomcontent");
 
                 if (!this.config.readOnly) {
                     sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan');
