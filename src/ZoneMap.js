@@ -120,6 +120,11 @@ define([
             sidebar.addTab('kaartlagen', 'Kaartlagen', 'layericon',
                 'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
+            var layerSwitcher = new ol.control.LayerSwitcher({
+                target: document.getElementById('kaartlagencontent')
+            });
+            this.mapController.olMap.addControl(layerSwitcher);
+
             sidebar.addTab('zoom', 'Zoom naar', 'zoomicon',
                 'Hier kan je naar een perceel of adres zoomen. Je moet minstens een gemeente kiezen.');
 

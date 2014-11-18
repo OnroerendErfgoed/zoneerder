@@ -1,0 +1,18 @@
+.layer-switcher .panel {
+    padding-right: 50px;
+    border: 1px solid #cccccc;
+    background-color: white;
+}
+
+.layer-switcher ul {
+    padding-left: 1em;
+    list-style: none;
+}
+
+.layer-switcher li.group {
+    padding-top: 5px;
+}
+
+.layer-switcher li.group > label {
+    font-weight: bold;
+}
