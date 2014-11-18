@@ -137,7 +137,6 @@ define([
             olMap.addControl(new ol.control.Attribution({
                 collapsible: false
             }));
-            olMap.addControl(new ol.control.LayerSwitcher());
 
             olMap.on('moveend', this._onMoveEnd);
 
