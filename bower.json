@@ -11,6 +11,6 @@
     "proj4": "~2.3.3",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git",
     "dojo-form-controls": "https://github.com/sirprize/dojo-form-controls.git",
-    "mijit": "git://github.com/sirprize/mijit.git#~1.8.1"
+    "mijit": "git://github.com/sirprize/mijit.git#61a80b3518"
   }
 }
