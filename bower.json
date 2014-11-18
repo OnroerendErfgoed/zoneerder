@@ -6,7 +6,6 @@
     "test"
   ],
   "dependencies": {
-    "ol3-layerswitcher": "https://github.com/walkermatt/ol3-layerswitcher.git",
     "dojo": "~1.10.1",
     "dijit": "~1.10.1",
     "ol3": "https://github.com/openlayers/ol3.git#master",
