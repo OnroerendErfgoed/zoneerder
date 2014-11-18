@@ -1,7 +1,7 @@
 define([
     'dojo/_base/declare',
     'dojo/_base/lang',
-    'dijit/_WidgetBase',
+    'mijit/_WidgetBase',
     "dojo/query",
     "dojo/NodeList-dom"
 ], function (declare, lang, WidgetBase, query) {

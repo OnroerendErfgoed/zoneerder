@@ -1,6 +1,6 @@
 define([
     "dojo/_base/declare",
-    "dijit/_WidgetBase",
+    "mijit/_WidgetBase",
     "dojo/_base/lang",
     "dojo/request",
     "dojo/request/xhr",
