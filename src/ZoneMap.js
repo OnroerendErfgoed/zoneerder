@@ -9,7 +9,7 @@ define([
     './sidebar/Sidebar',
     './services/ErfgoedService',
     'dojo/query',
-    'dijit/form/Button',
+    'dojo-form-controls/Button',
     'dojo/dom-construct',
     "crabpy_dojo/CrabpyWidget",
     'dojo/NodeList-dom'
@@ -80,8 +80,27 @@ define([
                     'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
                 sidebar.addTab('zoom', 'Zoom naar', 'zoomicon',
-                    'Hier kan je naar een perceel of adres zoomen. Het is niet verplicht om alle velden in te vullen,' +
-                        ' je kan bijvoorbeeld enkel een gemeente en straat kiezen en daar naar toe zoomen.');
+                    'Hier kan je naar een perceel of adres zoomen. Je moet minstens een gemeente kiezen.');
+
+                var crabpyWidget = new CrabpyWidget({
+                    name: "location",
+                    baseUrl: "https://dev-geo.onroerenderfgoed.be"
+                });
+                domConstruct.place(crabpyWidget.domNode, "zoomcontent");
+                var zoomButton = new Button({
+                    label: "Zoom naar adres",
+                    onClick: function(){
+                        var bbox = crabpyWidget.getBbox();
+                        if (bbox) {
+                            var extent = ol.proj.transformExtent(bbox, 'EPSG:31370', 'EPSG:900913');
+                            console.log(extent);
+                            mapController.zoomToExtent(extent);
+                            crabpyWidget.reset();
+                            sidebar.close();
+                        }
+                    }
+                });
+                domConstruct.place(zoomButton.domNode, "zoomcontent");
 
                 if (!this.config.readOnly) {
                     sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan');
