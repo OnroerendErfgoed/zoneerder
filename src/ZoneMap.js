@@ -45,7 +45,7 @@ define([
             this._setDefaultParam(this.config, "sidebar", false);
 
             this.erfgoedService = new ErfgoedService({
-                url: 'http://localhost:6544/afbakeningen'
+                url: 'http://localhost:6545/afbakeningen'  //todo: move to config & change to dev version
             })
         },
 
@@ -130,7 +130,7 @@ define([
 
             var crabpyWidget = new CrabpyWidget({
                 name: "location",
-                baseUrl: "https://dev-geo.onroerenderfgoed.be"
+                baseUrl: "https://dev-geo.onroerenderfgoed.be" //todo: move to config
             });
 
             var crabNode = domConstruct.create("div");
