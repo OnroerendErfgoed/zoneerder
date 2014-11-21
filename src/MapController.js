@@ -237,11 +237,6 @@ define([
                 geometry: geometry
             });
             oeFeaturesSource.addFeature(feature);
-
-            this.olMap.getView().fitExtent(
-                oeFeaturesSource.getExtent(),
-                /** @type {ol.Size} */ (this.olMap.getSize())
-            );
         },
 
         drawPerceel: function(olFeature) {
@@ -426,11 +421,6 @@ define([
 
             var geojsonSource = this.geoJsonLayer.getSource();
             geojsonSource.addFeature(feature);
-
-            this.olMap.getView().fitExtent(
-                geojsonSource.getExtent(),
-                /** @type {ol.Size} */ (this.olMap.getSize())
-            );
         },
 
         getFeatures: function () {
@@ -453,6 +443,11 @@ define([
                 });
             });
             return xyCoords;
+        },
+
+        zoomToZone: function () {
+            var geojsonSource = this.geoJsonLayer.getSource();
+            this.zoomToExtent(geojsonSource.getExtent());
         },
 
         zoomToExtent: function (extent){

@@ -83,6 +83,7 @@ define([
 
         setZone: function (val) {
             this.mapController.setZone(val);
+            this.mapController.zoomToZone();
         },
 
         getFeaturesInZone: function () {
