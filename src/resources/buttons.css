@@ -12,13 +12,15 @@
 }
 
 .fullextent button {
-    background-image: url('img/expand.png');
+    background-image: url('img/fullextent.png');
     background-size: contain;
 }
 
-button.full-screen-false:after {
-  content: "\2194";
+.full-screen button.full-screen-false {
+    background-image: url('img/fullscreen.png');
+    background-size: contain;
 }
-button.full-screen-true:after {
-  content: "\00d7";
+.full-screen button.full-screen-true {
+    background-image: url('img/fullscreeen_exit.png');
+    background-size: contain;
 }
