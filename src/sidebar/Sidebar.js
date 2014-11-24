@@ -134,14 +134,19 @@ function (declare, WidgetBase, TemplatedMixin, template, query, domClass, domCon
                 'innerHTML': label
             }, pane);
 
-            domConstruct.create('p', {
-                'innerHTML': description,
-                'class': 'description'
+            var paneBody = domConstruct.create('div', {
+                'class': 'pane-body'
             }, pane);
 
             domConstruct.create('div', {
-                'id': id + 'content'
-            }, pane);
+                'innerHTML': description,
+                'class': 'pane-description'
+            }, paneBody);
+
+            domConstruct.create('div', {
+                'id': id + 'content',
+                'class': 'pane-content'
+            }, paneBody);
 
         }
 

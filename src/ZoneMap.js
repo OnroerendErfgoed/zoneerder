@@ -127,7 +127,7 @@ define([
             this.mapController.olMap.addControl(layerSwitcher);
 
             sidebar.addTab('zoom', 'Zoom naar', 'zoomicon',
-                'Hier kan je naar een perceel of adres zoomen. Je moet minstens een gemeente kiezen.');
+                'Hier kan je naar een perceel of adres zoomen (je moet minstens een gemeente kiezen).');
 
             var crabpyWidget = new CrabpyWidget({
                 name: "location",
@@ -140,6 +140,7 @@ define([
             var self = this;
             var zoomButton = new Button({
                 label: "Zoom naar adres",
+                class: "sidebar-button",
                 onClick: function(){
                     var bbox = crabZoomer.getBbox();
                     if (bbox) {
@@ -157,6 +158,7 @@ define([
             var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
             var capakeyZoomButton = new Button({
                 label: "Zoom naar perceel",
+                class: "sidebar-button",
                 onClick: function(){
                     var bbox = capakeyZoomer.getBbox();
                     if (bbox) {
@@ -170,11 +172,18 @@ define([
             domConstruct.place(capakeyZoomButton.domNode, "zoomcontent");
 
             if (!this.config.readOnly) {
-                sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan');
+                sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan. ' +
+                    'Je kan één of meerdere polygonen intekenen en/of percelen selecteren.');
+
+                var drawTitle = domConstruct.create("h3",{innerHTML: "Polygoon tekenen:"});
+                domConstruct.place(drawTitle, "zonecontent");
+
+                var toolbarNode = domConstruct.create("div");
+                domConstruct.place(toolbarNode, "zonecontent");
 
                 var drawToolbar = new ol.control.DrawToolbar({
                     mapController: self.mapController,
-                    target: document.getElementById('zonecontent')
+                    target: toolbarNode
                 });
                 drawToolbar.on('save', function (evt) {
                     evt.features.forEach(function (feature) {
@@ -185,6 +194,9 @@ define([
                     self.mapController.geoJsonLayer.getSource().clear();
                 });
                 self.mapController.olMap.addControl(drawToolbar);
+
+                var parcelTitle = domConstruct.create("h3",{innerHTML: "Perceel selecteren:"});
+                domConstruct.place(parcelTitle, "zonecontent");
             }
 
             sidebar.addTab('help', 'Help', 'helpicon', 'help desc');
