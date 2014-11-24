@@ -37,11 +37,11 @@ ol.control.DrawToolbar = function(opt_options) {
     this.mapController = goog.isDef(options.mapController) ? options.mapController : null;
 
     //draw
-    var drawElement = this.createTool_('draw', 'Teken Polygoon', className);
+    var drawElement = this.createTool_('draw', 'Teken polygoon', className);
     this.attachEvents_(drawElement, 'draw', true);
 
     //edit
-    var modifyElement = this.createTool_('modify', 'Wijzig Polygoon', className);
+    var modifyElement = this.createTool_('modify', 'Wijzig polygoon', className);
     this.attachEvents_(modifyElement, 'modify', true);
 
     //cancel
@@ -49,17 +49,13 @@ ol.control.DrawToolbar = function(opt_options) {
     this.attachEvents_(cancelElement, 'cancel', false);
 
     //save
-    var saveElement = this.createTool_('save', 'Opslaan', className);
+    var saveElement = this.createTool_('save', 'Sla polygoon op', className);
     this.attachEvents_(saveElement, 'save', false);
-
-    //copyParcel
-    var copyParcelElement = this.createTool_('copyParcel', 'Kopieer perceel', className);
-    this.attachEvents_(copyParcelElement, 'copyParcel', true);
 
     var cssClasses = className + ' ' + ol.css.CLASS_UNSELECTABLE + ' ' +
         ol.css.CLASS_CONTROL;
     var element = goog.dom.createDom(goog.dom.TagName.DIV, cssClasses,
-        drawElement, modifyElement, cancelElement, saveElement, copyParcelElement);
+        drawElement, modifyElement, cancelElement, saveElement);
 
     goog.base(this, {
         element: element,
@@ -151,10 +147,6 @@ ol.control.DrawToolbar.prototype.selectTool_ = function(tool) {
         this.saveFeatures_();
         this.clearFeatures_();
     }
-    else if (tool == 'copyParcel'){
-        console.debug('start copy');
-        this.addOnclick_(map);
-    }
 };
 
 ol.control.DrawToolbar.prototype.saveFeatures_ = function() {
@@ -206,15 +198,6 @@ ol.control.DrawToolbar.prototype.attachEvents_ = function(tool, type, isSelectab
             this.blur();
         }, false);
     }
-};
-
-ol.control.DrawToolbar.prototype.addOnclick_ = function(map) {
-    var controller = this.mapController;
-    var eventKey = map.on('click', function(evt) {
-        var perceel = controller.getPerceel(evt.coordinate);
-        map.unByKey(eventKey);
-        controller.drawPerceel(perceel);
-    });
 };
 
 

@@ -203,6 +203,21 @@ define([
                 var parcelTitle = domConstruct.create("h3",{innerHTML: "Perceel selecteren:"});
                 domConstruct.place(parcelTitle, "zonecontent");
 
+                var parcelButton = new Button({
+                    label: "Selecteer perceel",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function(){
+                        var controller = this.mapController;
+                        var map = controller.olMap;
+                        var eventKey = map.on('click', function(evt) {
+                            map.unByKey(eventKey);
+                            var perceel = controller.getPerceel(evt.coordinate);
+                            controller.drawPerceel(perceel);
+                        });
+                    })
+                });
+                domConstruct.place(parcelButton.domNode, "zonecontent");
+
                 var buttonNode = domConstruct.create("div", {class: "button-bar"});
                 domConstruct.place(buttonNode, "zonecontent");
                 var saveButton = new Button({
