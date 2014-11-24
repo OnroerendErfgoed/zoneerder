@@ -400,16 +400,22 @@ define([
                 }
             });
 
-            //transform to geojson
-            var geojson = this.geoJsonFormatter.writeGeometry(multiPolygon, {featureProjection: 'EPSG:31370'});
+            if (multiPolygon.getCoordinates().length > 0) {
 
-            //hack to add crs. todo: remove when https://github.com/openlayers/ol3/issues/2078 is fixed
-            geojson.crs = {type: "name"};
-            geojson.crs.properties =  {
-                "name": "urn:ogc:def:crs:EPSG::31370"
-            };
+                //transform to geojson
+                var geojson = this.geoJsonFormatter.writeGeometry(multiPolygon, {featureProjection: 'EPSG:31370'});
 
-            return geojson;
+                //hack to add crs. todo: remove when https://github.com/openlayers/ol3/issues/2078 is fixed
+                geojson.crs = {type: "name"};
+                geojson.crs.properties = {
+                    "name": "urn:ogc:def:crs:EPSG::31370"
+                };
+
+                return geojson;
+            }
+            else {
+                return null;
+            }
         },
 
         setZone: function (geojson) {

@@ -18,8 +18,7 @@ goog.require('ol.source.TileWMS');
 
 
 ol.control.DrawToolbarEventType = {
-    SAVE: 'save',
-    CLEAR: 'clear'
+    SAVE: 'save'
 };
 
 
@@ -53,10 +52,6 @@ ol.control.DrawToolbar = function(opt_options) {
     var saveElement = this.createTool_('save', 'Opslaan', className);
     this.attachEvents_(saveElement, 'save', false);
 
-    //delete
-    var deleteElement = this.createTool_('delete', 'Alles wissen', className);
-    this.attachEvents_(deleteElement, 'delete', false);
-
     //copyParcel
     var copyParcelElement = this.createTool_('copyParcel', 'Kopieer perceel', className);
     this.attachEvents_(copyParcelElement, 'copyParcel', true);
@@ -64,7 +59,7 @@ ol.control.DrawToolbar = function(opt_options) {
     var cssClasses = className + ' ' + ol.css.CLASS_UNSELECTABLE + ' ' +
         ol.css.CLASS_CONTROL;
     var element = goog.dom.createDom(goog.dom.TagName.DIV, cssClasses,
-        drawElement, modifyElement, cancelElement, saveElement, deleteElement, copyParcelElement);
+        drawElement, modifyElement, cancelElement, saveElement, copyParcelElement);
 
     goog.base(this, {
         element: element,
@@ -152,9 +147,6 @@ ol.control.DrawToolbar.prototype.selectTool_ = function(tool) {
     else if (tool == 'cancel'){
         this.clearFeatures_();
     }
-    else if (tool == 'delete'){
-        this.deleteAllFeatures_();
-    }
     else if (tool == 'save'){
         this.saveFeatures_();
         this.clearFeatures_();
@@ -181,12 +173,6 @@ ol.control.DrawToolbar.prototype.clearFeatures_ = function() {
     this.featureOverlay_.getFeatures().clear();
 };
 
-ol.control.DrawToolbar.prototype.deleteAllFeatures_ = function() {
-    this.clearFeatures_();
-    this.dispatchEvent(
-        new ol.control.DrawToolbarEvent(ol.control.DrawToolbarEventType.CLEAR, null, this)
-    );
-};
 
 ol.control.DrawToolbar.prototype.createTool_ = function(type, tooltipLabel, baseClass) {
     var toolTip = goog.dom.createDom(goog.dom.TagName.SPAN, {

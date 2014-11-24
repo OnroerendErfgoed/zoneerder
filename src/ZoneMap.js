@@ -11,12 +11,13 @@ define([
     'dojo/query',
     'dojo-form-controls/Button',
     'dojo/dom-construct',
+    "dojo/Evented",
     "crabpy_dojo/CrabpyWidget",
     'dojo/NodeList-dom'
 
 ], function (declare, lang, array, WidgetBase, TemplatedMixin,
-             MapController, ButtonController, Sidebar, ErfgoedService, query, Button, domConstruct, CrabpyWidget) {
-    return declare([WidgetBase, TemplatedMixin], {
+             MapController, ButtonController, Sidebar, ErfgoedService, query, Button, domConstruct, Evented, CrabpyWidget) {
+    return declare([WidgetBase, TemplatedMixin, Evented], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
                         '</div>',
@@ -26,6 +27,8 @@ define([
         config: null,
 
         erfgoedService: null,
+
+        zone: null,
 
         postMixInProperties: function () {
             this.inherited(arguments);
@@ -78,10 +81,12 @@ define([
         },
 
         getZone: function () {
-            return this.mapController.getZone();
+//            return this.mapController.getZone();
+            return this.zone;
         },
 
         setZone: function (val) {
+            this.zone = val;
             this.mapController.setZone(val);
             this.mapController.zoomToZone();
         },
@@ -197,6 +202,35 @@ define([
 
                 var parcelTitle = domConstruct.create("h3",{innerHTML: "Perceel selecteren:"});
                 domConstruct.place(parcelTitle, "zonecontent");
+
+                var buttonNode = domConstruct.create("div", {class: "button-bar"});
+                domConstruct.place(buttonNode, "zonecontent");
+                var saveButton = new Button({
+                    label: "Zone bewaren",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function(){
+                        var zone = this.mapController.getZone();
+                        if (zone) {
+                            this.zone = zone;
+                            this.emit("zonechanged", zone);
+                        }
+                        else {
+                            alert("Er is nog geen zone beschikbaar om op te slaan.");
+                        }
+                    })
+                });
+                domConstruct.place(saveButton.domNode, buttonNode);
+
+                var deleteButton = new Button({
+                    label: "Zone verwijderen",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function(){
+                        this.mapController.geoJsonLayer.getSource().clear();
+                        this.zone = null;
+                        this.emit("zonechanged", null);
+                    })
+                });
+                domConstruct.place(deleteButton.domNode, buttonNode);
             }
 
             sidebar.addTab('help', 'Help', 'helpicon', 'help desc');

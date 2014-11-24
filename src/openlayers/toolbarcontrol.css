@@ -26,9 +26,6 @@
 .ol-toolbar button.ol-toolbar-cancel:after {
     content: "✋";
 }
-.ol-toolbar button.ol-toolbar-delete:after {
-    content: "✘";
-}
 .ol-toolbar button.ol-toolbar-save:after {
     content: "✔";
 }

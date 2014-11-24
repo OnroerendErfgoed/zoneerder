@@ -83,6 +83,11 @@
             }, 'widgetNode');
             widgetUnderTest.startup();
 
+            widgetUnderTest.on("zonechanged", function(event){
+                console.log("zone changed event: ");
+                console.log(event);
+            });
+
         });
 
     </script>
