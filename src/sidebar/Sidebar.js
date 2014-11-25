@@ -23,8 +23,6 @@ function (declare, WidgetBase, TemplatedMixin, template, query, domClass, domCon
         startup: function () {
 		    this.inherited(arguments);
 
-            console.log("startup sidebar");
-
             this.tabs = query('.sidebar-tabs', this.containerNode).at(0);
             this.tabContainer = query('.sidebar-content', this.containerNode).at(0);
             var sidebar = this;
