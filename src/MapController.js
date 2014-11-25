@@ -155,6 +155,7 @@ define([
 
         getPerceel: function (coordinate) {
             var url = "http://localhost:6543/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb"; //todo: move to config
+//            var url = "https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb"; //todo: move to config
             var data = '' +
                 '<wfs:GetFeature xmlns:topp="http://www.openplans.org/topp" ' +
                 'xmlns:wfs="http://www.opengis.net/wfs" ' +
@@ -246,8 +247,8 @@ define([
             var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
             var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
             var xyFeature = new ol.Feature({
-                geometry: xyGeom
-                //name: 'Mijn Polygon'
+                geometry: xyGeom,
+                name: olFeature.get('CAPAKEY')
             });
             perceelSource.addFeature(xyFeature);
         },
@@ -358,6 +359,7 @@ define([
 
             var createPolygonStyleFunction = function() {
               return function(feature, resolution) {
+                var text = (resolution < 3 && feature.get('name') )  ? feature.get('name') : '';
                 var style = new ol.style.Style({
                   stroke: new ol.style.Stroke({
                     color: color,
@@ -365,6 +367,17 @@ define([
                   }),
                   fill: new ol.style.Fill({
                     color: 'rgba(0, 0, 255, 0.1)'
+                  }),
+                  text: new ol.style.Text({
+                    font: '10px Verdana',
+                    text: text,
+                    fill: new ol.style.Fill({
+                      color: color
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: '#fff',
+                      width: 3
+                    })
                   })
                 });
                 return [style];
