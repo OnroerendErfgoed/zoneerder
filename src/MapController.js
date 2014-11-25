@@ -147,8 +147,8 @@ define([
                 /** @type {ol.Size} */ (olMap.getSize())
             );
 
-            console.log("projection:");
-            console.log(olMap.getView().getProjection());
+//            console.log("projection:");
+//            console.log(olMap.getView().getProjection());
         },
 
         startup: function () {
