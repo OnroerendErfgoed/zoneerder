@@ -142,10 +142,7 @@ define([
 
             //olMap.on('moveend', this._onMoveEnd);
 
-            view.fitExtent(
-                extentVlaanderen,
-                /** @type {ol.Size} */ (olMap.getSize())
-            );
+            this.zoomToExtent(extentVlaanderen);
 
 //            console.log("projection:");
 //            console.log(olMap.getView().getProjection());
