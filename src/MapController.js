@@ -138,7 +138,7 @@ define([
                 collapsible: false
             }));
 
-            olMap.on('moveend', this._onMoveEnd);
+            //olMap.on('moveend', this._onMoveEnd);
 
             view.fitExtent(
                 extentVlaanderen,
