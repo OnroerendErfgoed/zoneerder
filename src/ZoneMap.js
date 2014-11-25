@@ -115,7 +115,7 @@ define([
                 geojson.crs.properties =  {
                     "name": "urn:ogc:def:crs:EPSG::4326"
                 };
-                this.mapController.drawErfgoedGeom(geojson);
+                this.mapController.drawErfgoedGeom(geojson, feature.id);
             }));
         },
 

@@ -224,7 +224,7 @@ define([
             );
         },
 
-        drawErfgoedGeom: function(geom) {
+        drawErfgoedGeom: function(geom, label) {
             var formatter =  new ol.format.GeoJSON({
                 defaultDataProjection: ol.proj.get('EPSG:4326')
             });
@@ -235,7 +235,8 @@ define([
                 featureProjection: this.pDef
             });
             var feature = new ol.Feature({
-                geometry: geometry
+                geometry: geometry,
+                name: label
             });
             oeFeaturesSource.addFeature(feature);
         },
