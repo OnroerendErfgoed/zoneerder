@@ -92,7 +92,6 @@ define([
 
         getFeaturesInZone: function () {
             var features = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
-            this.mapController.drawErfgoedFeatures(features);
 
             //return light objects for list
             return array.map(features, function(feature){
