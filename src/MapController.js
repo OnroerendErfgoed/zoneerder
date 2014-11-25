@@ -18,6 +18,8 @@ define([
 
         geoJsonLayer: null,
 
+        oeFeaturesLayer: null,
+
         readOnly: null,
 
         fullExtent: null,
@@ -217,11 +219,6 @@ define([
                 });
                 oeFeaturesSource.addFeature(feature);
             });
-
-            this.olMap.getView().fitExtent(
-                oeFeaturesSource.getExtent(),
-                /** @type {ol.Size} */ (this.olMap.getSize())
-            );
         },
 
         drawErfgoedGeom: function(geom, label) {
@@ -475,6 +472,11 @@ define([
                 extent,
                 /** @type {ol.Size} */ (this.olMap.getSize())
             );
+        },
+
+        zoomToFeatures: function () {
+            var oeFeaturesSource = this.oeFeaturesLayer.getSource();
+            this.zoomToExtent(oeFeaturesSource.getExtent());
         }
 
     });
