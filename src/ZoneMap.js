@@ -91,15 +91,16 @@ define([
         },
 
         getFeaturesInZone: function () {
-            var features = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
-
-            //return light objects for list
-            return array.map(features, function(feature){
-                var returnObject = {};
-                returnObject.id = feature.id;
-                returnObject.naam = feature.naam;
-                returnObject.uri = feature.uri;
-                return returnObject;
+            var promise = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
+            return promise.then(function (data) {
+                var features = JSON.parse(data);
+                return array.map(features, function(feature){
+                    return {
+                        id: feature.id,
+                        naam: feature.naam,
+                        uri: feature.uri
+                    };
+                });
             });
         },
 
@@ -257,7 +258,17 @@ define([
             }
 
             sidebar.addTab('help', 'Help', 'helpicon', 'help desc');
-
+            var myButton = new Button({
+                label: "get features",
+                onClick: lang.hitch(this, function(){
+                    this.getFeaturesInZone().then(function (features){
+                        console.log("Click callback");
+                        console.log(features);
+                    });
+                })
+            });
+            domConstruct.place(myButton.domNode, "helpcontent");
+            myButton.startup();
             var myButton2 = new Button({
                 label: "set features",
                 onClick: lang.hitch(this, function(){
