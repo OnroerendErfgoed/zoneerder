@@ -194,7 +194,6 @@ define([
                 sync: true
             }).then(function (response) {
                 var features = wfsFormatter.readFeatures(response);
-                console.log(features);
                 feature = features[0];
 
             }, function (err) {
@@ -226,16 +225,21 @@ define([
         },
 
         drawPerceel: function(olFeature) {
-            var perceelSource = this.geoJsonLayer.getSource();
-            var geometry = olFeature.getGeometry();
-            geometry.transform('EPSG:31370', 'EPSG:900913');
-            var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
-            var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
-            var xyFeature = new ol.Feature({
-                geometry: xyGeom,
-                name: olFeature.get('CAPAKEY')
-            });
-            perceelSource.addFeature(xyFeature);
+            if (olFeature) {
+                var perceelSource = this.geoJsonLayer.getSource();
+                var geometry = olFeature.getGeometry();
+                geometry.transform('EPSG:31370', 'EPSG:900913');
+                var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+                var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+                var xyFeature = new ol.Feature({
+                    geometry: xyGeom,
+                    name: olFeature.get('CAPAKEY')
+                });
+                perceelSource.addFeature(xyFeature);
+            }
+            else {
+                alert('Er werd geen perceel gevonden op deze locatie');
+            }
         },
 
         _onMoveEnd: function (evt) {
