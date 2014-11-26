@@ -342,18 +342,9 @@ define([
               }
             }));
 
-            var createPolygonStyleFunction = function() {
-              return function(feature, resolution) {
+            var textStyleFunction = function (feature, resolution) {
                 var text = (resolution < 3 && feature.get('name') )  ? feature.get('name') : '';
-                var style = new ol.style.Style({
-                  stroke: new ol.style.Stroke({
-                    color: color,
-                    width: 1
-                  }),
-                  fill: new ol.style.Fill({
-                    color: 'rgba(0, 0, 255, 0.1)'
-                  }),
-                  text: new ol.style.Text({
+                return new ol.style.Text({
                     font: '10px Verdana',
                     text: text,
                     fill: new ol.style.Fill({
@@ -363,16 +354,49 @@ define([
                       color: '#fff',
                       width: 3
                     })
-                  })
                 });
+            };
+
+            var styleFunction = function (feature, resolution) {
+                var type = feature.getGeometry().getType();
+                var styleText = textStyleFunction(feature, resolution);
+
+                var style;
+                if (type == 'MultiPoint' || type == 'Point') {
+                    style = new ol.style.Style({
+                        image: new ol.style.Circle({
+                            radius: resolution < 3 ? 10 : 5,
+                            fill: new ol.style.Fill({
+                                color: color
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: color,
+                                width: 1
+                            })
+                        }),
+                        text: styleText
+                    })
+                }
+                else {
+                    style = new ol.style.Style({
+                        stroke: new ol.style.Stroke({
+                            color: color,
+                            width: 1
+                        }),
+                        fill: new ol.style.Fill({
+                            color: color == 'red' ? 'rgba(255, 0, 0, 0.3)' : 'rgba(0, 0, 255, 0.3)'
+                        }),
+                        text: styleText
+                    });
+                }
+
                 return [style];
-              };
             };
 
             return new ol.layer.Vector({
                 title: title,
                 source: vectorSource,
-                style: createPolygonStyleFunction(),
+                style: styleFunction,
                 type: 'overlay',
                 visible: true
             });
