@@ -85,8 +85,8 @@ define([
         },
 
         setZone: function (val) {
-            this.zone = val;
             this.mapController.setZone(val);
+            this.zone = this.mapController.getZone();
             this.mapController.zoomToZone();
         },
 
