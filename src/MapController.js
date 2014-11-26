@@ -204,18 +204,9 @@ define([
             return feature;
         },
 
-        drawErfgoedFeatures: function(oeObjects) {
+        clearFeatures: function() {
             var oeFeaturesSource = this.oeFeaturesLayer.getSource();
             oeFeaturesSource.clear();
-            var formatter = this.geoJsonFormatter;
-
-            array.forEach(oeObjects, function (oeObject) {
-                var geometry = formatter.readGeometry(oeObject.geometrie);
-                var feature = new ol.Feature({
-                    geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
-                });
-                oeFeaturesSource.addFeature(feature);
-            });
         },
 
         drawErfgoedGeom: function(geom, label) {
@@ -223,7 +214,6 @@ define([
                 defaultDataProjection: ol.proj.get('EPSG:4326')
             });
             var oeFeaturesSource = this.oeFeaturesLayer.getSource();
-            oeFeaturesSource.clear();
             var geometry = formatter.readGeometry(geom, {
                 dataProjection: this.pWgs84,
                 featureProjection: this.pDef
