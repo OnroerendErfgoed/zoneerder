@@ -13,12 +13,11 @@ define([
     'dojo-form-controls/Button',
     'dojo/dom-construct',
     'dojo/Evented',
-    'dojo/aspect',
     'crabpy_dojo/CrabpyWidget',
     'dojo/NodeList-dom'
 
 ], function (declare, lang, array, WidgetBase, TemplatedMixin, MapController, ButtonController, Sidebar,
-             ErfgoedService, PerceelService, query, Button, domConstruct, Evented, aspect, CrabpyWidget) {
+             ErfgoedService, PerceelService, query, Button, domConstruct, Evented, CrabpyWidget) {
     return declare([WidgetBase, TemplatedMixin, Evented], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
@@ -86,10 +85,10 @@ define([
             if (this.config.sidebar) {
                 this._createSidebar(this.sidebarNode);
             }
+        },
 
-            aspect.after(this, "resize", function() {
-                this.mapController.olMap.updateSize();
-            });
+        resize: function() {
+            this.mapController.olMap.updateSize();
         },
 
         getZone: function () {
