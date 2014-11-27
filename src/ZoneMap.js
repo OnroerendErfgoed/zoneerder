@@ -228,8 +228,12 @@ define([
                         var map = controller.olMap;
                         var eventKey = map.on('click', function(evt) {
                             map.unByKey(eventKey);
-                            var perceel = perceelService.getPerceel(evt.coordinate);
-                            controller.drawPerceel(perceel);
+                            perceelService.searchPerceel(evt.coordinate).then(function(wfsresponse) {
+                                var perceel = perceelService.readWfs(wfsresponse);
+                                controller.drawPerceel(perceel);
+                            }, function (err) {
+                                console.error(err);
+                            })
                         });
                     })
                 });
