@@ -4,10 +4,10 @@
     left: 0.5em;
 }
 
-.zoom .ol-zoom-in {
+.zoom .zoom-in {
   border-radius: 2px 2px 0 0;
 }
-.zoom .ol-zoom-out {
+.zoom .zoom-out {
   border-radius: 0 0 2px 2px;
 }
 
