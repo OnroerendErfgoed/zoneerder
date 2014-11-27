@@ -8,6 +8,7 @@ define([
     './ButtonController',
     './sidebar/Sidebar',
     './services/ErfgoedService',
+    './services/PerceelService',
     'dojo/query',
     'dojo-form-controls/Button',
     'dojo/dom-construct',
@@ -16,7 +17,7 @@ define([
     'dojo/NodeList-dom'
 
 ], function (declare, lang, array, WidgetBase, TemplatedMixin,
-             MapController, ButtonController, Sidebar, ErfgoedService, query, Button, domConstruct, Evented, CrabpyWidget) {
+             MapController, ButtonController, Sidebar, ErfgoedService, PerceelService, query, Button, domConstruct, Evented, CrabpyWidget) {
     return declare([WidgetBase, TemplatedMixin, Evented], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
@@ -27,6 +28,8 @@ define([
         config: null,
 
         erfgoedService: null,
+
+        perceelService: null,
 
         zone: null,
 
@@ -49,7 +52,11 @@ define([
 
             this.erfgoedService = new ErfgoedService({
                 url: 'http://localhost:6545/afbakeningen'  //todo: move to config & change to dev version
-            })
+            });
+            this.perceelService = new PerceelService({
+                url: 'http://localhost:6543/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'  //todo: move to config & change to dev version
+//                url: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'
+            });
         },
 
         _setDefaultParam: function(object, field, defValue){
@@ -217,10 +224,11 @@ define([
                     class: "sidebar-button",
                     onClick: lang.hitch(this, function(){
                         var controller = this.mapController;
+                        var perceelService = this.perceelService;
                         var map = controller.olMap;
                         var eventKey = map.on('click', function(evt) {
                             map.unByKey(eventKey);
-                            var perceel = controller.getPerceel(evt.coordinate);
+                            var perceel = perceelService.getPerceel(evt.coordinate);
                             controller.drawPerceel(perceel);
                         });
                     })
