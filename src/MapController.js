@@ -20,8 +20,6 @@ define([
 
         oeFeaturesLayer: null,
 
-        readOnly: null,
-
         fullExtent: null,
 
         erfgoedFeatures: null,

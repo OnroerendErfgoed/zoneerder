@@ -58,7 +58,6 @@
         ], function (ZoneMap) {
 
             var zoneMapConfig = {
-                readOnly: false,
                 buttons: {
                     fullScreen: true,
                     zoomInOut: true,
@@ -70,7 +69,6 @@
 
             // init widget
             var widgetUnderTest = new ZoneMap({
-                readOnly: false,
                 config: zoneMapConfig
             }, 'widgetNode');
             widgetUnderTest.startup();
