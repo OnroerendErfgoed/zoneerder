@@ -9,12 +9,12 @@ define([
     './SidebarController',
     './services/ErfgoedService',
     './services/PerceelService',
-    'dojo/query',
     'dojo/Evented',
+    'dojo/when',
     'dojo/NodeList-dom'
 
 ], function (declare, lang, array, WidgetBase, TemplatedMixin, MapController, ButtonController, SidebarController,
-             ErfgoedService, PerceelService, query, Evented) {
+             ErfgoedService, PerceelService, Evented, when) {
     return declare([WidgetBase, TemplatedMixin, Evented], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
@@ -30,34 +30,23 @@ define([
 
         zone: null,
 
-        postMixInProperties: function () {
-            this.inherited(arguments);
-        },
-
-        buildRendering: function () {
-            this.inherited(arguments);
-        },
-
         postCreate: function () {
             this.inherited(arguments);
-            //Set default config
-            if (!this.config) this.config = {};
-            this._setDefaultParam(this.config, "buttons", {});
-            this._setDefaultParam(this.config.buttons, "buttons", {});
-//            this._setDefaultParam(this.config, "sidebar", {});
+            if (!this.config) {
+                this.config = {
+                    erfgoedUrl: null,
+                    perceelUrl: null,
+                    buttons: null,
+                    sidebar: null
+                };
+            }
 
-            this.erfgoedService = new ErfgoedService({
-                url: 'http://localhost:6545/afbakeningen'  //todo: move to config & change to dev version
-            });
-            this.perceelService = new PerceelService({
-                url: 'http://localhost:6543/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'  //todo: move to config & change to dev version
-//                url: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'
-            });
-        },
+            if (this.config.erfgoedUrl) {
+                this.erfgoedService = new ErfgoedService({ url: this.config.erfgoedUrl });
+            }
 
-        _setDefaultParam: function(object, field, defValue){
-            if (!lang.exists(field, object)){
-                lang.setObject(field, defValue, object);
+            if (this.config.perceelUrl) {
+                this.perceelService = new PerceelService({ url: this.config.perceelUrl });
             }
         },
 
@@ -111,17 +100,22 @@ define([
         },
 
         getFeaturesInZone: function () {
-            var promise = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
-            return promise.then(function (data) {
-                var features = JSON.parse(data);
-                return array.map(features, function(feature){
-                    return {
-                        id: feature.id,
-                        naam: feature.naam,
-                        uri: feature.uri
-                    };
+            if (this.erfgoedService) {
+                var promise = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
+                return promise.then(function (data) {
+                    var features = JSON.parse(data);
+                    return array.map(features, function (feature) {
+                        return {
+                            id: feature.id,
+                            naam: feature.naam,
+                            uri: feature.uri
+                        };
+                    });
                 });
-            });
+            }
+            else {
+                return  when(console.error("No search service available for erfgoed features. Please add 'erfgoedUrl' to config"));
+            }
         },
 
         setFeatures: function(features) {

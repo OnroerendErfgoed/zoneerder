@@ -125,25 +125,30 @@ define([
                 var parcelTitle = domConstruct.create("h3", {innerHTML: "Perceel selecteren:"});
                 domConstruct.place(parcelTitle, "zonecontent");
 
-                var parcelButton = new Button({
-                    label: "Selecteer perceel",
-                    class: "sidebar-button",
-                    onClick: lang.hitch(this, function () {
-                        var controller = this.mapController;
-                        var perceelService = this.perceelService;
-                        var map = controller.olMap;
-                        var eventKey = map.on('click', function (evt) {
-                            map.unByKey(eventKey);
-                            perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
-                                var perceel = perceelService.readWfs(wfsresponse);
-                                controller.drawPerceel(perceel);
-                            }, function (err) {
-                                console.error(err);
-                            })
-                        });
-                    })
-                });
-                domConstruct.place(parcelButton.domNode, "zonecontent");
+                if (this.perceelService){
+                    var parcelButton = new Button({
+                        label: "Selecteer perceel",
+                        class: "sidebar-button",
+                        onClick: lang.hitch(this, function () {
+                            var controller = this.mapController;
+                            var perceelService = this.perceelService;
+                            var map = controller.olMap;
+                            var eventKey = map.on('click', function (evt) {
+                                map.unByKey(eventKey);
+                                perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
+                                    var perceel = perceelService.readWfs(wfsresponse);
+                                    controller.drawPerceel(perceel);
+                                }, function (err) {
+                                    console.error(err);
+                                })
+                            });
+                        })
+                    });
+                    domConstruct.place(parcelButton.domNode, "zonecontent");
+                }
+                else {
+                    console.warn("No parcel service available, please add 'perceelUrl' to config.");
+                }
 
                 var buttonNode = domConstruct.create("div", {class: "button-bar"});
                 domConstruct.place(buttonNode, "zonecontent");
