@@ -39,7 +39,7 @@ define([
 
         createSidebar: function (node) {
             var sidebar = new Sidebar({}, node);
-//            query(".ol-attribution").addClass("sidebar-padding");
+            query(".ol-attribution").addClass("sidebar-padding");
 
             if (this.tabs.layers) {
                 sidebar.addTab('kaartlagen', 'Kaartlagen', 'layericon',
