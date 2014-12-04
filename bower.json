@@ -1,12 +1,17 @@
 {
   "name": "zoneerder",
-  "version": "1.0.0",
-  "main": "MapController.js",
+  "description": "A configurable openlayers 3 map wrapped in a dojo widget",
+  "version": "0.0.2",
+  "main": "ZoneMap.js",
   "ignore": [
-    "test"
+    "test",
+    "tests",
+    ".bowerrc",
+    ".gitignore",
+    "README.md"
   ],
   "dependencies": {
-    "dojo": "~1.10.1",
+    "dojo": "~1.10.2",
     "ol3": "https://github.com/openlayers/ol3.git#master",
     "proj4": "~2.3.3",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git",
