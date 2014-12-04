@@ -4,6 +4,8 @@ zoneerder
 Dojo widget met een configureerbare Openlayers 3 kaart.
 
 Voorbeeld config:
+
+```
     var zoneMapConfig = {
         buttons: {
             fullScreen: true,
@@ -21,3 +23,4 @@ Voorbeeld config:
         erfgoedUrl: 'http://localhost:6545/afbakeningen', //TODO: change to dev when available
         perceelUrl: 'http://localhost:6543/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'
     }
+```
