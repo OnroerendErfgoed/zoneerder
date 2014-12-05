@@ -6,9 +6,10 @@ define([
     "dojo/request/xhr",
     "dojo/_base/array",
     "dojo/json",
-    "ol"
+    "ol",
+    "proj4"
 
-], function (declare, WidgetBase, lang, request, xhr, array, JSON, ol) {
+], function (declare, WidgetBase, lang, request, xhr, array, JSON, ol, proj4) {
     return declare([WidgetBase], {
 
         mapContainer: null,

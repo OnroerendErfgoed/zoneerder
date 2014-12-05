@@ -10,6 +10,7 @@ var dojoConfig = {
         { name: 'mijit', location: '../mijit' },
         { name: 'zoneerder', location: '../src' },
         { name: 'crabpy_dojo', location: '../crabpy_dojo' },
-        { name: 'ol', location: '../ol3-dist', main: 'ol' }
+        { name: 'ol', location: '../ol3-dist', main: 'ol' },
+        { name: 'proj4', location: '../proj4/dist', main: 'proj4' }
     ]
 };
