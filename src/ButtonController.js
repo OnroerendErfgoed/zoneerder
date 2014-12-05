@@ -2,10 +2,12 @@ define([
     'dojo/_base/declare',
     'dojo/_base/lang',
     'mijit/_WidgetBase',
-    "dojo/query",
-    "ol",
-    "dojo/NodeList-dom"
-], function (declare, lang, WidgetBase, query, ol) {
+    'dojo/query',
+    'dojo/on',
+    'dojo/dom-construct',
+    'ol',
+    'dojo/NodeList-dom'
+], function (declare, lang, WidgetBase, query, on, domConstruct, ol) {
     return declare([WidgetBase], {
 
         map: null,
@@ -87,11 +89,15 @@ define([
                 geolocation.on('error', function(error) {
                     alert(error.message);
                 });
-                this.map.addControl(new ol.control.zoomtogeolocationcontrol({
+
+                var geolocationControl = this._createGeolocateControl;
+                ol.inherits(geolocationControl, ol.control.Control);
+                var zoomtoGeolocation = new geolocationControl({
                     tipLabel: 'Zoom naar je geolocatie',
                     zoomLevel: 18,
                     geolocation: geolocation
-                }));
+                });
+                this.map.addControl(zoomtoGeolocation);
                 query(".ol-zoom-geolocation").style({top: topPadding + "em"}).addClass("left-bar");
                 topPadding += buttonHeight;
             }
@@ -103,6 +109,39 @@ define([
                 query(".rotate").style({top: topPadding + "em"}).addClass("left-bar");
                 //topPadding += buttonHeight;
             }
+        },
+
+        _createGeolocateControl: function (opt_options) {
+
+            var options = opt_options || {};
+
+            var element = domConstruct.create("div", {
+                'className': 'geolocation ol-control ol-unselectable'
+            });
+
+            var button = domConstruct.create("button", {
+                'title' : options.tipLabel
+            }, element);
+
+            var self = this;
+            var handleZoomToLocation_ = function (evt) {
+                evt.preventDefault();
+                var view = self.getMap().getView();
+                var geolocation = options.geolocation;
+                geolocation.setTracking(true);
+                geolocation.once('change:position', function () {
+                    view.setCenter(geolocation.getPosition());
+                    if (options.zoomLevel) view.setZoom(options.zoomLevel);
+                    geolocation.setTracking(false);
+                });
+            };
+            on(button, "click", handleZoomToLocation_);
+
+            ol.control.Control.call(this, {
+                element: element,
+                target: options.target
+            });
+
         }
 
     });
