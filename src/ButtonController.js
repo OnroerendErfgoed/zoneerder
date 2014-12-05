@@ -3,8 +3,9 @@ define([
     'dojo/_base/lang',
     'mijit/_WidgetBase',
     "dojo/query",
+    "ol",
     "dojo/NodeList-dom"
-], function (declare, lang, WidgetBase, query) {
+], function (declare, lang, WidgetBase, query, ol) {
     return declare([WidgetBase], {
 
         map: null,
