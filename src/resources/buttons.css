@@ -25,6 +25,6 @@
 
 .geolocation button {
     line-height: 1.4em;
-    background-image: url('../resources/img/geolocate.png');
+    background-image: url('img/geolocate.png');
     background-size: contain;
 }

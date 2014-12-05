@@ -98,7 +98,7 @@ define([
                     geolocation: geolocation
                 });
                 this.map.addControl(zoomtoGeolocation);
-                query(".ol-zoom-geolocation").style({top: topPadding + "em"}).addClass("left-bar");
+                query(".geolocation").style({top: topPadding + "em"}).addClass("left-bar");
                 topPadding += buttonHeight;
             }
             if (zoomButtons.rotate) {
