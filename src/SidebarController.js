@@ -5,11 +5,13 @@ define([
     'dojo/Evented',
     "dojo/query",
     './sidebar/Sidebar',
+    './layerswitcher/LayerSwitcher',
     'crabpy_dojo/CrabpyWidget',
     'dojo/dom-construct',
     'dojo-form-controls/Button',
+    'ol',
     'dojo/NodeList-dom'
-], function (declare, lang, WidgetBase, Evented, query, Sidebar, CrabpyWidget, domConstruct, Button) {
+], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button, ol) {
     return declare([WidgetBase, Evented], {
 
         mapController: null,
@@ -45,10 +47,14 @@ define([
                 sidebar.addTab('kaartlagen', 'Kaartlagen', 'layericon',
                     'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
-                var layerSwitcher = new ol.control.LayerSwitcher({
-                    target: document.getElementById('kaartlagencontent')
+                var layerNode = domConstruct.create("div");
+                domConstruct.place(layerNode, "kaartlagencontent");
+
+                var layerSwitcher = new LayerSwitcher ({
+                    map: this.mapController.olMap,
+                    div: layerNode
                 });
-                this.mapController.olMap.addControl(layerSwitcher);
+                layerSwitcher.startup();
             }
 
             if (this.tabs.zoom) {
