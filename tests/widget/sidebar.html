@@ -19,6 +19,7 @@
             height: 600px;
         }
     </style>
+    <script src="../../proj4/dist/proj4.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -49,13 +50,11 @@
                 sidebar: {
                     layers: true,
                     zoom: true,
-                    draw: false,
+                    draw: true,
                     help: true
                 },
                 erfgoedUrl: 'http://localhost:6545/afbakeningen', //TODO: change to dev when available
-                perceelUrl: 'http://localhost:6543/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'
-                //TODO: change to dev when available
-//                perceelUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'
+                perceelUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'
             };
 
             // init widget
