@@ -9,9 +9,8 @@ define([
     'crabpy_dojo/CrabpyWidget',
     'dojo/dom-construct',
     'dojo-form-controls/Button',
-    'ol',
     'dojo/NodeList-dom'
-], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button, ol) {
+], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button) {
     return declare([WidgetBase, Evented], {
 
         mapController: null,
@@ -76,7 +75,7 @@ define([
                     onClick: function () {
                         var bbox = crabZoomer.getBbox();
                         if (bbox) {
-                            var extent = ol.proj.transformExtent(bbox, 'EPSG:31370', 'EPSG:900913');
+                            var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
                             self.mapController.zoomToExtent(extent);
                             crabZoomer.reset();
                             sidebar.close();
@@ -94,7 +93,7 @@ define([
                     onClick: function () {
                         var bbox = capakeyZoomer.getBbox();
                         if (bbox) {
-                            var extent = ol.proj.transformExtent(bbox, 'EPSG:31370', 'EPSG:900913');
+                            var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
                             self.mapController.zoomToExtent(extent);
                             capakeyZoomer.reset();
                             sidebar.close();
@@ -114,19 +113,34 @@ define([
                 var toolbarNode = domConstruct.create("div");
                 domConstruct.place(toolbarNode, "zonecontent");
 
-                var drawToolbar = new ol.control.DrawToolbar({
-                    mapController: self.mapController,
-                    target: toolbarNode
-                });
-                drawToolbar.on('save', function (evt) {
-                    evt.features.forEach(function (feature) {
-                        self.mapController.geoJsonLayer.getSource().addFeature(feature);
-                    });
-                });
-                drawToolbar.on('clear', function () {
-                    self.mapController.geoJsonLayer.getSource().clear();
-                });
-                self.mapController.olMap.addControl(drawToolbar);
+//                this.drawInteraction_ = new ol.interaction.Draw({
+//                    features: this.geoJsonLayer.getFeatures(),
+//                    type: /** @type {ol.geom.GeometryType} */ ('Polygon')
+//                });
+//                var drawButton = new Button({
+//                    label: "Teken polygoon",
+//                    class: "sidebar-button",
+//                    onClick: lang.hitch(this, function () {
+//                        var controller = this.mapController;
+//                        var map = controller.olMap;
+//                        map.addInteraction(this.drawInteraction_);
+//                    })
+//                });
+//                domConstruct.place(parcelButton.domNode, "zonecontent");
+
+//                var drawToolbar = new ol.control.DrawToolbar({
+//                    mapController: self.mapController,
+//                    target: toolbarNode
+//                });
+//                drawToolbar.on('save', function (evt) {
+//                    evt.features.forEach(function (feature) {
+//                        self.mapController.geoJsonLayer.getSource().addFeature(feature);
+//                    });
+//                });
+//                drawToolbar.on('clear', function () {
+//                    self.mapController.geoJsonLayer.getSource().clear();
+//                });
+//                self.mapController.olMap.addControl(drawToolbar);
 
                 var parcelTitle = domConstruct.create("h3", {innerHTML: "Perceel selecteren:"});
                 domConstruct.place(parcelTitle, "zonecontent");
