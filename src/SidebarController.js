@@ -19,6 +19,8 @@ define([
 
         tabs: null,
 
+        crabpyUrl: null,
+
         postCreate: function () {
             this.inherited(arguments);
             //Set default values
@@ -62,7 +64,7 @@ define([
 
                 var crabpyWidget = new CrabpyWidget({
                     name: "location",
-                    baseUrl: "https://dev-geo.onroerenderfgoed.be" //todo: move to config
+                    baseUrl: this.crabpyUrl
                 });
 
                 var crabNode = domConstruct.create("div");

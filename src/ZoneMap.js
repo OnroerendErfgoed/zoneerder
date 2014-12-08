@@ -72,7 +72,8 @@ define([
                 var sidebarController = new SidebarController({
                     mapController: mapController,
                     perceelService: this.perceelService,
-                    tabs: this.config.sidebar
+                    tabs: this.config.sidebar,
+                    crabpyUrl: this.config.crabpyUrl
                 });
                 var sidebar = sidebarController.createSidebar(this.sidebarNode);
                 sidebar.startup();
