@@ -25,6 +25,8 @@ define([
 
         erfgoedFeatures: null,
 
+        mapInteractions: null,
+
         postMixInProperties: function () {
             this.inherited(arguments);
         },
@@ -98,9 +100,9 @@ define([
                 visible: false
             });
 
-            var geoJsonLayer = this._createGeojsonLayer('Selectielaag', 'blue');
+            var geoJsonLayer = this._createGeojsonLayer('Zone', 'blue');
             this.geoJsonLayer = geoJsonLayer;
-            var oeFeaturesLayer = this._createGeojsonLayer('OE Features', 'red');
+            var oeFeaturesLayer = this._createGeojsonLayer('Erfgoed Objecten', 'red');
             this.oeFeaturesLayer = oeFeaturesLayer;
 
             var baseLayers = new ol.layer.Group({
@@ -136,6 +138,7 @@ define([
                 collapsible: false
             }));
 
+            this._createInteractions();
             //olMap.on('moveend', this._onMoveEnd);
 
             this.zoomToExtent(extentVlaanderen);
@@ -442,7 +445,35 @@ define([
         zoomToFeatures: function () {
             var oeFeaturesSource = this.oeFeaturesLayer.getSource();
             this.zoomToExtent(oeFeaturesSource.getExtent());
-        }
+        },
 
+        startDraw: function() {
+            var map = this.olMap;
+
+            var drawInteraction = this.mapInteractions.draw;
+            map.addInteraction(drawInteraction);
+
+            drawInteraction.on('drawend', function (evt) {
+                window.setTimeout(function() {
+                  map.removeInteraction(drawInteraction);
+                }, 0);
+            });
+        },
+
+        stopDraw: function () {
+             this.olMap.removeInteraction(this.mapInteractions.draw);
+        },
+
+        _createInteractions: function () {
+            var drawInteraction = new ol.interaction.Draw({
+                source: this.geoJsonLayer.getSource(),
+                type: /** @type {ol.geom.GeometryType} */ ('Polygon')
+            });
+
+            this.mapInteractions = {
+                draw: drawInteraction
+            };
+
+        }
     });
 });

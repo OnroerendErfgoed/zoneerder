@@ -115,34 +115,23 @@ define([
                 var toolbarNode = domConstruct.create("div");
                 domConstruct.place(toolbarNode, "zonecontent");
 
-//                this.drawInteraction_ = new ol.interaction.Draw({
-//                    features: this.geoJsonLayer.getFeatures(),
-//                    type: /** @type {ol.geom.GeometryType} */ ('Polygon')
-//                });
-//                var drawButton = new Button({
-//                    label: "Teken polygoon",
-//                    class: "sidebar-button",
-//                    onClick: lang.hitch(this, function () {
-//                        var controller = this.mapController;
-//                        var map = controller.olMap;
-//                        map.addInteraction(this.drawInteraction_);
-//                    })
-//                });
-//                domConstruct.place(parcelButton.domNode, "zonecontent");
+                var drawButton = new Button({
+                    label: "Teken polygoon",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.startDraw();
+                    })
+                });
+                domConstruct.place(drawButton.domNode, "zonecontent");
 
-//                var drawToolbar = new ol.control.DrawToolbar({
-//                    mapController: self.mapController,
-//                    target: toolbarNode
-//                });
-//                drawToolbar.on('save', function (evt) {
-//                    evt.features.forEach(function (feature) {
-//                        self.mapController.geoJsonLayer.getSource().addFeature(feature);
-//                    });
-//                });
-//                drawToolbar.on('clear', function () {
-//                    self.mapController.geoJsonLayer.getSource().clear();
-//                });
-//                self.mapController.olMap.addControl(drawToolbar);
+                var stopButton = new Button({
+                    label: "Stop met tekenen",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.stopDraw();
+                    })
+                });
+                domConstruct.place(stopButton.domNode, "zonecontent");
 
                 var parcelTitle = domConstruct.create("h3", {innerHTML: "Perceel selecteren:"});
                 domConstruct.place(parcelTitle, "zonecontent");
@@ -179,6 +168,7 @@ define([
                     class: "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         var zone = this.mapController.getZone();
+                        this.mapController.stopDraw();
                         if (zone) {
                             this.zone = zone;
                             sidebar.emit("zone.saved", zone);
@@ -194,6 +184,7 @@ define([
                     label: "Zone verwijderen",
                     class: "sidebar-button",
                     onClick: lang.hitch(this, function () {
+                        this.mapController.stopDraw();
                         this.mapController.geoJsonLayer.getSource().clear();
                         this.zone = null;
                         sidebar.emit("zone.deleted");
