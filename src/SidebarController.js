@@ -199,7 +199,7 @@ define([
                         this.mapController.stopAllDrawActions();
                         if (zone) {
                             this.zone = zone;
-                            sidebar.emit("zone.saved", zone);
+                            sidebar.emit("zone.saved", {zone: zone});
                         }
                         else {
                             alert("Er is nog geen zone beschikbaar om op te slaan.");
