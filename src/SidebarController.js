@@ -124,14 +124,14 @@ define([
                 });
                 domConstruct.place(drawButton.domNode, "zonecontent");
 
-                var stopButton = new Button({
-                    label: "Stop met tekenen",
+                var cancelDrawButton = new Button({
+                    label: "Annuleren",
                     class: "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.stopDraw();
                     })
                 });
-                domConstruct.place(stopButton.domNode, "zonecontent");
+                domConstruct.place(cancelDrawButton.domNode, "zonecontent");
 
                 var parcelTitle = domConstruct.create("h3", {innerHTML: "Perceel selecteren:"});
                 domConstruct.place(parcelTitle, "zonecontent");
@@ -141,25 +141,53 @@ define([
                         label: "Selecteer perceel",
                         class: "sidebar-button",
                         onClick: lang.hitch(this, function () {
-                            var controller = this.mapController;
-                            var perceelService = this.perceelService;
-                            var map = controller.olMap;
-                            var eventKey = map.on('click', function (evt) {
-                                map.unByKey(eventKey);
-                                perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
-                                    var perceel = perceelService.readWfs(wfsresponse);
-                                    controller.drawPerceel(perceel);
-                                }, function (err) {
-                                    console.error(err);
-                                })
-                            });
+                            this.mapController.startParcelSelect(this.perceelService);
                         })
                     });
                     domConstruct.place(parcelButton.domNode, "zonecontent");
+
+                    var cancelParcelButton = new Button({
+                        label: "Annuleren",
+                        class: "sidebar-button",
+                        onClick: lang.hitch(this, function () {
+                            this.mapController.stopParcelSelect();
+                        })
+                    });
+                    domConstruct.place(cancelParcelButton.domNode, "zonecontent");
                 }
                 else {
                     console.warn("No parcel service available, please add 'perceelUrl' to config.");
                 }
+
+                var removeTitle = domConstruct.create("h3", {innerHTML: "Polygoon of perceel verwijderen uit zone:"});
+                domConstruct.place(removeTitle, "zonecontent");
+
+                var selectButton = new Button({
+                    label: "Selecteer",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.startSelect();
+                    })
+                });
+                domConstruct.place(selectButton.domNode, "zonecontent");
+
+                var removeButton = new Button({
+                    label: "Vewijderen",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.removeSelectedItems();
+                    })
+                });
+                domConstruct.place(removeButton.domNode, "zonecontent");
+
+                var cancelRemoveButton = new Button({
+                    label: "Annuleren",
+                    class: "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.stopSelect();
+                    })
+                });
+                domConstruct.place(cancelRemoveButton.domNode, "zonecontent");
 
                 var buttonNode = domConstruct.create("div", {class: "button-bar"});
                 domConstruct.place(buttonNode, "zonecontent");
@@ -168,7 +196,7 @@ define([
                     class: "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         var zone = this.mapController.getZone();
-                        this.mapController.stopDraw();
+                        this.mapController.stopAllDrawActions();
                         if (zone) {
                             this.zone = zone;
                             sidebar.emit("zone.saved", zone);
@@ -184,7 +212,7 @@ define([
                     label: "Zone verwijderen",
                     class: "sidebar-button",
                     onClick: lang.hitch(this, function () {
-                        this.mapController.stopDraw();
+                        this.mapController.stopAllDrawActions();
                         this.mapController.geoJsonLayer.getSource().clear();
                         this.zone = null;
                         sidebar.emit("zone.deleted");

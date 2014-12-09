@@ -448,6 +448,8 @@ define([
         },
 
         startDraw: function() {
+            this.stopAllDrawActions();
+
             var map = this.olMap;
 
             var drawInteraction = this.mapInteractions.draw;
@@ -462,6 +464,65 @@ define([
 
         stopDraw: function () {
              this.olMap.removeInteraction(this.mapInteractions.draw);
+        },
+
+        startSelect: function () {
+            this.stopAllDrawActions();
+
+            var map = this.olMap;
+
+            var selectInteraction = new ol.interaction.Select({
+                condition: ol.events.condition.click,
+                layers: [this.geoJsonLayer]
+            });
+
+            this.mapInteractions.select = selectInteraction;
+            map.addInteraction(selectInteraction);
+        },
+
+        removeSelectedItems: function () {
+            var selectInteraction = this.mapInteractions.select;
+            if (selectInteraction){
+                var source = this.geoJsonLayer.getSource();
+                selectInteraction.getFeatures().forEach(function (feature) {
+                    source.removeFeature(feature);
+                });
+            }
+            this.stopSelect();
+
+        },
+
+        stopSelect: function () {
+            this.olMap.removeInteraction(this.mapInteractions.select);
+        },
+
+        startParcelSelect: function (perceelService) {
+            this.stopAllDrawActions();
+
+            var controller = this;
+            var map = this.olMap;
+            var eventKey = map.on('click', function (evt) {
+                map.unByKey(eventKey);
+                perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
+                    var perceel = perceelService.readWfs(wfsresponse);
+                    controller.drawPerceel(perceel);
+                }, function (err) {
+                    console.error(err);
+                })
+            });
+            this.mapInteractions.selectParcelKey = eventKey;
+        },
+
+        stopParcelSelect: function () {
+            if (this.mapInteractions.selectParcelKey) {
+                this.olMap.unByKey(this.mapInteractions.selectParcelKey);
+            }
+        },
+
+        stopAllDrawActions: function () {
+            this.stopDraw();
+            this.stopSelect();
+            this.stopParcelSelect();
         },
 
         _createInteractions: function () {
