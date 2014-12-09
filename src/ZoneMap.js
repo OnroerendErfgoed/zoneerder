@@ -78,9 +78,11 @@ define([
                 var sidebar = sidebarController.createSidebar(this.sidebarNode);
                 sidebar.startup();
                 sidebar.on("zone.saved", function(zone){
+                    zonemap.zone = zone;
                     zonemap.emit("zonechanged", zone);
                 });
                 sidebar.on("zone.deleted", function(){
+                    zonemap.zone = null;
                     zonemap.emit("zonechanged", null);
                 });
             }
