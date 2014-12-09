@@ -5,9 +5,10 @@ define([
     "dojo/request",
     "dojo/request/xhr",
     "dojo/_base/array",
-    "dojo/json"
+    "dojo/json",
+    "ol"
 
-], function (declare, WidgetBase, lang, request, xhr, array, JSON) {
+], function (declare, WidgetBase, lang, request, xhr, array, JSON, ol) {
     return declare([WidgetBase], {
 
         mapContainer: null,
@@ -20,11 +21,11 @@ define([
 
         oeFeaturesLayer: null,
 
-        readOnly: null,
-
         fullExtent: null,
 
         erfgoedFeatures: null,
+
+        mapInteractions: null,
 
         postMixInProperties: function () {
             this.inherited(arguments);
@@ -38,9 +39,6 @@ define([
             this.inherited(arguments);
 
             proj4.defs("EPSG:31370","+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
-            proj4.defs("EPSG:3857",  "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
-            proj4.defs("EPSG:900913","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
-            proj4.defs("EPSG:4326","+proj=longlat +datum=WGS84 +no_defs");
 
             this.pDef = ol.proj.get('EPSG:3857');
             this.pMerc = ol.proj.get('EPSG:900913');
@@ -102,9 +100,9 @@ define([
                 visible: false
             });
 
-            var geoJsonLayer = this._createGeojsonLayer('Selectielaag', 'blue');
+            var geoJsonLayer = this._createGeojsonLayer('Zone', 'blue');
             this.geoJsonLayer = geoJsonLayer;
-            var oeFeaturesLayer = this._createGeojsonLayer('OE Features', 'red');
+            var oeFeaturesLayer = this._createGeojsonLayer('Erfgoed Objecten', 'red');
             this.oeFeaturesLayer = oeFeaturesLayer;
 
             var baseLayers = new ol.layer.Group({
@@ -140,6 +138,7 @@ define([
                 collapsible: false
             }));
 
+            this._createInteractions();
             //olMap.on('moveend', this._onMoveEnd);
 
             this.zoomToExtent(extentVlaanderen);
@@ -426,6 +425,11 @@ define([
             return xyCoords;
         },
 
+
+        transformExtent: function (extent, source, destination) {
+            return ol.proj.transformExtent(extent, source, destination);
+        },
+
         zoomToZone: function () {
             var geojsonSource = this.geoJsonLayer.getSource();
             this.zoomToExtent(geojsonSource.getExtent());
@@ -441,7 +445,96 @@ define([
         zoomToFeatures: function () {
             var oeFeaturesSource = this.oeFeaturesLayer.getSource();
             this.zoomToExtent(oeFeaturesSource.getExtent());
-        }
+        },
 
+        startDraw: function() {
+            this.stopAllDrawActions();
+
+            var map = this.olMap;
+
+            var drawInteraction = this.mapInteractions.draw;
+            map.addInteraction(drawInteraction);
+
+            drawInteraction.on('drawend', function (evt) {
+                window.setTimeout(function() {
+                  map.removeInteraction(drawInteraction);
+                }, 0);
+            });
+        },
+
+        stopDraw: function () {
+             this.olMap.removeInteraction(this.mapInteractions.draw);
+        },
+
+        startSelect: function () {
+            this.stopAllDrawActions();
+
+            var map = this.olMap;
+
+            var selectInteraction = new ol.interaction.Select({
+                condition: ol.events.condition.click,
+                layers: [this.geoJsonLayer]
+            });
+
+            this.mapInteractions.select = selectInteraction;
+            map.addInteraction(selectInteraction);
+        },
+
+        removeSelectedItems: function () {
+            var selectInteraction = this.mapInteractions.select;
+            if (selectInteraction){
+                var source = this.geoJsonLayer.getSource();
+                selectInteraction.getFeatures().forEach(function (feature) {
+                    source.removeFeature(feature);
+                });
+            }
+            this.stopSelect();
+
+        },
+
+        stopSelect: function () {
+            this.olMap.removeInteraction(this.mapInteractions.select);
+        },
+
+        startParcelSelect: function (perceelService) {
+            this.stopAllDrawActions();
+
+            var controller = this;
+            var map = this.olMap;
+            var eventKey = map.on('click', function (evt) {
+                map.unByKey(eventKey);
+                perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
+                    var perceel = perceelService.readWfs(wfsresponse);
+                    controller.drawPerceel(perceel);
+                }, function (err) {
+                    console.error(err);
+                })
+            });
+            this.mapInteractions.selectParcelKey = eventKey;
+        },
+
+        stopParcelSelect: function () {
+            if (this.mapInteractions.selectParcelKey) {
+                this.olMap.unByKey(this.mapInteractions.selectParcelKey);
+            }
+        },
+
+        stopAllDrawActions: function () {
+            this.stopDraw();
+            this.stopSelect();
+            this.stopParcelSelect();
+        },
+
+        _createInteractions: function () {
+            var drawInteraction = new ol.interaction.Draw({
+                source: this.geoJsonLayer.getSource(),
+                type: /** @type {ol.geom.GeometryType} */ ('Polygon')
+            });
+
+            this.mapInteractions = {
+                draw: drawInteraction
+            };
+
+        }
     });
 });

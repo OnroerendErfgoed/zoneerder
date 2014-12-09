@@ -1,7 +1,8 @@
+@import "../../ol3-dist/ol.css";
 @import "buttons.css";
 @import "../sidebar/sidebar.css";
+@import "../layerswitcher/layerswitcher.css";
 @import "../openlayers/toolbarcontrol.css";
-@import "../openlayers/layerswitcher.css";
 
 .map {
     width: 100%;

@@ -1,5 +1,3 @@
-@import "../openlayers/zoomtogeolocationcontrol.css";
-
 .left-bar {
     left: 0.5em;
 }
@@ -22,5 +20,11 @@
 }
 .full-screen button.full-screen-true {
     background-image: url('img/fullscreeen_exit.png');
+    background-size: contain;
+}
+
+.geolocation button {
+    line-height: 1.4em;
+    background-image: url('img/geolocate.png');
     background-size: contain;
 }
