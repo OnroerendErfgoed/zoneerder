@@ -1,6 +1,6 @@
 define(
     [
-        "dojo/_base/declare",
+        "../dojo/_base/declare",
         "mijit/_WidgetBase",
         "mijit/_TemplatedMixin",
         "dojo/text!./Sidebar.html",
