@@ -4,6 +4,7 @@
   "version": "0.0.2",
   "main": "ZoneMap.js",
   "ignore": [
+    "doc",
     "test",
     "tests",
     ".bowerrc",

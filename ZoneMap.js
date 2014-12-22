@@ -7,8 +7,8 @@ define([
     './MapController',
     './ButtonController',
     './SidebarController',
-    './services/ErfgoedService',
-    './services/PerceelService',
+    './ErfgoedService',
+    './PerceelService',
     'dojo/Evented',
     'dojo/when',
     'dojo/NodeList-dom'
