@@ -4,7 +4,7 @@ var miniExcludes = {
 	amdExcludes = {
 	},
 	isJsRe = /\.js$/,
-	isTestRe = /\/testspackage.json\//;
+	isTestRe = /\/test\//;
 
 var profile = {
 	resourceTags: {
