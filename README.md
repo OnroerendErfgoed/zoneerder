@@ -20,7 +20,8 @@ Voorbeeld config:
             draw: true,
             help: true
         },
-        erfgoedUrl: 'http://localhost:6545/afbakeningen', //TODO: change to dev when available
-        perceelUrl: 'http://localhost:6543/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb'
-    }
+        erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
+        perceelUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
+        crabpyUrl: 'https://dev-geo.onroerenderfgoed.be'
+    };
 ```
