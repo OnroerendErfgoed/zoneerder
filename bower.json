@@ -16,9 +16,7 @@
     "proj4": "~2.3.3",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git",
     "dojo-form-controls": "https://github.com/sirprize/dojo-form-controls.git",
-    "mijit": "git://github.com/sirprize/mijit.git#61a80b3518"
-  },
-  "devDependencies": {
-    "ol3": "https://github.com/openlayers/ol3.git#master"
+    "mijit": "git://github.com/sirprize/mijit.git#61a80b3518",
+    "ol3-amd": "https://github.com/cedrikv/ol3-amd.git"
   }
 }
