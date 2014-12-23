@@ -377,8 +377,7 @@ define([
             if (multiPolygon.getCoordinates().length > 0) {
 
                 //transform to geojson
-                var geojson = this.geoJsonFormatter.writeGeometry(multiPolygon, {featureProjection: 'EPSG:31370'});
-
+                var geojson = this.geoJsonFormatter.writeGeometryObject(multiPolygon, {featureProjection: 'EPSG:31370'});
                 //hack to add crs. todo: remove when https://github.com/openlayers/ol3/issues/2078 is fixed
                 geojson.crs = {type: "name"};
                 geojson.crs.properties = {
