@@ -123,7 +123,7 @@ define([
 
         setFeatures: function(features) {
             this.mapController.clearFeatures();
-            array.forEach(features, lang.hitch(this, function (feature) {
+            array.forEach(features, function (feature) {
                 var geojson = feature.locatie.geometry;
                 //hack to set correct casing for geometry types (camelcase)
                 //TODO: remove when fixed in inventaris, ex:
@@ -142,7 +142,7 @@ define([
                     "name": "urn:ogc:def:crs:EPSG::4326"
                 };
                 this.mapController.drawErfgoedGeom(geojson, feature.id);
-            }));
+            }, this);
         }
 
     });
