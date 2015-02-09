@@ -73,7 +73,7 @@ define([
                 var self = this;
                 var zoomButton = new Button({
                     label: "Zoom naar adres",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: function () {
                         var bbox = crabZoomer.getBbox();
                         if (bbox) {
@@ -91,7 +91,7 @@ define([
                 var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
                 var capakeyZoomButton = new Button({
                     label: "Zoom naar perceel",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: function () {
                         var bbox = capakeyZoomer.getBbox();
                         if (bbox) {
@@ -117,7 +117,7 @@ define([
 
                 var drawButton = new Button({
                     label: "Teken polygoon",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.startDraw();
                     })
@@ -126,7 +126,7 @@ define([
 
                 var cancelDrawButton = new Button({
                     label: "Annuleren",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.stopDraw();
                     })
@@ -139,7 +139,7 @@ define([
                 if (this.perceelService){
                     var parcelButton = new Button({
                         label: "Selecteer perceel",
-                        class: "sidebar-button",
+                        'class': "sidebar-button",
                         onClick: lang.hitch(this, function () {
                             this.mapController.startParcelSelect(this.perceelService);
                         })
@@ -148,7 +148,7 @@ define([
 
                     var cancelParcelButton = new Button({
                         label: "Annuleren",
-                        class: "sidebar-button",
+                        'class': "sidebar-button",
                         onClick: lang.hitch(this, function () {
                             this.mapController.stopParcelSelect();
                         })
@@ -164,7 +164,7 @@ define([
 
                 var selectButton = new Button({
                     label: "Selecteer",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.startSelect();
                     })
@@ -173,7 +173,7 @@ define([
 
                 var removeButton = new Button({
                     label: "Vewijderen",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.removeSelectedItems();
                     })
@@ -182,18 +182,18 @@ define([
 
                 var cancelRemoveButton = new Button({
                     label: "Annuleren",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.stopSelect();
                     })
                 });
                 domConstruct.place(cancelRemoveButton.domNode, "zonecontent");
 
-                var buttonNode = domConstruct.create("div", {class: "button-bar"});
+                var buttonNode = domConstruct.create("div", {'class': "button-bar"});
                 domConstruct.place(buttonNode, "zonecontent");
                 var saveButton = new Button({
                     label: "Zone bewaren",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         var zone = this.mapController.getZone();
                         this.mapController.stopAllDrawActions();
@@ -210,7 +210,7 @@ define([
 
                 var deleteButton = new Button({
                     label: "Zone verwijderen",
-                    class: "sidebar-button",
+                    'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.stopAllDrawActions();
                         this.mapController.geoJsonLayer.getSource().clear();
