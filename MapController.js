@@ -162,7 +162,7 @@ define([
             });
             var oeFeaturesSource = this.oeFeaturesLayer.getSource();
             var geometry = formatter.readGeometry(geom, {
-                dataProjection: this.pWgs84,
+                dataProjection: ol.proj.get(geom.crs.properties.name),
                 featureProjection: this.pDef
             });
             var feature = new ol.Feature({

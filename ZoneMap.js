@@ -111,7 +111,8 @@ define([
                         return {
                             id: feature.id,
                             naam: feature.naam,
-                            uri: feature.uri
+                            uri: feature.uri,
+						  	geometrie: feature.geometrie
                         };
                     });
                 });
@@ -124,23 +125,7 @@ define([
         setFeatures: function(features) {
             this.mapController.clearFeatures();
             array.forEach(features, function (feature) {
-                var geojson = feature.locatie.geometry;
-                //hack to set correct casing for geometry types (camelcase)
-                //TODO: remove when fixed in inventaris, ex:
-                // https://inventaris.onroerenderfgoed.be/dibe/relict/4877
-                var upperType = feature.locatie.geometry.type.toUpperCase();
-                if (upperType == 'MULTIPOINT') {
-                    feature.locatie.geometry.type = 'MultiPoint';
-                }
-                else if (upperType == 'MULTIPOLYGON') {
-                    feature.locatie.geometry.type = 'MultiPolygon';
-                }
-
-                //hack to add crs. todo: remove when https://github.com/openlayers/ol3/issues/2078 is fixed
-                geojson.crs = {type: "name"};
-                geojson.crs.properties =  {
-                    "name": "urn:ogc:def:crs:EPSG::4326"
-                };
+                var geojson = feature.geometrie;
                 this.mapController.drawErfgoedGeom(geojson, feature.id);
             }, this);
         }
