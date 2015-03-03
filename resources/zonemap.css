@@ -11,10 +11,6 @@
     position: relative;
 }
 
-.sidebar-map .ol-scale-line {
+.map .ol-scale-line {
   background-color: rgba(39, 146, 195, 0.5);
-}
-
-.ol-attribution.ol-uncollapsible.sidebar-padding {
-    right: 40px;
 }

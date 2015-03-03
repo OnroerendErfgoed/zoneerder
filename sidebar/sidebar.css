@@ -32,14 +32,14 @@
     width: 100%;
     height: 40px;
     line-height: 40px;
-    color: #fff;
+    color: #ffffff;
     overflow: hidden;
     transition: all 80ms;
 }
 .sidebar-tabs > li:hover,
 .sidebar-tabs > li.active {
-    color: #fff;
-    background-color: rgb(39, 146, 195)
+    color: #ffffff;
+    background-color: rgb(39, 146, 195);
 }
 .sidebar-tabs > li > a {
     display: block;
@@ -56,14 +56,12 @@
     overflow-x: hidden;
     overflow-y: auto;
     border-radius: 4px 0 0 4px;
-    color: #4f4f4f;
     border-right: 1px solid #FFFFFF;
 }
 
 .sidebar-pane {
     display: none;
     right: 40px;
-    box-sizing: border-box;
     width: 260px;
     background-color: rgba(255, 255, 255, 0.90);
     height: 100%;
@@ -72,17 +70,13 @@
     display: block;
 }
 
-.sidebar-content h2{
+.sidebar-content h2 {
     height: 35px;
     line-height: 35px;
 	  margin: 0;
 	  padding: 0 0 0 10px;
-    font-family: "din-condensed-web", Arial, Georgia, serif;
-	  font-size: 1.2em;
-	  letter-spacing: 0.04em;
-    font-weight: normal;
     width: 100%;
-    border-bottom: 1px solid rgb(39, 146, 195);
+    border-bottom: 1px solid rgba(39, 146, 195, 0.9);
     background-color: rgb(39, 146, 195);
     color: #ffffff;
 }
@@ -92,9 +86,8 @@
 }
 
 .sidebar-content .pane-description {
-    font-size: smaller;
     padding-bottom: 5px;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 1px solid rgb(39, 146, 195);
 }
 
 .sidebar-content .pane-content > div {
@@ -108,18 +101,6 @@
 .sidebar-content .pane-content select {
     width: 100%;
     margin: 5px 0 0 0;
-    background-color: #fafafa;
-    background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+");
-    background-position: 100% center;
-    background-repeat: no-repeat;
-    border: 1px solid #cccccc;
-    font-size: 0.77778rem;
-    -webkit-appearance: none !important;
-}
-
-.sidebar-content .pane-content select:hover {
-    background-color: #f3f3f3;
-    border-color: #999999;
 }
 
 .sidebar-content .button-bar {
@@ -131,14 +112,9 @@
 }
 
 .sidebar-content button.sidebar-button {
-    border: 0 solid #007095;
+    border: none;
     cursor: pointer;
-    font-weight: normal;
-    line-height: normal;
-    position: relative;
-    text-align: center;
     padding: 5px;
-    font-size: smaller;
     background-color: rgba(39, 146, 195, 0.8);
     color: white;
     margin: 2px;
@@ -147,3 +123,7 @@
 .sidebar-content button.sidebar-button:hover {
     background-color: rgb(39, 146, 195);
  }
+
+.sidebar-map .ol-attribution.ol-uncollapsible.sidebar-padding {
+    right: 40px;
+}
