@@ -57,13 +57,13 @@
     overflow-y: auto;
     border-radius: 4px 0 0 4px;
     border-right: 1px solid #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.90);
 }
 
 .sidebar-pane {
     display: none;
     right: 40px;
     width: 260px;
-    background-color: rgba(255, 255, 255, 0.90);
     height: 100%;
 }
 .sidebar-pane.active {
