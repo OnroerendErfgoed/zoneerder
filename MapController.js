@@ -100,9 +100,17 @@ define([
                 visible: false
             });
 
-            var geoJsonLayer = this._createGeojsonLayer('Zone', 'blue');
+            var geoJsonLayer = this._createGeojsonLayer({
+              title: 'Zone',
+              color: 'rgb(39, 146, 195)',
+              fill:  'rgba(39, 146, 195, 0.3)'
+            });
             this.geoJsonLayer = geoJsonLayer;
-            var oeFeaturesLayer = this._createGeojsonLayer('Erfgoed Objecten', 'red');
+            var oeFeaturesLayer = this._createGeojsonLayer({
+              title: 'Erfgoed Objecten',
+              color: 'rgb(124, 47, 140)',
+              fill:  'rgba(124, 47, 140, 0.3)'
+            });
             this.oeFeaturesLayer = oeFeaturesLayer;
 
             var baseLayers = new ol.layer.Group({
@@ -279,7 +287,7 @@ define([
             });
         },
 
-        _createGeojsonLayer: function(title, color) {
+        _createGeojsonLayer: function(options) {
             var vectorSource = new ol.source.GeoJSON(
             /** @type {olx.source.GeoJSONOptions} */ ({
               object: {
@@ -300,7 +308,7 @@ define([
                     font: '10px Verdana',
                     text: text,
                     fill: new ol.style.Fill({
-                      color: color
+                      color: options.color
                     }),
                     stroke: new ol.style.Stroke({
                       color: '#fff',
@@ -319,10 +327,10 @@ define([
                         image: new ol.style.Circle({
                             radius: resolution < 3 ? 10 : 5,
                             fill: new ol.style.Fill({
-                                color: color
+                                color: options.color
                             }),
                             stroke: new ol.style.Stroke({
-                                color: color,
+                                color: options.color,
                                 width: 1
                             })
                         }),
@@ -332,11 +340,11 @@ define([
                 else {
                     style = new ol.style.Style({
                         stroke: new ol.style.Stroke({
-                            color: color,
+                            color: options.color,
                             width: 1
                         }),
                         fill: new ol.style.Fill({
-                            color: color == 'red' ? 'rgba(255, 0, 0, 0.3)' : 'rgba(0, 0, 255, 0.3)'
+                            color: options.fill
                         }),
                         text: styleText
                     });
@@ -346,7 +354,7 @@ define([
             };
 
             return new ol.layer.Vector({
-                title: title,
+                title: options.title,
                 source: vectorSource,
                 style: styleFunction,
                 type: 'overlay',
