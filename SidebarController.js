@@ -45,7 +45,7 @@ define([
             query(".ol-attribution").addClass("sidebar-padding");
 
             if (this.tabs.layers) {
-                sidebar.addTab('kaartlagen', 'Kaartlagen', 'layericon',
+                sidebar.addTab('kaartlagen', 'Kaartlagen', 'fa-list',
                     'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
                 var layerNode = domConstruct.create("div");
@@ -59,7 +59,7 @@ define([
             }
 
             if (this.tabs.zoom) {
-                sidebar.addTab('zoom', 'Zoom naar', 'zoomicon',
+                sidebar.addTab('zoom', 'Zoom naar', 'fa-search',
                     'Hier kan je naar een perceel of adres zoomen (je moet minstens een gemeente kiezen).');
 
                 var crabpyWidget = new CrabpyWidget({
@@ -106,7 +106,7 @@ define([
             }
 
             if (this.tabs.draw) {
-                sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan. ' +
+                sidebar.addTab('zone', 'Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan. ' +
                     'Je kan één of meerdere polygonen intekenen en/of percelen selecteren.');
 
                 var drawTitle = domConstruct.create("h3", {innerHTML: "Polygoon tekenen:"});
@@ -222,7 +222,7 @@ define([
             }
 
             if (this.tabs.help) {
-                sidebar.addTab('help', 'Help', 'helpicon', 'help desc');
+                sidebar.addTab('help', 'Help', 'fa-question-circle', 'help desc');
             }
 
             return sidebar;
