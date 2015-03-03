@@ -106,15 +106,7 @@ define([
             if (this.erfgoedService) {
                 var promise = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
                 return promise.then(function (data) {
-                    var features = JSON.parse(data);
-                    return array.map(features, function (feature) {
-                        return {
-                            id: feature.id,
-                            naam: feature.naam,
-                            uri: feature.uri,
-						  	geometrie: feature.geometrie
-                        };
-                    });
+                    return JSON.parse(data);
                 });
             }
             else {
