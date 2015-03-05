@@ -31,7 +31,7 @@ define([
             element.className = 'ol-unselectable ol-control layer-switcher';
 
             this.panel = document.createElement('div');
-            this.panel.className = 'panel';
+            this.panel.className = 'layerpanel';
 
             element.appendChild(this.panel);
 
