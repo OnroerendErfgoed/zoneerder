@@ -110,7 +110,10 @@ function (declare, WidgetBase, TemplatedMixin, template, query, domClass, domCon
         addTab: function (id, label, iconClass, description) {
             //add tab nav to navNode
             domConstruct.create('li', {
-                'innerHTML': '<a href="#' + id + '" role="tab" class="icon ' + iconClass + '" title="' + label + '"></a>'
+                'innerHTML': '' +
+                '<a href="#' + id + '" role="tab" title="' + label + '">' +
+                ' <i class="fa fa-lg ' + iconClass + '"></i>' +
+                '</a>'
             }, this.navNode);
 
             //add tab pane to contentNode
@@ -145,6 +148,12 @@ function (declare, WidgetBase, TemplatedMixin, template, query, domClass, domCon
                 'id': id + 'content',
                 'class': 'pane-content'
             }, paneBody);
+
+
+            domConstruct.create('div', {
+                'id': id + 'footer',
+                'class': 'pane-footer'
+            }, pane);
 
         }
 

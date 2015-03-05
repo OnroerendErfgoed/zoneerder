@@ -1,12 +1,16 @@
+div.ol-control.left-bar button {
+    background-color: rgba(39, 146, 195, 0.5);
+}
+
 .left-bar {
     left: 0.5em;
 }
 
 .zoom .zoom-in {
-  border-radius: 2px 2px 0 0;
+    border-radius: 2px 2px 0 0;
 }
 .zoom .zoom-out {
-  border-radius: 0 0 2px 2px;
+    border-radius: 0 0 2px 2px;
 }
 
 .fullextent button {

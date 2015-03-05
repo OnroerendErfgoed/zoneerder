@@ -45,7 +45,7 @@ define([
             query(".ol-attribution").addClass("sidebar-padding");
 
             if (this.tabs.layers) {
-                sidebar.addTab('kaartlagen', 'Kaartlagen', 'layericon',
+                sidebar.addTab('kaartlagen', 'Kaartlagen', 'fa-list',
                     'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
                 var layerNode = domConstruct.create("div");
@@ -59,7 +59,7 @@ define([
             }
 
             if (this.tabs.zoom) {
-                sidebar.addTab('zoom', 'Zoom naar', 'zoomicon',
+                sidebar.addTab('zoom', 'Zoom naar', 'fa-search',
                     'Hier kan je naar een perceel of adres zoomen (je moet minstens een gemeente kiezen).');
 
                 var crabpyWidget = new CrabpyWidget({
@@ -106,13 +106,10 @@ define([
             }
 
             if (this.tabs.draw) {
-                sidebar.addTab('zone', 'Bepaal zone', 'zoneicon', 'Baken een zone af voor het beheersplan. ' +
+                sidebar.addTab('zone', 'Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan. ' +
                     'Je kan één of meerdere polygonen intekenen en/of percelen selecteren.');
 
-                var drawTitle = domConstruct.create("h3", {innerHTML: "Polygoon tekenen:"});
-                domConstruct.place(drawTitle, "zonecontent");
-
-                var toolbarNode = domConstruct.create("div");
+                var toolbarNode = domConstruct.create("div", {'class': 'buttons'});
                 domConstruct.place(toolbarNode, "zonecontent");
 
                 var drawButton = new Button({
@@ -122,19 +119,7 @@ define([
                         this.mapController.startDraw();
                     })
                 });
-                domConstruct.place(drawButton.domNode, "zonecontent");
-
-                var cancelDrawButton = new Button({
-                    label: "Annuleren",
-                    'class': "sidebar-button",
-                    onClick: lang.hitch(this, function () {
-                        this.mapController.stopDraw();
-                    })
-                });
-                domConstruct.place(cancelDrawButton.domNode, "zonecontent");
-
-                var parcelTitle = domConstruct.create("h3", {innerHTML: "Perceel selecteren:"});
-                domConstruct.place(parcelTitle, "zonecontent");
+                domConstruct.place(drawButton.domNode, toolbarNode);
 
                 if (this.perceelService){
                     var parcelButton = new Button({
@@ -144,41 +129,47 @@ define([
                             this.mapController.startParcelSelect(this.perceelService);
                         })
                     });
-                    domConstruct.place(parcelButton.domNode, "zonecontent");
-
-                    var cancelParcelButton = new Button({
-                        label: "Annuleren",
-                        'class': "sidebar-button",
-                        onClick: lang.hitch(this, function () {
-                            this.mapController.stopParcelSelect();
-                        })
-                    });
-                    domConstruct.place(cancelParcelButton.domNode, "zonecontent");
+                    domConstruct.place(parcelButton.domNode, toolbarNode);
                 }
                 else {
                     console.warn("No parcel service available, please add 'perceelUrl' to config.");
                 }
 
-                var removeTitle = domConstruct.create("h3", {innerHTML: "Polygoon of perceel verwijderen uit zone:"});
+                var cancelDrawButton = new Button({
+                    label: "Annuleren",
+                    'class': "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.stopDraw();
+                        this.mapController.stopParcelSelect();
+                    })
+                });
+                domConstruct.place(cancelDrawButton.domNode, toolbarNode);
+
+
+
+                var removeTitle = domConstruct.create("p", {innerHTML: "Verwijder een polygoon uit de selectie"});
                 domConstruct.place(removeTitle, "zonecontent");
 
+                var toolbarNode2 = domConstruct.create("div", {'class': 'buttons'});
+                domConstruct.place(toolbarNode2, "zonecontent");
+
                 var selectButton = new Button({
-                    label: "Selecteer",
+                    label: "Kies polygoon",
                     'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.startSelect();
                     })
                 });
-                domConstruct.place(selectButton.domNode, "zonecontent");
+                domConstruct.place(selectButton.domNode, toolbarNode2);
 
                 var removeButton = new Button({
-                    label: "Vewijderen",
+                    label: "Verwijderen",
                     'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.removeSelectedItems();
                     })
                 });
-                domConstruct.place(removeButton.domNode, "zonecontent");
+                domConstruct.place(removeButton.domNode, toolbarNode2);
 
                 var cancelRemoveButton = new Button({
                     label: "Annuleren",
@@ -187,10 +178,8 @@ define([
                         this.mapController.stopSelect();
                     })
                 });
-                domConstruct.place(cancelRemoveButton.domNode, "zonecontent");
+                domConstruct.place(cancelRemoveButton.domNode, toolbarNode2);
 
-                var buttonNode = domConstruct.create("div", {'class': "button-bar"});
-                domConstruct.place(buttonNode, "zonecontent");
                 var saveButton = new Button({
                     label: "Zone bewaren",
                     'class': "sidebar-button",
@@ -206,7 +195,7 @@ define([
                         }
                     })
                 });
-                domConstruct.place(saveButton.domNode, buttonNode);
+                domConstruct.place(saveButton.domNode, "zonefooter");
 
                 var deleteButton = new Button({
                     label: "Zone verwijderen",
@@ -218,11 +207,11 @@ define([
                         sidebar.emit("zone.deleted");
                     })
                 });
-                domConstruct.place(deleteButton.domNode, buttonNode);
+                domConstruct.place(deleteButton.domNode, "zonefooter");
             }
 
             if (this.tabs.help) {
-                sidebar.addTab('help', 'Help', 'helpicon', 'help desc');
+                sidebar.addTab('help', 'Help', 'fa-question-circle', 'help desc');
             }
 
             return sidebar;

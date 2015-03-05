@@ -17,6 +17,7 @@
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git",
     "dojo-form-controls": "https://github.com/sirprize/dojo-form-controls.git",
     "mijit": "git://github.com/sirprize/mijit.git#61a80b3518",
-    "ol": "https://github.com/cedrikv/ol3-amd.git"
+    "ol": "https://github.com/cedrikv/ol3-amd.git",
+    "font-awesome": "~4.3.0"
   }
 }

@@ -11,14 +11,6 @@
     position: relative;
 }
 
-/* Temp fix for attribution bug */
-.ol-attribution ul {
-   max-width: 100%;
-}
-.sidebar-padding {
-    padding-right: 46px;
-}
-
-.sidebar-content .ol-toolbar {
-    position: relative;
+.map .ol-scale-line {
+  background-color: rgba(39, 146, 195, 0.5);
 }
