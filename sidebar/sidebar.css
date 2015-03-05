@@ -86,10 +86,6 @@
     flex: 1;
 }
 
-.sidebar-content .pane-description {
-    padding-bottom: 5px;
-}
-
 .sidebar-content .pane-footer {
     padding: 10px;
     display: flex;
@@ -98,8 +94,12 @@
 }
 
 .sidebar-content .pane-content > div {
-    padding: 10px 0;
+    padding: 10px 0 0 0;
+}
+
+.sidebar-content .pane-content > div.buttons {
     border-bottom: 2px solid #8FC6DB;
+    padding: 5px 0 10px 0;
 }
 
 .sidebar-content .pane-content fieldset {
