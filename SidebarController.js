@@ -147,14 +147,14 @@ define([
 
 
 
-                var removeTitle = domConstruct.create("h5", {innerHTML: "Verwijder een polygoon uit de selectie: "});
+                var removeTitle = domConstruct.create("p", {innerHTML: "Verwijder een polygoon uit de selectie"});
                 domConstruct.place(removeTitle, "zonecontent");
 
                 var toolbarNode2 = domConstruct.create("div", {'class': 'buttons'});
                 domConstruct.place(toolbarNode2, "zonecontent");
 
                 var selectButton = new Button({
-                    label: "Selecteren",
+                    label: "Kies polygoon",
                     'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.startSelect();
@@ -163,7 +163,7 @@ define([
                 domConstruct.place(selectButton.domNode, toolbarNode2);
 
                 var removeButton = new Button({
-                    label: "Vewijderen",
+                    label: "Verwijderen",
                     'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.removeSelectedItems();
@@ -180,8 +180,6 @@ define([
                 });
                 domConstruct.place(cancelRemoveButton.domNode, toolbarNode2);
 
-                var buttonNode = domConstruct.create("div", {'class': "button-bar"});
-                domConstruct.place(buttonNode, "zonecontent");
                 var saveButton = new Button({
                     label: "Zone bewaren",
                     'class': "sidebar-button",
@@ -197,7 +195,7 @@ define([
                         }
                     })
                 });
-                domConstruct.place(saveButton.domNode, buttonNode);
+                domConstruct.place(saveButton.domNode, "zonefooter");
 
                 var deleteButton = new Button({
                     label: "Zone verwijderen",
@@ -209,7 +207,7 @@ define([
                         sidebar.emit("zone.deleted");
                     })
                 });
-                domConstruct.place(deleteButton.domNode, buttonNode);
+                domConstruct.place(deleteButton.domNode, "zonefooter");
             }
 
             if (this.tabs.help) {

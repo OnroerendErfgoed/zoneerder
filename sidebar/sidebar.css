@@ -21,7 +21,6 @@
     bottom: 0;
     right: 0;
     width: 40px;
-    height: 100%;
     margin: 0;
     padding: 35px 0 0 0;
     background-color: rgba(39, 146, 195, 0.6);
@@ -67,7 +66,9 @@
     height: 100%;
 }
 .sidebar-pane.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .sidebar-content h2 {
@@ -75,7 +76,6 @@
     line-height: 35px;
     margin: 0;
     padding: 0 0 0 10px;
-    width: 100%;
     border-bottom: 1px solid rgba(39, 146, 195, 0.9);
     background-color: rgb(39, 146, 195);
     color: #ffffff;
@@ -83,13 +83,21 @@
 
 .sidebar-content .pane-body {
     padding: 10px;
+    flex: 1;
 }
 
 .sidebar-content .pane-description {
     padding-bottom: 5px;
 }
 
-.sidebar-content .pane-content > div:not(:last-child) {
+.sidebar-content .pane-footer {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.sidebar-content .pane-content > div {
     margin-top: 10px;
     padding-bottom: 20px;
     border-bottom: 2px solid #8FC6DB;
@@ -111,25 +119,20 @@
     justify-content: space-around;
 }
 
-.sidebar-content .pane-content div.buttons button {
-    width: 110px;
-    margin: 10px 0;
-}
-
 .sidebar-content .button-bar {
     text-align: center;
     padding: 10px;
-    position: absolute;
-    bottom: 0;
 }
 
 .sidebar-content button.sidebar-button {
     border: none;
     cursor: pointer;
-    padding: 5px;
+    padding: 5px 0;
     background-color: rgba(39, 146, 195, 0.8);
     color: white;
-    margin: 2px;
+    margin: 10px 5px;
+    flex-grow: 1;
+    max-width: 115px;
 }
 
 .sidebar-content button.sidebar-button:hover {

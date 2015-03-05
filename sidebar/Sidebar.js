@@ -149,6 +149,12 @@ function (declare, WidgetBase, TemplatedMixin, template, query, domClass, domCon
                 'class': 'pane-content'
             }, paneBody);
 
+
+            domConstruct.create('div', {
+                'id': id + 'footer',
+                'class': 'pane-footer'
+            }, pane);
+
         }
 
 	});
