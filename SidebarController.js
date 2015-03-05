@@ -147,7 +147,7 @@ define([
 
 
 
-                var removeTitle = domConstruct.create("p", {innerHTML: "Verwijder een polygoon uit de selectie"});
+                var removeTitle = domConstruct.create("div", {innerHTML: "Verwijder een polygoon uit de selectie"});
                 domConstruct.place(removeTitle, "zonecontent");
 
                 var toolbarNode2 = domConstruct.create("div", {'class': 'buttons'});
