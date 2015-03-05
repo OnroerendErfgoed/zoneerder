@@ -91,7 +91,7 @@
 }
 
 .sidebar-content .pane-footer {
-    width: 100%;
+    padding: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
@@ -127,7 +127,7 @@
 .sidebar-content button.sidebar-button {
     border: none;
     cursor: pointer;
-    padding: 5px 0;
+    padding: 5px;
     background-color: rgba(39, 146, 195, 0.8);
     color: white;
     margin: 10px 5px;
