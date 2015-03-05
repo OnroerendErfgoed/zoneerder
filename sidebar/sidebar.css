@@ -73,8 +73,8 @@
 .sidebar-content h2 {
     height: 35px;
     line-height: 35px;
-	  margin: 0;
-	  padding: 0 0 0 10px;
+    margin: 0;
+    padding: 0 0 0 10px;
     width: 100%;
     border-bottom: 1px solid rgba(39, 146, 195, 0.9);
     background-color: rgb(39, 146, 195);
@@ -82,16 +82,17 @@
 }
 
 .sidebar-content .pane-body {
-    padding: 5px;
+    padding: 10px;
 }
 
 .sidebar-content .pane-description {
     padding-bottom: 5px;
-    border-bottom: 1px solid rgb(39, 146, 195);
 }
 
-.sidebar-content .pane-content > div {
+.sidebar-content .pane-content > div:not(:last-child) {
     margin-top: 10px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #8FC6DB;
 }
 
 .sidebar-content .pane-content fieldset {
@@ -103,8 +104,19 @@
     margin: 5px 0 0 0;
 }
 
+.sidebar-content .pane-content div.buttons {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.sidebar-content .pane-content div.buttons button {
+    width: 110px;
+    margin: 10px 0;
+}
+
 .sidebar-content .button-bar {
-    border-top: 2px solid #e5e5e5;
     text-align: center;
     padding: 10px;
     position: absolute;

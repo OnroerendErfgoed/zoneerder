@@ -109,10 +109,7 @@ define([
                 sidebar.addTab('zone', 'Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan. ' +
                     'Je kan één of meerdere polygonen intekenen en/of percelen selecteren.');
 
-                var drawTitle = domConstruct.create("h3", {innerHTML: "Polygoon tekenen:"});
-                domConstruct.place(drawTitle, "zonecontent");
-
-                var toolbarNode = domConstruct.create("div");
+                var toolbarNode = domConstruct.create("div", {'class': 'buttons'});
                 domConstruct.place(toolbarNode, "zonecontent");
 
                 var drawButton = new Button({
@@ -122,19 +119,7 @@ define([
                         this.mapController.startDraw();
                     })
                 });
-                domConstruct.place(drawButton.domNode, "zonecontent");
-
-                var cancelDrawButton = new Button({
-                    label: "Annuleren",
-                    'class': "sidebar-button",
-                    onClick: lang.hitch(this, function () {
-                        this.mapController.stopDraw();
-                    })
-                });
-                domConstruct.place(cancelDrawButton.domNode, "zonecontent");
-
-                var parcelTitle = domConstruct.create("h3", {innerHTML: "Perceel selecteren:"});
-                domConstruct.place(parcelTitle, "zonecontent");
+                domConstruct.place(drawButton.domNode, toolbarNode);
 
                 if (this.perceelService){
                     var parcelButton = new Button({
@@ -144,32 +129,38 @@ define([
                             this.mapController.startParcelSelect(this.perceelService);
                         })
                     });
-                    domConstruct.place(parcelButton.domNode, "zonecontent");
-
-                    var cancelParcelButton = new Button({
-                        label: "Annuleren",
-                        'class': "sidebar-button",
-                        onClick: lang.hitch(this, function () {
-                            this.mapController.stopParcelSelect();
-                        })
-                    });
-                    domConstruct.place(cancelParcelButton.domNode, "zonecontent");
+                    domConstruct.place(parcelButton.domNode, toolbarNode);
                 }
                 else {
                     console.warn("No parcel service available, please add 'perceelUrl' to config.");
                 }
 
-                var removeTitle = domConstruct.create("h3", {innerHTML: "Polygoon of perceel verwijderen uit zone:"});
+                var cancelDrawButton = new Button({
+                    label: "Annuleren",
+                    'class': "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.stopDraw();
+                        this.mapController.stopParcelSelect();
+                    })
+                });
+                domConstruct.place(cancelDrawButton.domNode, toolbarNode);
+
+
+
+                var removeTitle = domConstruct.create("h5", {innerHTML: "Verwijder een polygoon uit de selectie: "});
                 domConstruct.place(removeTitle, "zonecontent");
 
+                var toolbarNode2 = domConstruct.create("div", {'class': 'buttons'});
+                domConstruct.place(toolbarNode2, "zonecontent");
+
                 var selectButton = new Button({
-                    label: "Selecteer",
+                    label: "Selecteren",
                     'class': "sidebar-button",
                     onClick: lang.hitch(this, function () {
                         this.mapController.startSelect();
                     })
                 });
-                domConstruct.place(selectButton.domNode, "zonecontent");
+                domConstruct.place(selectButton.domNode, toolbarNode2);
 
                 var removeButton = new Button({
                     label: "Vewijderen",
@@ -178,7 +169,7 @@ define([
                         this.mapController.removeSelectedItems();
                     })
                 });
-                domConstruct.place(removeButton.domNode, "zonecontent");
+                domConstruct.place(removeButton.domNode, toolbarNode2);
 
                 var cancelRemoveButton = new Button({
                     label: "Annuleren",
@@ -187,7 +178,7 @@ define([
                         this.mapController.stopSelect();
                     })
                 });
-                domConstruct.place(cancelRemoveButton.domNode, "zonecontent");
+                domConstruct.place(cancelRemoveButton.domNode, toolbarNode2);
 
                 var buttonNode = domConstruct.create("div", {'class': "button-bar"});
                 domConstruct.place(buttonNode, "zonecontent");
