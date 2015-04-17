@@ -534,6 +534,12 @@ define([
             this.stopParcelSelect();
         },
 
+        startInputWKT: function (wktInput) {
+            this.stopAllDrawActions();
+            console.log(wktInput);
+
+        },
+
         _createInteractions: function () {
             var drawInteraction = new ol.interaction.Draw({
                 source: this.geoJsonLayer.getSource(),
