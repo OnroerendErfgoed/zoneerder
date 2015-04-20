@@ -201,19 +201,19 @@ define([
         },
 
         drawWKTzone: function(wkt) {
-					  var wktParser = new ol.format.WKT();
-					  var wktSource = this.geoJsonLayer.getSource();
-					  try {
-							var featureFromWKT = wktParser.readFeature(wkt, {
-								dataProjection: this.pLam,
-								featureProjection: this.pDef
-							});
-						}
-						catch (error){
-							alert("Dit is een ongeldige WKT geometrie.")
-						}
-					  wktSource.addFeature(featureFromWKT);
-					  this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
+            var wktParser = new ol.format.WKT();
+            var wktSource = this.geoJsonLayer.getSource();
+            try {
+                var featureFromWKT = wktParser.readFeature(wkt, {
+                    dataProjection: this.pLam,
+                    featureProjection: this.pDef
+            	});
+            }
+            catch (error){
+						    alert("Dit is een ongeldige WKT geometrie.")
+            }
+            wktSource.addFeature(featureFromWKT);
+            this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
         },
 
 
@@ -553,8 +553,7 @@ define([
 
         startInputWKT: function (wktInput) {
             this.stopAllDrawActions();
-            console.log(wktInput);
-            this.drawWKTzone(wktInput, 'test')
+            this.drawWKTzone(wktInput)
         },
 
         _createInteractions: function () {
