@@ -204,7 +204,7 @@ define([
 					  var wktParser = new ol.format.WKT();
 					  var wktSource = this.geoJsonLayer.getSource();
 					  try {
-							var geometryFromWKT = wktParser.readFeature(wkt, {
+							var featureFromWKT = wktParser.readFeature(wkt, {
 								dataProjection: this.pLam,
 								featureProjection: this.pDef
 							});
@@ -212,7 +212,8 @@ define([
 						catch (error){
 							alert("Dit is een ongeldige WKT geometrie.")
 						}
-					  wktSource.addFeature(geometryFromWKT);
+					  wktSource.addFeature(featureFromWKT);
+					  this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
         },
 
 
