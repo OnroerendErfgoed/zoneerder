@@ -167,15 +167,6 @@ define([
                 });
                 domConstruct.place(inputButton.domNode, toolbarNode3);
 
-                var cancelInputButton = new Button({
-                    label: "Annuleren",
-                    'class': "sidebar-button",
-                    onClick: lang.hitch(this, function () {
-                        //this.mapController.stopInputWKT();
-                    })
-                });
-                domConstruct.place(cancelInputButton.domNode, toolbarNode3);
-
 
                 var removeTitle = domConstruct.create("div", {innerHTML: "Verwijder een polygoon uit de selectie"});
                 domConstruct.place(removeTitle, "zonecontent");
