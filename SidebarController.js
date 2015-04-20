@@ -154,6 +154,7 @@ define([
                 domConstruct.place(toolbarNode3, "zonecontent");
 
                 var inputWKT = new TextArea({
+									class: "sidebar-textarea"
                 });
                 domConstruct.place(inputWKT.domNode, toolbarNode3);
 
