@@ -9,8 +9,9 @@ define([
     'crabpy_dojo/CrabpyWidget',
     'dojo/dom-construct',
     'dojo-form-controls/Button',
+    'dojo-form-controls/Textarea',
     'dojo/NodeList-dom'
-], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button) {
+], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button, TextArea) {
     return declare([WidgetBase, Evented], {
 
         mapController: null,
@@ -145,6 +146,26 @@ define([
                 });
                 domConstruct.place(cancelDrawButton.domNode, toolbarNode);
 
+
+                var inputTitle = domConstruct.create("div", {innerHTML: "Gebruik de WKT geometrie van een polygoon (projectie in Lambert 72)."});
+                domConstruct.place(inputTitle, "zonecontent");
+
+                var toolbarNode3 = domConstruct.create("div", {'class': 'buttons'});
+                domConstruct.place(toolbarNode3, "zonecontent");
+
+                var inputWKT = new TextArea({
+								    class: "sidebar-textarea"
+                });
+                domConstruct.place(inputWKT.domNode, toolbarNode3);
+
+                var inputButton = new Button({
+                    label: "Gebruik polygoon",
+                    'class': "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.startInputWKT(inputWKT.value);
+                    })
+                });
+                domConstruct.place(inputButton.domNode, toolbarNode3);
 
 
                 var removeTitle = domConstruct.create("div", {innerHTML: "Verwijder een polygoon uit de selectie"});

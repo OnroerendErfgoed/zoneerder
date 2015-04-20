@@ -200,6 +200,23 @@ define([
             }
         },
 
+        drawWKTzone: function(wkt) {
+            var wktParser = new ol.format.WKT();
+            var wktSource = this.geoJsonLayer.getSource();
+            try {
+                var featureFromWKT = wktParser.readFeature(wkt, {
+                    dataProjection: this.pLam,
+                    featureProjection: this.pDef
+            	});
+            }
+            catch (error){
+						    alert("Dit is een ongeldige WKT geometrie.")
+            }
+            wktSource.addFeature(featureFromWKT);
+            this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
+        },
+
+
         _onMoveEnd: function (evt) {
             var olMap = evt.map;
             var mapview = olMap.getView();
@@ -532,6 +549,11 @@ define([
             this.stopDraw();
             this.stopSelect();
             this.stopParcelSelect();
+        },
+
+        startInputWKT: function (wktInput) {
+            this.stopAllDrawActions();
+            this.drawWKTzone(wktInput)
         },
 
         _createInteractions: function () {

@@ -134,6 +134,12 @@
     max-width: 115px;
 }
 
+.sidebar-content textarea.sidebar-textarea {
+    width:240px;
+    height:50px;
+    max-width: 240px;
+}
+
 .sidebar-content button.sidebar-button:hover {
     background-color: rgb(39, 146, 195);
  }
