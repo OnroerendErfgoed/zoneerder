@@ -147,7 +147,7 @@ define([
                 domConstruct.place(cancelDrawButton.domNode, toolbarNode);
 
 
-                var inputTitle = domConstruct.create("div", {innerHTML: "Gebruik de WKT geometrie van een polygoon."});
+                var inputTitle = domConstruct.create("div", {innerHTML: "Gebruik de WKT geometrie van een polygoon (projectie in Lambert 72)."});
                 domConstruct.place(inputTitle, "zonecontent");
 
                 var toolbarNode3 = domConstruct.create("div", {'class': 'buttons'});
