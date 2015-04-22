@@ -552,19 +552,74 @@ define([
         },
 
         startInputWKT: function (wktInput) {
-            this.stopAllDrawActions();
-            var mySplitStringArray = wktInput.split(/\s{2,}|\t|\n/); //split on 2 or more spaces OR tab OR newline
-            var wktFound = array.some(mySplitStringArray, lang.hitch(this, function (part) {
-              if (part.substring(0, 7).toUpperCase()=='POLYGON' || part.substring(0, 12).toUpperCase()=='MULTIPOLYGON') {
-                this.drawWKTzone(part);
+          var wkt = this._filterWktFromString(wktInput.toUpperCase());
+          if (wkt) {
+            this.drawWKTzone(wkt);
+          }
+          else {
+            alert('Het is niet mogelijk om een wkt string uit de opgegeven tekst te halen.');
+          }
+        },
+
+        _filterWktFromString: function (stringWithWkt) {
+          var supportedGeometries = ["MULTIPOLYGON", "POLYGON"];
+          var wkt = null;
+          var wktFound;
+
+          //first check: clean wkt string
+          wktFound = array.some(supportedGeometries, function (geometryType) {
+            if (stringWithWkt.lastIndexOf(geometryType, 0) === 0) {
+              wkt = stringWithWkt;
+              return true;
+            }
+          });
+          if (wktFound) {
+            return wkt;
+          }
+
+          //second check: see if input is tab delimited (QGIS)
+          var mySplitStringArray = stringWithWkt.split(/\s{2,}|\t|\n/); //split on 2 or more spaces OR tab OR newline
+          wktFound = array.some(mySplitStringArray, lang.hitch(this, function (part) {
+            return array.some(supportedGeometries, function (geometryType) {
+              if (part.lastIndexOf(geometryType, 0) === 0) {
+                wkt = part;
                 return true;
               }
-            }));
-            if (!wktFound) {
-              alert('Het is niet mogelijk om een wkt string uit de opgegeven tekst te halen.');
+            })
+          }));
+          if (wktFound) {
+            return wkt;
+          }
+
+          //last check: find geometry type in the string and iterate over characters after it, counting the bracket pairs
+          wktFound = array.some(supportedGeometries, function (geometryType) {
+            var geometryTypeIdx = stringWithWkt.indexOf(geometryType);
+            if (geometryTypeIdx > -1) {
+              var split = stringWithWkt.split(geometryType);
+              if (split[1]) {
+                var polygonStart = split[1].trim();
+                var bracketPairs = 0;
+                wkt = geometryType;
+                for (var x = 0; x < polygonStart.length; x++) {
+                  var c = polygonStart.charAt(x);
+                  if (c == '(') {
+                    bracketPairs++;
+                  } else if (c == ')') {
+                    bracketPairs--;
+                  }
+                  wkt += c;
+                  if (bracketPairs === 0) {
+                     return true;
+                  }
+                }
+              }
             }
+          });
+          if (wktFound) {
+            return wkt;
+          }
 
-
+          return null;
         },
 
         _createInteractions: function () {
