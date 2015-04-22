@@ -553,7 +553,18 @@ define([
 
         startInputWKT: function (wktInput) {
             this.stopAllDrawActions();
-            this.drawWKTzone(wktInput)
+            var mySplitStringArray = wktInput.split(/\s{2,}|\t|\n/); //split on 2 or more spaces OR tab OR newline
+            var wktFound = array.some(mySplitStringArray, lang.hitch(this, function (part) {
+              if (part.substring(0, 7).toUpperCase()=='POLYGON' || part.substring(0, 12).toUpperCase()=='MULTIPOLYGON') {
+                this.drawWKTzone(part);
+                return true;
+              }
+            }));
+            if (!wktFound) {
+              alert('Het is niet mogelijk om een wkt string uit de opgegeven tekst te halen.');
+            }
+
+
         },
 
         _createInteractions: function () {
