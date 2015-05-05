@@ -32,7 +32,7 @@ define([
                 var url = this.url;
                 var data = {
                     categorie: "objecten",
-                    geometrie: JSON.stringify(zone)
+                    geometrie: zone
                 };
                 return xhr.post(url, {
                     data: JSON.stringify(data),
