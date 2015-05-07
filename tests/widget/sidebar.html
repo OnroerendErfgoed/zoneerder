@@ -28,6 +28,7 @@
     <div id="widgetNode"></div>
     <div id="button1Node"></div>
     <div id="button2Node"></div>
+    <div id="button3Node"></div>
 
 
     <!-- load Dojo -->
@@ -56,6 +57,7 @@
                     help: true
                 },
                 erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
+                niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',
                 perceelUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
                 crabpyUrl: 'https://dev-geo.onroerenderfgoed.be'
             };
@@ -80,6 +82,16 @@
                 })
             }, 'button1Node');
             myButton.startup();
+
+            var myButtonNis = new Button({
+                label: "get niscodes",
+                onClick: lang.hitch(this, function () {
+                    widgetUnderTest.getNiscodesInZone().then(function (niscodes) {
+                        console.log(niscodes);
+                    });
+                })
+            }, 'button3Node');
+            myButtonNis.startup();
 
             var myButton2 = new Button({
                 label: "set features",

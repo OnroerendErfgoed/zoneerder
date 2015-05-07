@@ -35,7 +35,7 @@ define([
                     geometrie: zone
                 };
                 return xhr.post(url, {
-                    data: JSON.stringify(data),
+                    data: data,
                     headers: {
                         "X-Requested-With": "",
                         "Content-Type": "application/json"

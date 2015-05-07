@@ -8,13 +8,14 @@ define([
     './ButtonController',
     './SidebarController',
     './ErfgoedService',
+    './NiscodeService',
     './PerceelService',
     'dojo/Evented',
     'dojo/when',
     'dojo/NodeList-dom'
 
 ], function (declare, lang, array, WidgetBase, TemplatedMixin, MapController, ButtonController, SidebarController,
-             ErfgoedService, PerceelService, Evented, when) {
+             ErfgoedService, NiscodeService, PerceelService, Evented, when) {
     return declare([WidgetBase, TemplatedMixin, Evented], {
         templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                             '<div data-dojo-attach-point="sidebarNode"></div>' +
@@ -35,6 +36,7 @@ define([
             if (!this.config) {
                 this.config = {
                     erfgoedUrl: null,
+                    niscodeUrl: null,
                     perceelUrl: null,
                     buttons: null,
                     sidebar: null
@@ -43,6 +45,10 @@ define([
 
             if (this.config.erfgoedUrl) {
                 this.erfgoedService = new ErfgoedService({ url: this.config.erfgoedUrl });
+            }
+
+            if (this.config.niscodeUrl) {
+                this.niscodeService = new NiscodeService({ url: this.config.niscodeUrl });
             }
 
             if (this.config.perceelUrl) {
@@ -106,11 +112,27 @@ define([
             if (this.erfgoedService) {
                 var promise = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
                 return promise.then(function (data) {
-                    return JSON.parse(data);
+                    return data;
                 });
             }
             else {
                 return  when(console.error("No search service available for erfgoed features. Please add 'erfgoedUrl' to config"));
+            }
+        },
+
+        getNiscodesInZone: function () {
+            if (this.niscodeService) {
+								var niscodes = [];
+                var promise = this.niscodeService.searchNiscodes(this.mapController.getZone());
+                return promise.then(function (data) {
+									  data.forEach(function(obj){
+										    niscodes.push(obj.id);
+										});
+                    return niscodes;
+                });
+            }
+            else {
+                return  when(console.error("No search service available for niscodes. Please add 'niscodeUrl' to config"));
             }
         },
 
