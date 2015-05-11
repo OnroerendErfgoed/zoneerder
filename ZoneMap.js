@@ -102,6 +102,13 @@ define([
             this.mapController.zoomToZone();
         },
 
+        resetZone: function (val) {
+            this.mapController.geoJsonLayer.getSource().clear();
+            this.mapController.setZone(val);
+            this.zone = this.mapController.getZone();
+            this.mapController.zoomToZone();
+        },
+
         getFeaturesInZone: function () {
             if (this.erfgoedService) {
                 var promise = this.erfgoedService.searchErfgoedFeatures(this.mapController.getZone());
