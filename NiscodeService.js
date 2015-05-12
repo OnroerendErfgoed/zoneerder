@@ -31,6 +31,7 @@ define([
             if (zone && zone.coordinates.length > 0) {
                 var url = this.url;
                 var data = {
+                    geef_geometrie: 0,
                     geometrie: zone
                 };
                 //return xhr.post(url, {
