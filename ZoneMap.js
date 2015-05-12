@@ -103,10 +103,12 @@ define([
         },
 
         resetZone: function (val) {
+            this.mapController.stopAllDrawActions();
             this.mapController.geoJsonLayer.getSource().clear();
-            this.mapController.setZone(val);
-            this.zone = this.mapController.getZone();
-            this.mapController.zoomToZone();
+            if (val) {
+                this.setZone(val);
+						}
+
         },
 
         getFeaturesInZone: function () {
