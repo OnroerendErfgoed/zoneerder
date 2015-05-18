@@ -21,6 +21,7 @@ Voorbeeld config:
             help: true
         },
         erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
+        niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',
         perceelUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
         crabpyUrl: 'https://dev-geo.onroerenderfgoed.be'
     };

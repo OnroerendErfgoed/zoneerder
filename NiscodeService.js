@@ -2,14 +2,13 @@ define([
     "dojo/_base/declare",
     "mijit/_WidgetBase",
     "dojo/request/xhr",
-    "dojo/_base/array",
-    "dojo/json",
     "dojo/when"
 
-], function (declare, WidgetBase, xhr, array, JSON, when) {
+], function (declare, WidgetBase, xhr, when) {
     return declare([WidgetBase], {
 
         url: null,
+        mockNiscodes: [{id:"44021"},{id:"40000"}],
 
         postMixInProperties: function () {
             this.inherited(arguments);
@@ -27,11 +26,12 @@ define([
             this.inherited(arguments);
         },
 
-        searchErfgoedFeatures: function (zone) {
+        searchNiscodes: function (zone) {
             if (zone && zone.coordinates.length > 0) {
                 var url = this.url;
                 var data = {
-                    categorie: "objecten",
+									  type: 'gemeente',
+                    geef_geometrie: 0,
                     geometrie: zone
                 };
                 return xhr.post(url, {
