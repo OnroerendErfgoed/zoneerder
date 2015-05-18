@@ -2,10 +2,9 @@ define([
     "dojo/_base/declare",
     "mijit/_WidgetBase",
     "dojo/request/xhr",
-    "dojo/when",
-		"dojo/Deferred"
+    "dojo/when"
 
-], function (declare, WidgetBase, xhr, when, Deferred) {
+], function (declare, WidgetBase, xhr, when) {
     return declare([WidgetBase], {
 
         url: null,
@@ -31,28 +30,19 @@ define([
             if (zone && zone.coordinates.length > 0) {
                 var url = this.url;
                 var data = {
+									  type: 'gemeente',
                     geef_geometrie: 0,
                     geometrie: zone
                 };
-                //return xhr.post(url, {
-                //    data: data,
-                //    headers: {
-                //        "X-Requested-With": "",
-                //        "Content-Type": "application/json"
-                //    }
-                //});
-							  // mocken
-								var deferred = new Deferred();
-							  deferred.resolve(this.mockNiscodes);
-                return deferred.promise
+                return xhr.post(url, {
+                    data: data,
+                    headers: {
+                        "X-Requested-With": "",
+                        "Content-Type": "application/json"
+                    }
+                });
             }
-            //return when("[]");
-					  //  mocken
-					  else {
-							var deferred = new Deferred();
-							deferred.resolve([]);
-							return deferred.promise;
-						}
+            return when("[]");
         }
     });
 });
