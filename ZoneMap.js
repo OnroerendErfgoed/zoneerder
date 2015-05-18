@@ -131,13 +131,9 @@ define([
 
         getNiscodesInZone: function () {
             if (this.niscodeService) {
-								var niscodes = [];
                 var promise = this.niscodeService.searchNiscodes(this.mapController.getZone());
                 return promise.then(function (data) {
-									  data.forEach(function(obj){
-										    niscodes.push(obj.id);
-										});
-                    return niscodes;
+                    return data;
                 });
             }
             else {
