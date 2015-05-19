@@ -8,7 +8,6 @@ define([
     return declare([WidgetBase], {
 
         url: null,
-        mockNiscodes: [{id:"44021"},{id:"40000"}],
 
         postMixInProperties: function () {
             this.inherited(arguments);
@@ -35,9 +34,11 @@ define([
                     geometrie: zone
                 };
                 return xhr.post(url, {
-                    data: data,
+									  handleAs:"json",
+                    data: JSON.stringify(data),
                     headers: {
                         "X-Requested-With": "",
+											  "Accept": "application/json",
                         "Content-Type": "application/json"
                     }
                 });
