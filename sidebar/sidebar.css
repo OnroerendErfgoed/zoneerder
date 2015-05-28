@@ -63,12 +63,10 @@
     display: none;
     right: 40px;
     width: 260px;
-    height: 100%;
 }
 .sidebar-pane.active {
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .sidebar-content h2 {
