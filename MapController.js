@@ -123,7 +123,7 @@ define([
             this.oeFeaturesLayer = oeFeaturesLayer;
 
             var baseLayers = new ol.layer.Group({
-                title: 'Base maps',
+                title: 'Basislagen',
                 layers: [
                     orthoTileLayer,
                     gewestplanTileLayer,
@@ -136,7 +136,7 @@ define([
             olMap.addLayer(baseLayers);
 
             var layers = new ol.layer.Group({
-                title: 'layers',
+                title: 'Overlays',
                 layers: [
                     grbTransTileLayer,
                     grb_gbgTileLayer,
