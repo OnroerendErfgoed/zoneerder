@@ -84,13 +84,6 @@
     flex: 1;
 }
 
-.sidebar-content .pane-footer {
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
 .sidebar-content .pane-content > div {
     padding: 10px 0 0 0;
 }
