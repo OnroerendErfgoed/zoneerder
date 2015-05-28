@@ -28,7 +28,7 @@ define([
             this.mapListeners = [];
 
             var element = this.div;
-            element.className = 'ol-unselectable ol-control layer-switcher';
+            element.className = 'layer-switcher';
 
             this.panel = document.createElement('div');
             this.panel.className = 'layerpanel';

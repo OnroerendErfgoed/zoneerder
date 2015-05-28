@@ -201,6 +201,10 @@ define([
                 });
                 domConstruct.place(cancelRemoveButton.domNode, toolbarNode2);
 
+
+                var toolbarNode4 = domConstruct.create("div", {'class': 'buttons'});
+                domConstruct.place(toolbarNode4, "zonecontent");
+
                 var saveButton = new Button({
                     label: "Zone bewaren",
                     'class': "sidebar-button",
@@ -216,7 +220,7 @@ define([
                         }
                     })
                 });
-                domConstruct.place(saveButton.domNode, "zonefooter");
+                domConstruct.place(saveButton.domNode, toolbarNode4);
 
                 var deleteButton = new Button({
                     label: "Zone verwijderen",
@@ -228,7 +232,7 @@ define([
                         sidebar.emit("zone.deleted");
                     })
                 });
-                domConstruct.place(deleteButton.domNode, "zonefooter");
+                domConstruct.place(deleteButton.domNode, toolbarNode4);
             }
 
             if (this.tabs.help) {

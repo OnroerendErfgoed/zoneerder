@@ -63,12 +63,10 @@
     display: none;
     right: 40px;
     width: 260px;
-    height: 100%;
 }
 .sidebar-pane.active {
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .sidebar-content h2 {
@@ -82,15 +80,8 @@
 }
 
 .sidebar-content .pane-body {
-    padding: 10px;
+    padding: 10px 15px 10px 10px;
     flex: 1;
-}
-
-.sidebar-content .pane-footer {
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
 }
 
 .sidebar-content .pane-content > div {
