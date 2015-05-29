@@ -22,8 +22,15 @@ define([
     templateString: template,
     tabContainer: null,
     tabs: null,
+    tabButtons: null,
+
+    postCreate: function () {
+      console.debug('Sidebar::postCreate');
+      this.inherited(arguments);
+    },
 
     startup: function () {
+      console.debug('Sidebar::startup');
       this.inherited(arguments);
 
       this.tabs = query('.sidebar-tabs', this.containerNode).at(0);
@@ -43,6 +50,7 @@ define([
     },
 
     open: function (tab) {
+      console.debug('Sidebar::open');
       var siderbar = this.containerNode;
       var id = "";
       var a = (query('a', tab).forEach(function(node){
@@ -65,6 +73,7 @@ define([
     },
 
     close: function() {
+      console.debug('Sidebar::close');
       var siderbar = this.containerNode;
       // remove old active highlights
       query('.sidebar-tabs >li.active', siderbar).removeClass('active');
@@ -75,6 +84,7 @@ define([
     },
 
     setTabContent: function (content, tabname){
+      console.debug('Sidebar::setTabContent', tabname);
       if (tabname == "layers") {
         content.placeAt(this.layerNode);
       }
@@ -111,6 +121,7 @@ define([
     },
 
     addTab: function (id, label, iconClass, description) {
+      console.debug('Sidebar::addTab', id);
       //add tab nav to buttonNode
       domConstruct.create('li', {
         'innerHTML': '' +
