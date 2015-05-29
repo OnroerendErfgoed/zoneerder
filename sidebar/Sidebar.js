@@ -83,43 +83,6 @@ define([
       }
     },
 
-    setTabContent: function (content, tabname){
-      console.debug('Sidebar::setTabContent', tabname);
-      if (tabname == "layers") {
-        content.placeAt(this.layerNode);
-      }
-      else if (tabname == "addlayer") {
-        content.placeAt(this.addlayerNode);
-      }
-      else if (tabname == "capazoom") {
-        content.placeAt(this.capazoomNode);
-      }
-      else if (tabname == "crabzoom") {
-        content.placeAt(this.crabzoomNode);
-      }
-      else if (tabname == "ehreport") {
-        html.set(this.erfgoedNode, content);
-        this._openReportTab();
-      }
-      else if (tabname == "grbreport") {
-        html.set(this.grbNode, content);
-        this._openReportTab();
-      }
-      else if (tabname == "rcereport") {
-        html.set(this.rceNode, content);
-        this._openReportTab();
-      }
-      else if (tabname == "help") {
-        html.set(this.helpNode, content);
-      }
-    },
-
-    _openReportTab: function () {
-      var nodes = query('.sidebar-tabs >li > a.reporticon', this.containerNode);
-      var tab = nodes[0].parentNode;
-      this.open(tab);
-    },
-
     addTab: function (id, label, iconClass, description) {
       console.debug('Sidebar::addTab', id);
       //add tab nav to buttonNode
