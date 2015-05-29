@@ -43,6 +43,8 @@ define([
 
     open: function (tab) {
       console.debug('Sidebar::open');
+      domClass.remove(this.containerNode, 'collapsed');
+
       var siderbar = this.containerNode;
       var id = "";
       var a = (query('a', tab).forEach(function(node){
@@ -52,27 +54,12 @@ define([
       // close all tabs & show new tab
       query('.sidebar-pane.active', siderbar).removeClass('active');
       query('#' + id, this.containerNode).addClass('active');
-
-      // set correct link active
-      query('.sidebar-tabs >li.active', siderbar).removeClass('active');
-      domClass.add(tab, "active");
-
-      if (domClass.contains(siderbar, 'collapsed')) {
-        // open sidebar
-        domClass.remove(siderbar, "collapsed");
-      }
-
     },
 
-    close: function() {
-      console.debug('Sidebar::close');
-      var siderbar = this.containerNode;
-      // remove old active highlights
-      query('.sidebar-tabs >li.active', siderbar).removeClass('active');
-
-      if (!domClass.contains(siderbar, 'collapsed')) {
-        domClass.add(siderbar, "collapsed");
-      }
+    collapse: function() {
+      console.debug('Sidebar::collapse');
+      query('.sidebar-tabs >li.active', this.containerNode).removeClass('active');
+      domClass.add(this.containerNode, 'collapsed');
     },
 
     addTab: function (id, label, iconClass, description) {
@@ -133,7 +120,7 @@ define([
       query('.sidebar-tabs >li.active', this.tablist).removeClass('active');
 
       if (tabActive) {
-        this.close();
+        this.collapse();
       }
       else {
         domClass.add(tabButton, 'active');
