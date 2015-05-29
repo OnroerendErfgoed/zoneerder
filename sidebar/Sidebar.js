@@ -29,12 +29,12 @@ define([
     tabButtons: null,
 
     postCreate: function () {
-      console.debug('Sidebar::postCreate');
+      //console.debug('Sidebar::postCreate');
       this.inherited(arguments);
     },
 
     startup: function () {
-      console.debug('Sidebar::startup');
+      //console.debug('Sidebar::startup');
       this.inherited(arguments);
 
       this.tabs = query('.sidebar-tabs', this.containerNode).at(0);
@@ -42,33 +42,25 @@ define([
     },
 
     openTab: function (tabPane) {
-      console.debug('Sidebar::open', tabPane);
+      //console.debug('Sidebar::open', tabPane);
       domClass.remove(this.containerNode, 'collapsed');
       query('.sidebar-pane.active', this.paneNode).removeClass('active');
       domClass.add(tabPane, 'active');
     },
 
     collapse: function() {
-      console.debug('Sidebar::collapse');
+      //console.debug('Sidebar::collapse');
       domClass.add(this.containerNode, 'collapsed');
+      query('.sidebar-pane.active', this.paneNode).removeClass('active');
+      query('.sidebar-tabs >li.active', this.tablist).removeClass('active');
     },
 
-    addTab: function (id, label, iconClass, description) {
-      console.debug('Sidebar::addTab', id);
+    createTab: function (label, iconClass, description) {
+      //console.debug('Sidebar::createTab', label);
 
       //add tab pane to paneNode
-      /*
-       <div class="sidebar-pane" id="Kaartlagen">
-       <h2>Kaartlagen</h2>
-       <p class="description">
-       Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.
-       </p>
-       <div data-dojo-attach-point="layerNode"></div>
-       </div>
-       */
       var pane = domConstruct.create('div', {
-        'class': 'sidebar-pane',
-        'id': id
+        'class': 'sidebar-pane'
       }, this.paneNode);
 
       domConstruct.create('h2', {
@@ -84,8 +76,7 @@ define([
         'class': 'pane-description'
       }, paneBody);
 
-      domConstruct.create('div', {
-        'id': id + 'content',
+      var contentContainer = domConstruct.create('div', {
         'class': 'pane-content'
       }, paneBody);
 
@@ -97,16 +88,17 @@ define([
       }).placeAt(this.buttonNode);
 
       on(btn, 'click', lang.hitch(this, function (evt) {
-        console.debug('Sidebar::addTab click', evt);
         evt.preventDefault();
         evt.stopPropagation();
         this._tabButtonClick(evt.target, evt.tab);
       }));
 
+      return contentContainer;
+
     },
 
     _tabButtonClick: function (tabButton, tabPane) {
-      console.debug('Sidebar::_tabButtonClick', tabButton);
+      //console.debug('Sidebar::_tabButtonClick', tabButton);
       var tabActive = domClass.contains(tabButton, 'active');
       query('.sidebar-tabs >li.active', this.tablist).removeClass('active');
 

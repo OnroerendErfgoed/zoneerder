@@ -46,11 +46,11 @@ define([
             query(".ol-attribution").addClass("sidebar-padding");
 
             if (this.tabs.layers) {
-                sidebar.addTab('kaartlagen', 'Kaartlagen', 'fa-list',
+                var layerTab = sidebar.createTab('Kaartlagen', 'fa-list',
                     'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
                 var layerNode = domConstruct.create("div");
-                domConstruct.place(layerNode, "kaartlagencontent");
+                domConstruct.place(layerNode, layerTab);
 
                 var layerSwitcher = new LayerSwitcher ({
                     map: this.mapController.olMap,
@@ -60,7 +60,7 @@ define([
             }
 
             if (this.tabs.zoom) {
-                sidebar.addTab('zoom', 'Zoom naar', 'fa-search',
+                var ZoomTab = sidebar.createTab('Zoom naar', 'fa-search',
                     'Hier kan je naar een perceel of adres zoomen (je moet minstens een gemeente kiezen).');
 
                 var crabpyWidget = new CrabpyWidget({
@@ -69,7 +69,7 @@ define([
                 });
 
                 var crabNode = domConstruct.create("div");
-                domConstruct.place(crabNode, "zoomcontent");
+                domConstruct.place(crabNode, ZoomTab);
                 var crabZoomer = crabpyWidget.createCrabZoomer(crabNode);
                 var self = this;
                 var zoomButton = new Button({
@@ -81,14 +81,14 @@ define([
                             var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
                             self.mapController.zoomToExtent(extent);
                             crabZoomer.reset();
-                            sidebar.close();
+                            sidebar.collapse();
                         }
                     }
                 });
-                domConstruct.place(zoomButton.domNode, "zoomcontent");
+                domConstruct.place(zoomButton.domNode, ZoomTab);
 
                 var capakeyNode = domConstruct.create("div");
-                domConstruct.place(capakeyNode, "zoomcontent");
+                domConstruct.place(capakeyNode, ZoomTab);
                 var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
                 var capakeyZoomButton = new Button({
                     label: "Zoom naar perceel",
@@ -99,19 +99,19 @@ define([
                             var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
                             self.mapController.zoomToExtent(extent);
                             capakeyZoomer.reset();
-                            sidebar.close();
+                            sidebar.collapse();
                         }
                     }
                 });
-                domConstruct.place(capakeyZoomButton.domNode, "zoomcontent");
+                domConstruct.place(capakeyZoomButton.domNode, ZoomTab);
             }
 
             if (this.tabs.draw) {
-                sidebar.addTab('zone', 'Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan. ' +
+                var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan. ' +
                     'Je kan één of meerdere polygonen intekenen en/of percelen selecteren.');
 
                 var toolbarNode = domConstruct.create("div", {'class': 'buttons'});
-                domConstruct.place(toolbarNode, "zonecontent");
+                domConstruct.place(toolbarNode, drawTab);
 
                 var drawButton = new Button({
                     label: "Teken polygoon",
@@ -148,10 +148,10 @@ define([
 
 
                 var inputTitle = domConstruct.create("div", {innerHTML: "Gebruik de WKT geometrie van een polygoon (projectie in Lambert 72)."});
-                domConstruct.place(inputTitle, "zonecontent");
+                domConstruct.place(inputTitle, drawTab);
 
                 var toolbarNode3 = domConstruct.create("div", {'class': 'buttons'});
-                domConstruct.place(toolbarNode3, "zonecontent");
+                domConstruct.place(toolbarNode3, drawTab);
 
                 var inputWKT = new TextArea({
 								    'class': "sidebar-textarea"
@@ -169,10 +169,10 @@ define([
 
 
                 var removeTitle = domConstruct.create("div", {innerHTML: "Verwijder een polygoon uit de selectie"});
-                domConstruct.place(removeTitle, "zonecontent");
+                domConstruct.place(removeTitle, drawTab);
 
                 var toolbarNode2 = domConstruct.create("div", {'class': 'buttons'});
-                domConstruct.place(toolbarNode2, "zonecontent");
+                domConstruct.place(toolbarNode2, drawTab);
 
                 var selectButton = new Button({
                     label: "Kies polygoon",
@@ -203,7 +203,7 @@ define([
 
 
                 var toolbarNode4 = domConstruct.create("div", {'class': 'buttons'});
-                domConstruct.place(toolbarNode4, "zonecontent");
+                domConstruct.place(toolbarNode4, drawTab);
 
                 var saveButton = new Button({
                     label: "Zone bewaren",
@@ -236,7 +236,7 @@ define([
             }
 
             if (this.tabs.help) {
-                sidebar.addTab('help', 'Help', 'fa-question-circle', 'help desc');
+                sidebar.createTab('Help', 'fa-question-circle', '...');
             }
 
             return sidebar;

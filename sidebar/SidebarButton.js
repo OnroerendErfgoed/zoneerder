@@ -21,18 +21,18 @@ define([
 
     postCreate: function () {
       this.inherited(arguments);
-      console.debug('SidebarButton::postCreate', this.label);
+      //console.debug('SidebarButton::postCreate', this.label);
     },
 
     startup: function () {
       this.inherited(arguments);
-      console.debug('SidebarButton::startup', this.label);
+      //console.debug('SidebarButton::startup', this.label);
     },
 
     _onClick: function (evt) {
       evt.preventDefault();
       evt.stopPropagation();
-      console.debug('SidebarButton::_onClick', this.label);
+      //console.debug('SidebarButton::_onClick', this.label);
       this.emit('click', {tab: this.tab});
     }
 
