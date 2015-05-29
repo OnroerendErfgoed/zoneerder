@@ -24,9 +24,6 @@ define([
   return declare([WidgetBase, TemplatedMixin], {
 
     templateString: template,
-    tabContainer: null,
-    tabs: null,
-    tabButtons: null,
 
     postCreate: function () {
       //console.debug('Sidebar::postCreate');
@@ -36,9 +33,6 @@ define([
     startup: function () {
       //console.debug('Sidebar::startup');
       this.inherited(arguments);
-
-      this.tabs = query('.sidebar-tabs', this.containerNode).at(0);
-      this.tabContainer = query('.sidebar-content', this.containerNode).at(0);
     },
 
     openTab: function (tabPane) {
