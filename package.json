@@ -1,15 +1,15 @@
 {
     "name": "zoneerder",
-    "description": "Configureerbare widget om zones n te tekenen.",
+    "description": "Configureerbare widget om zones in te tekenen.",
     "keywords": ["JavaScript", "Dojo", "Widget", "Openlayers"],
-    "version": "1.0.0",
-	"repository": {
-		"type":"git",
-		"url":"https://github.com/cedrikv/zoneerder"
-	},
+    "version": "0.0.3",
+    "repository": {
+        "type":"git",
+        "url":"https://github.com/OnroerendErfgoed/zoneerder"
+    },
     "main": "./ZoneMap",
     "dojoBuild": "package.js",
     "directories": {
-		"lib": "."
-	}
+        "lib": "."
+    }
 }
