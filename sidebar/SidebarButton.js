@@ -1,20 +1,22 @@
 define([
   'dojo/_base/declare',
   'dijit/_WidgetBase',
-  'dijit/_TemplatedMixin'
+  'dijit/_TemplatedMixin',
+  'dojo/Evented'
 ], function (
   declare,
   WidgetBase,
-  TemplatedMixin
+  TemplatedMixin,
+  Evented
 ) {
-  return declare([WidgetBase, TemplatedMixin], {
+  return declare([WidgetBase, TemplatedMixin, Evented], {
 
     tab: null,
     label: null,
     iconClass: null,
     templateString: ''
       + '<li data-dojo-attach-point="buttonContainer">'
-      +   '<a href="#" data-dojo-attach-event="onclick: _onClick" role="tab" title="${label}">'
+      +   '<a href="#" data-dojo-attach-event="onClick: _tabClick" role="tab" title="${label}">'
       +     '<i class="fa fa-lg ${iconClass}"></i>'
       +   '</a>'
       + '</li>',
@@ -29,11 +31,10 @@ define([
       //console.debug('SidebarButton::startup', this.label);
     },
 
-    _onClick: function (evt) {
+    _tabClick: function (evt) {
       evt.preventDefault();
-      evt.stopPropagation();
       //console.debug('SidebarButton::_onClick', this.label);
-      this.emit('click', {tab: this.tab});
+      this.emit('tabClick', {tab: this.tab});
     }
 
   });

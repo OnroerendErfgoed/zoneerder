@@ -81,10 +81,8 @@ define([
         iconClass: iconClass
       }).placeAt(this.buttonNode);
 
-      on(btn, 'click', lang.hitch(this, function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        this._tabButtonClick(evt.target, evt.tab);
+      btn.on("tabClick", lang.hitch(this, function (evt) {
+        this._tabButtonClick(btn.domNode, evt.tab);
       }));
 
       return contentContainer;
@@ -92,7 +90,7 @@ define([
     },
 
     _tabButtonClick: function (tabButton, tabPane) {
-      //console.debug('Sidebar::_tabButtonClick', tabButton);
+      //console.debug('Sidebar::_tabButtonClick', tabButton, tabPane, domClass.contains(tabButton, 'active'));
       var tabActive = domClass.contains(tabButton, 'active');
       query('li.active', this.buttonNode).removeClass('active');
 
