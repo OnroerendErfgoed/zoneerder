@@ -1,8 +1,8 @@
 define(
     [
         "dojo/_base/declare",
-        "mijit/_WidgetBase",
-        "mijit/_TemplatedMixin",
+        "dijit/_WidgetBase",
+        "dijit/_TemplatedMixin",
         "dojo/text!./Sidebar.html",
         "dojo/query",
         "dojo/dom-class",

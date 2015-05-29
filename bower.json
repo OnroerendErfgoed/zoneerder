@@ -12,7 +12,8 @@
     "README.md"
   ],
   "dependencies": {
-    "dojo": "~1.10.2",
+    "dojo": "~1.10.4",
+    "dijit": "~1.10.4",
     "proj4": "~2.3.3",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git",
     "dojo-form-controls": "https://github.com/sirprize/dojo-form-controls.git",
