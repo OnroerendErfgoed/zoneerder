@@ -41,43 +41,20 @@ define([
       this.tabContainer = query('.sidebar-content', this.containerNode).at(0);
     },
 
-    open: function (tab) {
-      console.debug('Sidebar::open');
+    openTab: function (tabPane) {
+      console.debug('Sidebar::open', tabPane);
       domClass.remove(this.containerNode, 'collapsed');
-
-      var siderbar = this.containerNode;
-      var id = "";
-      var a = (query('a', tab).forEach(function(node){
-        id = node.hash.slice(1);
-      }));
-
-      // close all tabs & show new tab
-      query('.sidebar-pane.active', siderbar).removeClass('active');
-      query('#' + id, this.containerNode).addClass('active');
+      query('.sidebar-pane.active', this.paneNode).removeClass('active');
+      domClass.add(tabPane, 'active');
     },
 
     collapse: function() {
       console.debug('Sidebar::collapse');
-      query('.sidebar-tabs >li.active', this.containerNode).removeClass('active');
       domClass.add(this.containerNode, 'collapsed');
     },
 
     addTab: function (id, label, iconClass, description) {
       console.debug('Sidebar::addTab', id);
-      //add tab button to buttonNode
-      var btn = new SidebarButton({
-        tempId: id,
-        label: label,
-        iconClass: iconClass
-      }).placeAt(this.buttonNode);
-
-      on(btn, 'click', lang.hitch(this, function (evt) {
-        evt.preventDefault();
-        evt.stopPropagation();
-        this._tabButtonClick(evt.target);
-      }));
-
-
 
       //add tab pane to paneNode
       /*
@@ -112,9 +89,23 @@ define([
         'class': 'pane-content'
       }, paneBody);
 
+      //add tab button to buttonNode
+      var btn = new SidebarButton({
+        tab: pane,
+        label: label,
+        iconClass: iconClass
+      }).placeAt(this.buttonNode);
+
+      on(btn, 'click', lang.hitch(this, function (evt) {
+        console.debug('Sidebar::addTab click', evt);
+        evt.preventDefault();
+        evt.stopPropagation();
+        this._tabButtonClick(evt.target, evt.tab);
+      }));
+
     },
 
-    _tabButtonClick: function (tabButton) {
+    _tabButtonClick: function (tabButton, tabPane) {
       console.debug('Sidebar::_tabButtonClick', tabButton);
       var tabActive = domClass.contains(tabButton, 'active');
       query('.sidebar-tabs >li.active', this.tablist).removeClass('active');
@@ -124,7 +115,7 @@ define([
       }
       else {
         domClass.add(tabButton, 'active');
-        this.open(tabButton);
+        this.openTab(tabPane);
       }
     }
 

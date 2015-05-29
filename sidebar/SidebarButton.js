@@ -9,16 +9,15 @@ define([
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
+    tab: null,
+    label: null,
+    iconClass: null,
     templateString: ''
       + '<li data-dojo-attach-point="buttonContainer">'
-      +   '<a href="#${tempId}" data-dojo-attach-event="onclick: _onClick" role="tab" title="${label}">'
+      +   '<a href="#" data-dojo-attach-event="onclick: _onClick" role="tab" title="${label}">'
       +     '<i class="fa fa-lg ${iconClass}"></i>'
       +   '</a>'
       + '</li>',
-
-    tempId: null,
-    label: null,
-    iconClass: null,
 
     postCreate: function () {
       this.inherited(arguments);
@@ -34,7 +33,7 @@ define([
       evt.preventDefault();
       evt.stopPropagation();
       console.debug('SidebarButton::_onClick', this.label);
-      this.emit('click');
+      this.emit('click', {tab: this.tab});
     }
 
   });
