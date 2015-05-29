@@ -3,19 +3,23 @@ define([
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
   'dojo/text!./Sidebar.html',
+  'dojo/_base/lang',
   'dojo/query',
   'dojo/dom-class',
   'dojo/dom-construct',
-  'dojo/html'
+  'dojo/on',
+  './SidebarButton'
 ], function (
   declare,
   WidgetBase,
   TemplatedMixin,
   template,
+  lang,
   query,
   domClass,
   domConstruct,
-  html
+  on,
+  SidebarButton
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -35,18 +39,6 @@ define([
 
       this.tabs = query('.sidebar-tabs', this.containerNode).at(0);
       this.tabContainer = query('.sidebar-content', this.containerNode).at(0);
-      var sidebar = this;
-
-      query('.sidebar-tabs >li > a', this.containerNode).on("click", function(evt) {
-        evt.preventDefault();
-        var tab = this.parentNode;
-        if (domClass.contains(tab, 'active')) {
-          sidebar.close();
-        }
-        else {
-          sidebar.open(tab);
-        }
-      });
     },
 
     open: function (tab) {
@@ -85,13 +77,20 @@ define([
 
     addTab: function (id, label, iconClass, description) {
       console.debug('Sidebar::addTab', id);
-      //add tab nav to buttonNode
-      domConstruct.create('li', {
-        'innerHTML': '' +
-        '<a href="#' + id + '" role="tab" title="' + label + '">' +
-        ' <i class="fa fa-lg ' + iconClass + '"></i>' +
-        '</a>'
-      }, this.buttonNode);
+      //add tab button to buttonNode
+      var btn = new SidebarButton({
+        tempId: id,
+        label: label,
+        iconClass: iconClass
+      }).placeAt(this.buttonNode);
+
+      on(btn, 'click', lang.hitch(this, function (evt) {
+        evt.preventDefault();
+        evt.stopPropagation();
+        this._tabButtonClick(evt.target);
+      }));
+
+
 
       //add tab pane to paneNode
       /*
@@ -126,6 +125,20 @@ define([
         'class': 'pane-content'
       }, paneBody);
 
+    },
+
+    _tabButtonClick: function (tabButton) {
+      console.debug('Sidebar::_tabButtonClick', tabButton);
+      var tabActive = domClass.contains(tabButton, 'active');
+      query('.sidebar-tabs >li.active', this.tablist).removeClass('active');
+
+      if (tabActive) {
+        this.close();
+      }
+      else {
+        domClass.add(tabButton, 'active');
+        this.open(tabButton);
+      }
     }
 
   });
