@@ -46,7 +46,7 @@ define([
       //console.debug('Sidebar::collapse');
       domClass.add(this.containerNode, 'collapsed');
       query('.sidebar-pane.active', this.paneNode).removeClass('active');
-      query('.sidebar-tabs >li.active', this.tablist).removeClass('active');
+      query('li.active', this.buttonNode).removeClass('active');
     },
 
     createTab: function (label, iconClass, description) {
@@ -94,7 +94,7 @@ define([
     _tabButtonClick: function (tabButton, tabPane) {
       //console.debug('Sidebar::_tabButtonClick', tabButton);
       var tabActive = domClass.contains(tabButton, 'active');
-      query('.sidebar-tabs >li.active', this.tablist).removeClass('active');
+      query('li.active', this.buttonNode).removeClass('active');
 
       if (tabActive) {
         this.collapse();
