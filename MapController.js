@@ -51,10 +51,10 @@ define([
             var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
             var centerVlaanderen = [483613.49323354336, 6632162.6232922375];
             this.fullExtent = extentVlaanderen;
-
-            this.geoJsonFormatter =  new ol.format.GeoJSON({
-                defaultDataProjection: 'EPSG:31370'
-            });
+            //
+            //this.geoJsonFormatter =  new ol.format.GeoJSON({
+            //    defaultDataProjection: 'EPSG:31370'
+            //});
 
             var view = new ol.View({
                 projection: this.mapProjection,
@@ -88,7 +88,7 @@ define([
             var beschermdWmsLayer = new ol.layer.Tile({
                 title: "Beschermd Onroerend Erfgoed",
                 extent: extentVlaanderen,
-                source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+                source: new ol.source.TileWMS(({
                     url: 'https://geo.onroerenderfgoed.be/geoserver/wms', //todo: move to config
                     params: {
                         'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
@@ -109,18 +109,18 @@ define([
                 visible: false
             });
 
-            var geoJsonLayer = this._createGeojsonLayer({
-              title: 'Zone',
-              color: 'rgb(39, 146, 195)',
-              fill:  'rgba(39, 146, 195, 0.3)'
-            });
-            this.geoJsonLayer = geoJsonLayer;
-            var oeFeaturesLayer = this._createGeojsonLayer({
-              title: 'Erfgoed Objecten',
-              color: 'rgb(124, 47, 140)',
-              fill:  'rgba(124, 47, 140, 0.3)'
-            });
-            this.oeFeaturesLayer = oeFeaturesLayer;
+            //var geoJsonLayer = this._createGeojsonLayer({
+            //  title: 'Zone',
+            //  color: 'rgb(39, 146, 195)',
+            //  fill:  'rgba(39, 146, 195, 0.3)'
+            //});
+            //this.geoJsonLayer = geoJsonLayer;
+            //var oeFeaturesLayer = this._createGeojsonLayer({
+            //  title: 'Erfgoed Objecten',
+            //  color: 'rgb(124, 47, 140)',
+            //  fill:  'rgba(124, 47, 140, 0.3)'
+            //});
+            //this.oeFeaturesLayer = oeFeaturesLayer;
 
             var baseLayers = new ol.layer.Group({
                 title: 'Basislagen',
@@ -141,14 +141,15 @@ define([
                     grbTransTileLayer,
                     grb_gbgTileLayer,
                     grb_adpTileLayer,
-                    beschermdWmsLayer,
-                    geoJsonLayer,
-                    oeFeaturesLayer
+                    beschermdWmsLayer
+                    //geoJsonLayer,
+                    //oeFeaturesLayer
                 ]
             });
             olMap.addLayer(layers);
 
-            osmTileLayer.setVisible(true);
+            beschermdWmsLayer.setVisible(true);
+            orthoTileLayer.setVisible(true);
 
             olMap.addControl(new ol.control.ScaleLine());
             olMap.addControl(new ol.control.Attribution({
@@ -254,7 +255,7 @@ define([
         },
 
         _createGrbLayer: function(grbLayerId, title, isBaselayer){
-            var proj= this.mapProjection;
+            var proj = this.mapProjection;
             var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
             var grbResolutions = [
                 156543.033928041,
@@ -530,7 +531,7 @@ define([
         },
 
         startParcelSelect: function (perceelService) {
-            this.stopAllDrawActions();
+            //this.stopAllDrawActions();//TODO: fix this
 
             var controller = this;
             var map = this.olMap;
@@ -538,7 +539,8 @@ define([
                 map.unByKey(eventKey);
                 perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
                     var perceel = perceelService.readWfs(wfsresponse);
-                    controller.drawPerceel(perceel);
+                    console.debug("searchPerceel ", wfsresponse, perceel);
+                    //controller.drawPerceel(perceel);
                 }, function (err) {
                     console.error(err);
                 })
@@ -630,13 +632,13 @@ define([
         },
 
         _createInteractions: function () {
-            var drawInteraction = new ol.interaction.Draw({
-                source: this.geoJsonLayer.getSource(),
-                type: /** @type {ol.geom.GeometryType} */ ('Polygon')
-            });
+            //var drawInteraction = new ol.interaction.Draw({
+            //    source: this.geoJsonLayer.getSource(),
+            //    type: /** @type {ol.geom.GeometryType} */ ('Polygon')
+            //});
 
             this.mapInteractions = {
-                draw: drawInteraction
+                //draw: drawInteraction
             };
 
         }
