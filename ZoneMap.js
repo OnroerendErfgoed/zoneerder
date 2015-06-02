@@ -33,6 +33,7 @@ define([
 
     templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                       '<div data-dojo-attach-point="sidebarNode"></div>' +
+                      '<div data-dojo-attach-point="popupNode"></div>' +
                     '</div>',
     mapController: null,
     config: null,
@@ -71,7 +72,8 @@ define([
       var zonemap = this;
 
       var mapController = new MapController({
-        mapContainer: this.mapNode
+        mapContainer: this.mapNode,
+        popupContainer: this.popupNode
       });
       this.mapController = mapController;
       mapController.startup();

@@ -6,7 +6,8 @@ define([
   'dojo/request/xhr',
   'dojo/_base/array',
   'dojo/json',
-  'ol'
+  'ol',
+  './popup/Popup'
 ], function (
   declare,
   WidgetBase,
@@ -15,11 +16,13 @@ define([
   xhr,
   array,
   JSON,
-  ol
+  ol,
+  Popup
 ) {
   return declare([WidgetBase], {
 
     mapContainer: null,
+    popupContainer: null,
     olMap: null,
     mapProjection: null,
     geoJsonLayer: null,
@@ -67,6 +70,10 @@ define([
         logo: false
       });
       this.olMap = olMap;
+
+      this.popup = new Popup({
+        map: olMap
+      }, this.popupContainer);
 
       var orthoTileLayer = this._createGrbLayer("orthoklm", "Ortho", true);
       var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
@@ -161,6 +168,7 @@ define([
 
     startup: function () {
       this.inherited(arguments);
+      this.popup.startup();
     },
 
     clearFeatures: function () {
