@@ -524,7 +524,7 @@ define([
     },
 
     startParcelSelect: function (perceelService) {
-      //this.stopAllDrawActions();//TODO: fix this
+      this.stopAllDrawActions();
 
       var controller = this;
       var map = this.olMap;
@@ -624,13 +624,13 @@ define([
     },
 
     _createInteractions: function () {
-      //var drawInteraction = new ol.interaction.Draw({
-      //    source: this.geoJsonLayer.getSource(),
-      //    type: /** @type {ol.geom.GeometryType} */ ('Polygon')
-      //});
+      var drawInteraction = new ol.interaction.Draw({
+          source: this.geoJsonLayer.getSource(),
+          type: /** @type {ol.geom.GeometryType} */ ('Polygon')
+      });
 
       this.mapInteractions = {
-        //draw: drawInteraction
+        draw: drawInteraction
       };
 
     }
