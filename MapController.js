@@ -187,10 +187,10 @@ define([
     drawPerceel: function (olFeature) {
       if (olFeature) {
         var perceelSource = this.geoJsonLayer.getSource();
-        //var geometry = olFeature.getGeometry();
-        //geometry.transform('EPSG:31370', 'EPSG:900913');
-        //var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
-        //var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+        var geometry = olFeature.getGeometry();
+        var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+        var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+        olFeature.setGeometry(xyGeom);
         //var xyFeature = new ol.Feature({
         //  geometry: xyGeom,
         //  name: olFeature.get('CAPAKEY')
