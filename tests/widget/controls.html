@@ -24,38 +24,38 @@
 </head>
 
 <body>
-    <div id="widgetNode"></div>
+<div id="widgetNode"></div>
 
 
-    <!-- load Dojo -->
-    <script type="text/javascript" src="../config.js"></script>
-    <script type="text/javascript" src="../../dojo/dojo.js"></script>
+<!-- load Dojo -->
+<script type="text/javascript" src="../config.js"></script>
+<script type="text/javascript" src="../../dojo/dojo.js"></script>
 
-    <script>
-        require([
-            "zoneerder/ZoneMap",
-            "dojo/domReady!"
-        ], function (ZoneMap) {
+<script>
+    require([
+        "zoneerder/ZoneMap",
+        "dojo/domReady!"
+    ], function (ZoneMap) {
 
-            var zoneMapConfig = {
-                buttons: {
-                    fullScreen: true,
-                    zoomInOut: true,
-                    zoomFullExtent: true,
-                    zoomGeolocation: true,
-                    rotate: true
-                }
-            };
+        var zoneMapConfig = {
+            buttons: {
+                fullScreen: true,
+                zoomInOut: true,
+                zoomFullExtent: true,
+                zoomGeolocation: true,
+                rotate: true
+            }
+        };
 
-            // init widget
-            var widgetUnderTest = new ZoneMap({
-                config: zoneMapConfig
-            }, 'widgetNode');
-            widgetUnderTest.startup();
+        // init widget
+        var widgetUnderTest = new ZoneMap({
+            config: zoneMapConfig
+        }, 'widgetNode');
+        widgetUnderTest.startup();
 
-        });
+    });
 
-    </script>
+</script>
 </body>
 
 </html>
