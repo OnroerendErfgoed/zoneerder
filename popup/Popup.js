@@ -15,7 +15,8 @@ define([
 
     templateString: template,
     map: null,
-    enabled: true,
+    layer: null,
+    _enabled: true,
     _overlay: null,
 
     postCreate: function () {
@@ -31,16 +32,33 @@ define([
       console.debug('Popup::startup');
     },
 
+    enable: function () {
+      this._enabled = true;
+    },
+
+    disable: function () {
+      this._enabled = false;
+    },
+
     /**
      * Add a click handler to the map to render the popup.
      */
     _createClickHandler: function (map) {
       map.on('singleclick', lang.hitch( this, function (evt) {
         console.debug('Popup::clickhandler');
-        if (this.enabled) {
-          var coordinate = evt.coordinate;
-          this.setContent('<em>' + coordinate + '</em>');
-          this._overlay.setPosition(coordinate);
+        if (this._enabled) {
+          var clickLayer = this.layer;
+          var feature = map.forEachFeatureAtPixel(evt.pixel,
+            function(feature, layer) {
+              console.debug('feature found', feature, layer, clickLayer);
+              if (layer == clickLayer) {
+                return feature;
+              }
+            });
+          if (feature) {
+            this.setContent(feature.get('name'));
+            this._overlay.setPosition(evt.coordinate);
+          }
         }
       }));
     },
@@ -71,7 +89,6 @@ define([
       this.popupcloser.blur();
       return false;
     },
-
 
     setContent: function (content) {
       console.debug('Popup::_setContent');

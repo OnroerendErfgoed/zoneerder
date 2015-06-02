@@ -71,10 +71,6 @@ define([
       });
       this.olMap = olMap;
 
-      this.popup = new Popup({
-        map: olMap
-      }, this.popupContainer);
-
       var orthoTileLayer = this._createGrbLayer("orthoklm", "Ortho", true);
       var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
       var grbTileLayer = this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true);
@@ -158,6 +154,7 @@ define([
       }));
 
       this._createInteractions();
+      this._createPopup();
       //olMap.on('moveend', this._onMoveEnd);
 
       this.zoomToExtent(extentVlaanderen);
@@ -640,7 +637,13 @@ define([
       this.mapInteractions = {
         draw: drawInteraction
       };
+    },
 
+    _createPopup: function () {
+      this.popup = new Popup({
+        map: this.olMap,
+        layer: this.oeFeaturesLayer
+      }, this.popupContainer);
     }
   });
 });
