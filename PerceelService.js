@@ -26,14 +26,17 @@ define([
         coordinate[0] + this.buffer,
         coordinate[1] + this.buffer
       ];
+      //do call in Lambert72, there is a projection error when using web mercator (on the AGIV server?)
+      var bboxLambert = ol.proj.transformExtent(bbox, 'EPSG:900913', 'EPSG:31370');
+
       var wfsCall = new ol.format.WFS().writeGetFeature({
         maxFeatures: 10,
-        srsName: 'urn:x-ogc:def:crs:EPSG:3857',
+        srsName: 'urn:x-ogc:def:crs:EPSG:31370',
         featureNS: 'http://www.openplans.org/topp',
         featurePrefix: 'grb',
         featureTypes: ['GRB_-_Adp_-_administratief_perceel'],
         geometryName: 'SHAPE',
-        bbox: bbox
+        bbox: bboxLambert
       });
 
       return xhr.post(url, {
@@ -50,7 +53,10 @@ define([
         featureNS: "https://geo.agiv.be/ogc/wfs/grb",
         featureType: "GRB_-_Adp_-_administratief_perceel"
       });
-      var features = formatter.readFeatures(wfs);
+      var features = formatter.readFeatures(wfs, {
+        dataProjection: 'EPSG:31370',
+        featureProjection: 'EPSG:900913'
+      });
       return features[0];
     }
   });

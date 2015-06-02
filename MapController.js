@@ -34,6 +34,7 @@ define([
       proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
       // Add crs urn alias to Lambert72 projection, in order for open layers to recognize it.
       proj4.defs('urn:ogc:def:crs:EPSG::31370', proj4.defs('EPSG:31370'));
+      proj4.defs('urn:ogc:def:crs:EPSG:6.9:31370', proj4.defs('EPSG:31370'));
 
       this.pDef = ol.proj.get('EPSG:3857');
       this.pMerc = ol.proj.get('EPSG:900913');
@@ -102,18 +103,18 @@ define([
         visible: false
       });
 
-      //var geoJsonLayer = this._createGeojsonLayer({
-      //  title: 'Zone',
-      //  color: 'rgb(39, 146, 195)',
-      //  fill:  'rgba(39, 146, 195, 0.3)'
-      //});
-      //this.geoJsonLayer = geoJsonLayer;
-      //var oeFeaturesLayer = this._createGeojsonLayer({
-      //  title: 'Erfgoed Objecten',
-      //  color: 'rgb(124, 47, 140)',
-      //  fill:  'rgba(124, 47, 140, 0.3)'
-      //});
-      //this.oeFeaturesLayer = oeFeaturesLayer;
+      var geoJsonLayer = this._createGeojsonLayer({
+        title: 'Zone',
+        color: 'rgb(39, 146, 195)',
+        fill:  'rgba(39, 146, 195, 0.3)'
+      });
+      this.geoJsonLayer = geoJsonLayer;
+      var oeFeaturesLayer = this._createGeojsonLayer({
+        title: 'Erfgoed Objecten',
+        color: 'rgb(124, 47, 140)',
+        fill:  'rgba(124, 47, 140, 0.3)'
+      });
+      this.oeFeaturesLayer = oeFeaturesLayer;
 
       var baseLayers = new ol.layer.Group({
         title: 'Basislagen',
@@ -134,15 +135,15 @@ define([
           grbTransTileLayer,
           grb_gbgTileLayer,
           grb_adpTileLayer,
-          beschermdWmsLayer
-          //geoJsonLayer,
-          //oeFeaturesLayer
+          beschermdWmsLayer,
+          geoJsonLayer,
+          oeFeaturesLayer
         ]
       });
       olMap.addLayer(layers);
 
-      beschermdWmsLayer.setVisible(true);
-      orthoTileLayer.setVisible(true);
+      //beschermdWmsLayer.setVisible(true);
+      grbTileLayer.setVisible(true);
 
       olMap.addControl(new ol.control.ScaleLine());
       olMap.addControl(new ol.control.Attribution({
@@ -186,15 +187,16 @@ define([
     drawPerceel: function (olFeature) {
       if (olFeature) {
         var perceelSource = this.geoJsonLayer.getSource();
-        var geometry = olFeature.getGeometry();
-        geometry.transform('EPSG:31370', 'EPSG:900913');
-        var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
-        var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
-        var xyFeature = new ol.Feature({
-          geometry: xyGeom,
-          name: olFeature.get('CAPAKEY')
-        });
-        perceelSource.addFeature(xyFeature);
+        //var geometry = olFeature.getGeometry();
+        //geometry.transform('EPSG:31370', 'EPSG:900913');
+        //var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+        //var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+        //var xyFeature = new ol.Feature({
+        //  geometry: xyGeom,
+        //  name: olFeature.get('CAPAKEY')
+        //});
+        //console.debug('adding feature', xyFeature);
+        perceelSource.addFeature(olFeature);
       }
       else {
         alert('Er werd geen perceel gevonden op deze locatie');
@@ -308,19 +310,20 @@ define([
     },
 
     _createGeojsonLayer: function (options) {
-      var vectorSource = new ol.source.GeoJSON(
-        /** @type {olx.source.GeoJSONOptions} */ ({
-          object: {
-            'type': 'FeatureCollection',
-            'crs': {
-              'type': 'name',
-              'properties': {
-                'name': 'EPSG:900913'
-              }
-            },
-            'features': []
-          }
-        }));
+      var vectorSource = new ol.source.Vector({});
+      //var vectorSource = new ol.source.GeoJSON(
+      //  /** @type {olx.source.GeoJSONOptions} */ ({
+      //    object: {
+      //      'type': 'FeatureCollection',
+      //      'crs': {
+      //        'type': 'name',
+      //        'properties': {
+      //          'name': 'EPSG:900913'
+      //        }
+      //      },
+      //      'features': []
+      //    }
+      //  }));
 
       var textStyleFunction = function (feature, resolution) {
         var text = (resolution < 3 && feature.get('name') ) ? feature.get('name') : '';
@@ -532,8 +535,7 @@ define([
         map.unByKey(eventKey);
         perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
           var perceel = perceelService.readWfs(wfsresponse);
-          console.debug("searchPerceel ", wfsresponse, perceel);
-          //controller.drawPerceel(perceel);
+          controller.drawPerceel(perceel);
         }, function (err) {
           console.error(err);
         })
