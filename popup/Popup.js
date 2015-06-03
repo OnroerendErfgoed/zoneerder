@@ -3,13 +3,15 @@ define([
   'mijit/_WidgetBase',
   'mijit/_TemplatedMixin',
   'dojo/text!./Popup.html',
-  'dojo/_base/lang'
+  'dojo/_base/lang',
+  'ol'
 ], function (
   declare,
   WidgetBase,
   TemplatedMixin,
   template,
-  lang
+  lang,
+  ol
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
