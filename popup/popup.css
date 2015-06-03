@@ -1,7 +1,7 @@
 
 .ol-popup {
   position: absolute;
-  background-color: rgba(39, 146, 195, 0.6);
+  background-color: rgba(39, 146, 195, 0.8);
   -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
   filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
   padding: 15px;
