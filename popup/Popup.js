@@ -61,9 +61,9 @@ define([
             var html =
               "<h5>" + feature.get('naam') + "</h5>" +
               "<ul>" +
-              "   <li>id: " + feature.get('id') + "</li>" +
-              "   <li>type: " + feature.get('type') + "</li>" +
-              "   <li>uri: <a href='" + feature.get('uri') + "' target='_blank'>link</a> <i class='fa fa-external-link'></i></li>" +
+              "   <li>id:<em> " + feature.get('id') + "</em></li>" +
+              "   <li>type:<em> " + feature.get('type') + "</em></li>" +
+              "   <li><a href='" + feature.get('uri') + "' target='_blank'>detail pagina</a> <i class='fa fa-external-link'></i></li>" +
               "</ul>";
             this.setContent(html);
             this._overlay.setPosition(evt.coordinate);

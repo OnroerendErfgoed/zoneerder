@@ -57,11 +57,15 @@
   margin: 5px 0;
 }
 
-.map .ol-popup-content a {
+.ol-popup-content a {
   color: #ffffff;
   text-decoration: underline;
 }
 
-.map .ol-popup-content i {
+.ol-popup-content i {
   font-size: 10px;
+}
+
+.ol-popup-content li {
+  font-size: 0.9em;
 }
