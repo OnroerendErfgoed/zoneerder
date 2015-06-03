@@ -59,7 +59,7 @@ define([
             });
           if (feature) {
             var html =
-              "<h4>" + feature.get('naam') + "</h4>" +
+              "<h5>" + feature.get('naam') + "</h5>" +
               "<ul>" +
               "   <li>id: " + feature.get('id') + "</li>" +
               "   <li>type: " + feature.get('type') + "</li>" +

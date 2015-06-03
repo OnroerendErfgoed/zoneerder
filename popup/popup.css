@@ -6,7 +6,7 @@
   filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
   padding: 15px;
   border-radius: 10px;
-  border: 1px solid #cccccc;
+  border: 1px solid rgba(255, 255, 255, .4);
   bottom: 12px;
   left: -50px;
   color: #ffffff;
@@ -22,7 +22,7 @@
   pointer-events: none;
 }
 .ol-popup:after {
-  border-top-color: rgba(39, 146, 195, 0.6);
+  border-top-color: rgba(39, 146, 195, 0.7);
   border-width: 10px;
   left: 48px;
   margin-left: -10px;
@@ -44,11 +44,27 @@
   color: #ffffff;
 }
 
+.ol-popup-content {
+  color: #ffffff;
+}
+
 .ol-popup-content ul {
   margin: 0;
   padding-left: 15px;
 }
 
-.ol-popup-content h4 {
+.ol-popup-content h5 {
   margin: 5px 0;
+  color: #ffffff;
+}
+
+.map .ol-popup-content a {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.map .ol-popup-content a:after {
+	content: "\00a0\f08e";
+	font-family: FontAwesome;
+  font-size: 10px;
 }
