@@ -6,7 +6,8 @@ define([
   'dojo/request/xhr',
   'dojo/_base/array',
   'dojo/json',
-  'ol'
+  'ol',
+  './popup/Popup'
 ], function (
   declare,
   WidgetBase,
@@ -15,11 +16,13 @@ define([
   xhr,
   array,
   JSON,
-  ol
+  ol,
+  Popup
 ) {
   return declare([WidgetBase], {
 
     mapContainer: null,
+    popupContainer: null,
     olMap: null,
     mapProjection: null,
     geoJsonLayer: null,
@@ -151,6 +154,7 @@ define([
       }));
 
       this._createInteractions();
+      this._createPopup();
       //olMap.on('moveend', this._onMoveEnd);
 
       this.zoomToExtent(extentVlaanderen);
@@ -161,6 +165,7 @@ define([
 
     startup: function () {
       this.inherited(arguments);
+      this.popup.startup();
     },
 
     clearFeatures: function () {
@@ -168,20 +173,26 @@ define([
       oeFeaturesSource.clear();
     },
 
-    drawErfgoedGeom: function (geom, label) {
+    addErfgoedFeature: function (geoJsonFeature) {
       var formatter = new ol.format.GeoJSON({
         defaultDataProjection: ol.proj.get('EPSG:4326')
       });
-      var oeFeaturesSource = this.oeFeaturesLayer.getSource();
-      var geometry = formatter.readGeometry(geom, {
-        dataProjection: ol.proj.get(geom.crs.properties.name),
+      //var feature = formatter.readFeature(geoJsonFeature);
+      //only the geometry property is in a valid geoJSON format
+      var geometry = formatter.readGeometry(geoJsonFeature.geometrie, {
+        dataProjection: ol.proj.get(geoJsonFeature.geometrie.crs.properties.name),
         featureProjection: this.pDef
       });
       var feature = new ol.Feature({
         geometry: geometry,
-        name: label
+        name: geoJsonFeature.id,
+        naam: geoJsonFeature.naam,
+        id: geoJsonFeature.id,
+        type: geoJsonFeature.type,
+        uri: geoJsonFeature.uri,
+        description: geoJsonFeature.description
       });
-      oeFeaturesSource.addFeature(feature);
+      this.oeFeaturesLayer.getSource().addFeature(feature);
     },
 
     drawPerceel: function (olFeature) {
@@ -192,7 +203,6 @@ define([
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
         olFeature.set('name', olFeature.get('CAPAKEY'));
         olFeature.setGeometry(xyGeom);
-        //console.debug('adding feature', xyFeature);
         perceelSource.addFeature(olFeature);
       }
       else {
@@ -476,25 +486,29 @@ define([
 
     startDraw: function () {
       this.stopAllDrawActions();
+      this.popup.disable();
 
       var map = this.olMap;
 
       var drawInteraction = this.mapInteractions.draw;
       map.addInteraction(drawInteraction);
 
-      drawInteraction.on('drawend', function (evt) {
+      drawInteraction.on('drawend', lang.hitch(this, function (evt) {
+        this.popup.enable();
         window.setTimeout(function () {
           map.removeInteraction(drawInteraction);
         }, 0);
-      });
+      }));
     },
 
     stopDraw: function () {
       this.olMap.removeInteraction(this.mapInteractions.draw);
+      this.popup.enable();
     },
 
     startSelect: function () {
       this.stopAllDrawActions();
+      this.popup.disable();
 
       var map = this.olMap;
 
@@ -521,13 +535,17 @@ define([
 
     stopSelect: function () {
       this.olMap.removeInteraction(this.mapInteractions.select);
+      this.popup.enable();
     },
 
     startParcelSelect: function (perceelService) {
       this.stopAllDrawActions();
+      this.popup.disable();
 
-      var controller = this;
-      var map = this.olMap;
+      var controller = this,
+          map = this.olMap,
+          popup = this.popup;
+
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
         perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
@@ -535,7 +553,9 @@ define([
           controller.drawPerceel(perceel);
         }, function (err) {
           console.error(err);
-        })
+        }).always(function () {
+          popup.enable();
+        });
       });
       this.mapInteractions.selectParcelKey = eventKey;
     },
@@ -632,7 +652,13 @@ define([
       this.mapInteractions = {
         draw: drawInteraction
       };
+    },
 
+    _createPopup: function () {
+      this.popup = new Popup({
+        map: this.olMap,
+        layer: this.oeFeaturesLayer
+      }, this.popupContainer);
     }
   });
 });
