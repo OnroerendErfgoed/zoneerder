@@ -481,25 +481,29 @@ define([
 
     startDraw: function () {
       this.stopAllDrawActions();
+      this.popup.disable();
 
       var map = this.olMap;
 
       var drawInteraction = this.mapInteractions.draw;
       map.addInteraction(drawInteraction);
 
-      drawInteraction.on('drawend', function (evt) {
+      drawInteraction.on('drawend', lang.hitch(this, function (evt) {
+        this.popup.enable();
         window.setTimeout(function () {
           map.removeInteraction(drawInteraction);
         }, 0);
-      });
+      }));
     },
 
     stopDraw: function () {
       this.olMap.removeInteraction(this.mapInteractions.draw);
+      this.popup.enable();
     },
 
     startSelect: function () {
       this.stopAllDrawActions();
+      this.popup.disable();
 
       var map = this.olMap;
 
@@ -526,13 +530,17 @@ define([
 
     stopSelect: function () {
       this.olMap.removeInteraction(this.mapInteractions.select);
+      this.popup.enable();
     },
 
     startParcelSelect: function (perceelService) {
       this.stopAllDrawActions();
+      this.popup.disable();
 
-      var controller = this;
-      var map = this.olMap;
+      var controller = this,
+          map = this.olMap,
+          popup = this.popup;
+
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
         perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
@@ -540,7 +548,9 @@ define([
           controller.drawPerceel(perceel);
         }, function (err) {
           console.error(err);
-        })
+        }).always(function () {
+          popup.enable();
+        });
       });
       this.mapInteractions.selectParcelKey = eventKey;
     },
