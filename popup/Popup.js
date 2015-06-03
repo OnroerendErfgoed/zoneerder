@@ -22,7 +22,7 @@ define([
     _overlay: null,
 
     postCreate: function () {
-      console.debug('Popup::postCreate');
+      //console.debug('Popup::postCreate');
       this.inherited(arguments);
       this._overlay = this._createOverlay(this.popup);
       this.map.addOverlay(this._overlay);
@@ -31,7 +31,7 @@ define([
 
     startup: function () {
       this.inherited(arguments);
-      console.debug('Popup::startup');
+      //console.debug('Popup::startup');
     },
 
     enable: function () {
@@ -47,12 +47,11 @@ define([
      */
     _createClickHandler: function (map) {
       map.on('singleclick', lang.hitch( this, function (evt) {
-        console.debug('Popup::clickhandler');
+        //console.debug('Popup::clickhandler');
         if (this._enabled) {
           var clickLayer = this.layer;
           var feature = map.forEachFeatureAtPixel(evt.pixel,
             function(feature, layer) {
-              console.debug('feature found', feature);
               if (layer == clickLayer) {
                 return feature;
               }
@@ -77,7 +76,7 @@ define([
      * @return {ol.Overlay} the created overlay
      */
     _createOverlay: function (element) {
-      console.debug('Popup::_createOverlay');
+      //console.debug('Popup::_createOverlay');
       return new ol.Overlay(/** @type {olx.OverlayOptions} */ ({
         element: element,
         autoPan: true,
@@ -92,7 +91,7 @@ define([
      * @return {boolean} Don't follow the href.
      */
     _closePopup: function(evt) {
-      console.debug('Popup::_closePopup');
+      //console.debug('Popup::_closePopup');
       evt.preventDefault();
       this._overlay.setPosition(undefined);
       this.popupcloser.blur();
@@ -100,7 +99,7 @@ define([
     },
 
     setContent: function (content) {
-      console.debug('Popup::_setContent');
+      //console.debug('Popup::_setContent');
       this.popupcontent.innerHTML = content;
     }
 
