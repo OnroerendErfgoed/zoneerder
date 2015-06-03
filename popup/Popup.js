@@ -56,7 +56,14 @@ define([
               }
             });
           if (feature) {
-            this.setContent(feature.get('name'));
+            var html =
+              "<h4>" + feature.get('naam') + "</h4>" +
+              "<ul>" +
+              "   <li>id: " + feature.get('id') + "</li>" +
+              "   <li>type: " + feature.get('type') + "</li>" +
+              "   <li>uri: <a href='" + feature.get('uri') + "' target='_blank'>link</a></li>" +
+              "</ul>";
+            this.setContent(html);
             this._overlay.setPosition(evt.coordinate);
           }
         }

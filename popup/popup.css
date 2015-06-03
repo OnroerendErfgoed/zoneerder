@@ -10,7 +10,7 @@
   bottom: 12px;
   left: -50px;
   color: #ffffff;
-  min-width: 150px;
+  min-width: 200px;
 }
 .ol-popup:after, .map .ol-popup:before {
   top: 100%;
@@ -42,4 +42,13 @@
 .ol-popup-closer:after {
   content: "✖";
   color: #ffffff;
+}
+
+.ol-popup-content ul {
+  margin: 0;
+  padding-left: 15px;
+}
+
+.ol-popup-content h4 {
+  margin: 5px 0;
 }
