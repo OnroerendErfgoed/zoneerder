@@ -55,7 +55,6 @@
 
 .ol-popup-content h5 {
   margin: 5px 0;
-  color: #ffffff;
 }
 
 .map .ol-popup-content a {
@@ -63,8 +62,6 @@
   text-decoration: underline;
 }
 
-.map .ol-popup-content a:after {
-	content: "\00a0\f08e";
-	font-family: FontAwesome;
+.map .ol-popup-content i {
   font-size: 10px;
 }

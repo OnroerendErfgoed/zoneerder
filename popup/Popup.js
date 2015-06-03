@@ -63,7 +63,7 @@ define([
               "<ul>" +
               "   <li>id: " + feature.get('id') + "</li>" +
               "   <li>type: " + feature.get('type') + "</li>" +
-              "   <li>uri: <a href='" + feature.get('uri') + "' target='_blank'>link</a></li>" +
+              "   <li>uri: <a href='" + feature.get('uri') + "' target='_blank'>link</a> <i class='fa fa-external-link'></i></li>" +
               "</ul>";
             this.setContent(html);
             this._overlay.setPosition(evt.coordinate);
