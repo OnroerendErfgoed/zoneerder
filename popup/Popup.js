@@ -50,7 +50,7 @@ define([
           var clickLayer = this.layer;
           var feature = map.forEachFeatureAtPixel(evt.pixel,
             function(feature, layer) {
-              console.debug('feature found', feature, layer, clickLayer);
+              console.debug('feature found', feature);
               if (layer == clickLayer) {
                 return feature;
               }

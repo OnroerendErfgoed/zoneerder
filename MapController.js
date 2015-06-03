@@ -197,7 +197,6 @@ define([
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
         olFeature.set('name', olFeature.get('CAPAKEY'));
         olFeature.setGeometry(xyGeom);
-        //console.debug('adding feature', xyFeature);
         perceelSource.addFeature(olFeature);
       }
       else {
