@@ -173,20 +173,26 @@ define([
       oeFeaturesSource.clear();
     },
 
-    drawErfgoedGeom: function (geom, label) {
+    addErfgoedFeature: function (geoJsonFeature) {
       var formatter = new ol.format.GeoJSON({
         defaultDataProjection: ol.proj.get('EPSG:4326')
       });
-      var oeFeaturesSource = this.oeFeaturesLayer.getSource();
-      var geometry = formatter.readGeometry(geom, {
-        dataProjection: ol.proj.get(geom.crs.properties.name),
+      //var feature = formatter.readFeature(geoJsonFeature);
+      //only the geometry property is in a valid geoJSON format
+      var geometry = formatter.readGeometry(geoJsonFeature.geometrie, {
+        dataProjection: ol.proj.get(geoJsonFeature.geometrie.crs.properties.name),
         featureProjection: this.pDef
       });
       var feature = new ol.Feature({
         geometry: geometry,
-        name: label
+        name: geoJsonFeature.id,
+        naam: geoJsonFeature.naam,
+        id: geoJsonFeature.id,
+        type: geoJsonFeature.type,
+        uri: geoJsonFeature.uri,
+        description: geoJsonFeature.description
       });
-      oeFeaturesSource.addFeature(feature);
+      this.oeFeaturesLayer.getSource().addFeature(feature);
     },
 
     drawPerceel: function (olFeature) {

@@ -155,8 +155,7 @@ define([
     setFeatures: function(features) {
       this.mapController.clearFeatures();
       array.forEach(features, function (feature) {
-        var geojson = feature.geometrie;
-        this.mapController.drawErfgoedGeom(geojson, feature.id);
+        this.mapController.addErfgoedFeature(feature);
       }, this);
     }
 
