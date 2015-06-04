@@ -8,7 +8,6 @@ define([
   return declare([WidgetBase], {
 
     url: null,
-    buffer: 0.00000000001,
 
     postCreate: function () {
       this.inherited(arguments);
@@ -19,28 +18,32 @@ define([
     },
 
     searchPerceel: function (coordinate) {
-      var url = this.url;
-      var bbox = [
-        coordinate[0] - this.buffer,
-        coordinate[1] - this.buffer,
-        coordinate[0] + this.buffer,
-        coordinate[1] + this.buffer
-      ];
-      //do call in Lambert72, there is a projection error when using web mercator (on the AGIV server?)
-      var bboxLambert = ol.proj.transformExtent(bbox, 'EPSG:900913', 'EPSG:31370');
 
-      var wfsCall = new ol.format.WFS().writeGetFeature({
-        maxFeatures: 10,
-        srsName: 'urn:x-ogc:def:crs:EPSG:31370',
-        featureNS: 'http://www.openplans.org/topp',
-        featurePrefix: 'grb',
-        featureTypes: ['GRB_-_Adp_-_administratief_perceel'],
-        geometryName: 'SHAPE',
-        bbox: bboxLambert
-      });
+      var data = '' +
+        '<wfs:GetFeature xmlns:topp="http://www.openplans.org/topp" ' +
+        'xmlns:wfs="http://www.opengis.net/wfs" ' +
+        'xmlns:ogc="http://www.opengis.net/ogc" ' +
+        'xmlns:gml="http://www.opengis.net/gml" ' +
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+        'service="WFS" ' +
+        'version="1.1.0"  ' +
+        'maxFeatures="10" ' +
+        'xsi:schemaLocation="http://www.opengis.net/wfs ' +
+        'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">' +
+        '<wfs:Query typeName="grb:GRB_-_Adp_-_administratief_perceel">' +
+        '<ogc:Filter>' +
+        '<ogc:Contains>' +
+        '<ogc:PropertyName>SHAPE</ogc:PropertyName>' +
+        '<gml:Point srsName="urn:x-ogc:def:crs:EPSG:3857">' +
+        '<gml:pos srsName="urn:x-ogc:def:crs:EPSG:3857">' + coordinate[0] + ' ' + coordinate[1] + '</gml:pos>' +
+        '</gml:Point>' +
+        '</ogc:Contains>' +
+        '</ogc:Filter>' +
+        '  </wfs:Query>' +
+        '</wfs:GetFeature>';
 
-      return xhr.post(url, {
-        data: (new XMLSerializer()).serializeToString(wfsCall),
+      return xhr.post(this.url, {
+        data: data,
         headers: {
           "X-Requested-With": "",
           "Content-Type": "application/xml"
