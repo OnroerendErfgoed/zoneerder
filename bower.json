@@ -16,7 +16,7 @@
     "dijit": "~1.10.4",
     "proj4": "~2.3.6",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git#0.1.0",
-    "ol": "https://github.com/cedrikv/ol3-amd.git#0.2.0",
+    "ol": "https://github.com/OnroerendErfgoed/ol3-amd.git#0.2.0",
     "font-awesome": "~4.3.0"
   }
 }
