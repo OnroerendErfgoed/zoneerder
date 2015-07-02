@@ -141,15 +141,23 @@
 
 
 .sidebar-map .zoneerder-pane {
-  border: 1px solid rgba(39, 146, 195, 0.8);
+  border: 1px solid #52A7CF;
   padding: 0;
   margin: 10px 0;
 }
 
 .sidebar-map .zoneerder-pane-header {
-  background-color: rgba(39, 146, 195, 0.8);
+  background-color: #52A7CF;
   color: white;
   text-align: center;
+  font-weight: bold;
+}
+
+.sidebar-map .zoneerder-pane-header a {
+  float: right;
+  margin: 1px 5px 1px 0;
+  font-size: 14px;
+  color: white;
 }
 
 .sidebar-map .zoneerder-draw-buttons {

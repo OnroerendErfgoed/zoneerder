@@ -10,8 +10,11 @@ define([
   'dojo/dom-construct',
   'dojo-form-controls/Button',
   'dojo-form-controls/Textarea',
+  "dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style",
   'dojo/NodeList-dom'
-], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button, TextArea) {
+], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button, TextArea,
+dom, fx, on, domStyle
+) {
   return declare([WidgetBase, Evented], {
 
     mapController: null,
@@ -109,18 +112,50 @@ define([
       if (this.tabs.draw) {
         var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan.');
 
+        /* ZONE */
         var zonePane = domConstruct.create('div', {
           'class': 'zoneerder-pane'
         }, drawTab);
-        domConstruct.create('div', {
+
+        var zoneHeader = domConstruct.create('div', {
           'class': 'zoneerder-pane-header',
           innerHTML: 'Zone'
         }, zonePane);
+
+        domConstruct.create('a', {
+          href: '#',
+          innerHTML: '<i class="fa fa-trash"></i> ',
+          onclick: lang.hitch(this, function () {
+             console.info('zone::delete');
+            this.mapController.stopAllDrawActions();
+            this.mapController.geoJsonLayer.getSource().clear();
+            this.zone = null;
+            sidebar.emit("zone.deleted");
+          })
+        }, zoneHeader);
+
+        domConstruct.create('a', {
+          href: '#',
+          innerHTML: '<i class="fa fa-search"></i> ',
+          onclick: lang.hitch(this, function () {
+            console.info('TODO: implement zoom to zone');
+          })
+        }, zoneHeader);
+
+        domConstruct.create('a', {
+          href: '#',
+          innerHTML: '<i class="fa fa-flash"></i> ',
+          onclick: lang.hitch(this, function () {
+            console.info('TODO: implement flash zone');
+          })
+        }, zoneHeader);
+
         domConstruct.create('div', {
           'class': 'zoneerder-pane-content',
           innerHTML: 'content'
         }, zonePane);
 
+        /* TOEVOEGEN */
         var addPane = domConstruct.create('div', {
           'class': 'zoneerder-pane'
         }, drawTab);
@@ -225,6 +260,7 @@ define([
         //domConstruct.place(cancelRemoveButton.domNode, toolbarNode2);
         //
 
+        /* BUTTONS */
         var bottomButtonsNode = domConstruct.create("div", {'class': 'zoneerder-draw-buttons'}, drawTab);
 
         new Button({
@@ -250,18 +286,6 @@ define([
             console.info('TODO: implement cancel');
           })
         }).placeAt(bottomButtonsNode);
-
-      //  var deleteButton = new Button({
-      //    label: "Zone verwijderen",
-      //    'class': "sidebar-button",
-      //    onClick: lang.hitch(this, function () {
-      //      this.mapController.stopAllDrawActions();
-      //      this.mapController.geoJsonLayer.getSource().clear();
-      //      this.zone = null;
-      //      sidebar.emit("zone.deleted");
-      //    })
-      //  });
-      //  domConstruct.place(deleteButton.domNode, toolbarNode4);
       }
 
       if (this.tabs.help) {
