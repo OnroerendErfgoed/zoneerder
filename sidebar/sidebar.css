@@ -138,3 +138,20 @@
 .sidebar-map .ol-attribution.ol-uncollapsible.sidebar-padding {
   right: 40px;
 }
+
+
+.sidebar-map .zoneerder-pane {
+  border: 1px solid rgba(39, 146, 195, 0.8);
+  padding: 0;
+  margin: 10px 0;
+}
+
+.sidebar-map .zoneerder-pane-header {
+  background-color: rgba(39, 146, 195, 0.8);
+  color: white;
+  text-align: center;
+}
+
+.sidebar-map .zoneerder-draw-buttons {
+  text-align: center;
+}
