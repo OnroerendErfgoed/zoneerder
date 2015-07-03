@@ -113,9 +113,7 @@ dom, fx, on, domStyle
         var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan.');
 
         /* ZONE */
-        var zonePane = domConstruct.create('div', {
-          'class': 'zoneerder-pane'
-        }, drawTab);
+        var zonePane = domConstruct.create('div', {'class': 'zoneerder-pane'}, drawTab);
 
         var zoneHeader = domConstruct.create('div', {
           'class': 'zoneerder-pane-header',
@@ -123,9 +121,11 @@ dom, fx, on, domStyle
         }, zonePane);
 
         domConstruct.create('a', {
+          title: 'Verwijder de volledige zone',
           href: '#',
           innerHTML: '<i class="fa fa-trash"></i> ',
-          onclick: lang.hitch(this, function () {
+          onclick: lang.hitch(this, function (evt) {
+            evt.preventDefault();
              console.info('zone::delete');
             this.mapController.stopAllDrawActions();
             this.mapController.geoJsonLayer.getSource().clear();
@@ -135,17 +135,21 @@ dom, fx, on, domStyle
         }, zoneHeader);
 
         domConstruct.create('a', {
+          title: 'Zoom naar de zone',
           href: '#',
           innerHTML: '<i class="fa fa-search"></i> ',
-          onclick: lang.hitch(this, function () {
+          onclick: lang.hitch(this, function (evt) {
+            evt.preventDefault();
             console.info('TODO: implement zoom to zone');
           })
         }, zoneHeader);
 
         domConstruct.create('a', {
+          title: 'Flash de zone',
           href: '#',
           innerHTML: '<i class="fa fa-flash"></i> ',
-          onclick: lang.hitch(this, function () {
+          onclick: lang.hitch(this, function (evt) {
+            evt.preventDefault();
             console.info('TODO: implement flash zone');
           })
         }, zoneHeader);
@@ -156,76 +160,80 @@ dom, fx, on, domStyle
         }, zonePane);
 
         /* TOEVOEGEN */
-        var addPane = domConstruct.create('div', {
-          'class': 'zoneerder-pane'
-        }, drawTab);
+        var addPane = domConstruct.create('div', {'class': 'zoneerder-pane'}, drawTab);
+
         domConstruct.create('div', {
           'class': 'zoneerder-pane-header',
           innerHTML: 'Toevoegen'
         }, addPane);
-        domConstruct.create('div', {
-          'class': 'zoneerder-pane-content',
-          innerHTML: 'content 2'
+
+        var addContent = domConstruct.create('div', {
+          'class': 'zoneerder-pane-content'
         }, addPane);
-        //
-        //var toolbarNode = domConstruct.create("div", {'class': 'buttons'});
-        //domConstruct.place(toolbarNode, drawTab);
-        //
-        //var drawButton = new Button({
-        //  label: "Teken polygoon",
-        //  'class': "sidebar-button",
-        //  onClick: lang.hitch(this, function () {
-        //    this.mapController.startDraw();
-        //  })
-        //});
-        //domConstruct.place(drawButton.domNode, toolbarNode);
-        //
-        //if (this.perceelService){
-        //  var parcelButton = new Button({
-        //    label: "Selecteer perceel",
-        //    'class': "sidebar-button",
-        //    onClick: lang.hitch(this, function () {
-        //      this.mapController.startParcelSelect(this.perceelService);
-        //    })
-        //  });
-        //  domConstruct.place(parcelButton.domNode, toolbarNode);
-        //}
-        //else {
-        //  console.warn("No parcel service available, please add 'perceelUrl' to config.");
-        //}
-        //
-        //var cancelDrawButton = new Button({
-        //  label: "Annuleren",
-        //  'class': "sidebar-button",
-        //  onClick: lang.hitch(this, function () {
-        //    this.mapController.stopDraw();
-        //    this.mapController.stopParcelSelect();
-        //  })
-        //});
-        //domConstruct.place(cancelDrawButton.domNode, toolbarNode);
-        //
-        //
-        //var inputTitle = domConstruct.create("div", {innerHTML: "Gebruik de WKT geometrie van een polygoon (projectie in Lambert 72)."});
-        //domConstruct.place(inputTitle, drawTab);
-        //
-        //var toolbarNode3 = domConstruct.create("div", {'class': 'buttons'});
-        //domConstruct.place(toolbarNode3, drawTab);
-        //
-        //var inputWKT = new TextArea({
-        //  'class': "sidebar-textarea"
-        //});
-        //domConstruct.place(inputWKT.domNode, toolbarNode3);
-        //
-        //var inputButton = new Button({
-        //  label: "Gebruik polygoon",
-        //  'class': "sidebar-button",
-        //  onClick: lang.hitch(this, function () {
-        //    this.mapController.startInputWKT(inputWKT.value);
-        //  })
-        //});
-        //domConstruct.place(inputButton.domNode, toolbarNode3);
-        //
-        //
+
+        domConstruct.create('span', {
+          'class': 'zoneerder-actionlist-header',
+          innerHTML: 'Voeg een polygoon toe aan de zone: '
+        }, addContent);
+
+        var actionList = domConstruct.create('ul', {
+          'class': 'zoneerder-actionlist'
+        }, addContent);
+
+        domConstruct.create('a', {
+          title: 'Teken een polygoon',
+          href: '#',
+          innerHTML: '<i class="fa fa-pencil"></i> Teken polygoon',
+          onclick: lang.hitch(this, function (evt) {
+            evt.preventDefault();
+            this.mapController.startDraw();
+          })
+        }, domConstruct.create('li', {}, actionList));
+
+        if (this.perceelService){
+          domConstruct.create('a', {
+            title: 'Selecteer een perceel',
+            href: '#',
+            innerHTML: '<i class="fa  fa-hand-o-up"></i> Selecteer perceel',
+            onclick: lang.hitch(this, function (evt) {
+              evt.preventDefault();
+              console.info('zone::select perceel');
+              this.mapController.startParcelSelect(this.perceelService);
+            })
+          }, domConstruct.create('li', {}, actionList));
+        }
+        else {
+          console.warn("No parcel service available, please add 'perceelUrl' to config.");
+        }
+
+        domConstruct.create('a', {
+          title: 'Selecteer een bescherming',
+          href: '#',
+          innerHTML: '<i class="fa  fa-hand-o-up"></i> Selecteer bescherming',
+          onclick: lang.hitch(this, function (evt) {
+            evt.preventDefault();
+             console.info('zone::select bescherming');
+          })
+        }, domConstruct.create('li', {}, actionList));
+
+        var wktLi = domConstruct.create('li', {}, actionList);
+        domConstruct.create('a', {
+          title: 'Gebruik de WKT string',
+          'class': 'button',
+          href: '#',
+          innerHTML: 'WKT',
+          onclick: lang.hitch(this, function (evt) {
+            evt.preventDefault();
+            this.mapController.startInputWKT(wktInput.value);
+          })
+        }, wktLi);
+        var wktInput = domConstruct.create('input', {
+          type: 'text',
+          title: 'Vul de WKT (Well Known Text) van een polygoon in (projectie in Lambert 72)',
+          placeholder: 'WKT string (Lambert72)'
+        }, wktLi);
+
+
         //var removeTitle = domConstruct.create("div", {innerHTML: "Verwijder een polygoon uit de selectie"});
         //domConstruct.place(removeTitle, drawTab);
         //
@@ -284,6 +292,8 @@ dom, fx, on, domStyle
           'class': "sidebar-button",
           onClick: lang.hitch(this, function () {
             console.info('TODO: implement cancel');
+            this.mapController.stopDraw();
+            this.mapController.stopParcelSelect();
           })
         }).placeAt(bottomButtonsNode);
       }

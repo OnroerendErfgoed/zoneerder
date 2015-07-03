@@ -141,7 +141,7 @@
 
 
 .sidebar-map .zoneerder-pane {
-  border: 1px solid #52A7CF;
+  border: 2px solid #52A7CF;
   padding: 0;
   margin: 10px 0;
 }
@@ -151,6 +151,7 @@
   color: white;
   text-align: center;
   font-weight: bold;
+  padding: 5px;
 }
 
 .sidebar-map .zoneerder-pane-header a {
@@ -162,4 +163,23 @@
 
 .sidebar-map .zoneerder-draw-buttons {
   text-align: center;
+}
+
+.sidebar-map .zoneerder-pane-content {
+  padding: 5px;
+}
+
+.sidebar-map ul.zoneerder-actionlist {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.sidebar-map ul.zoneerder-actionlist li {
+  padding: 5px 0;
+}
+
+.sidebar-map ul.zoneerder-actionlist li a {
+  color: #52A7CF;
+  text-decoration: none;
 }
