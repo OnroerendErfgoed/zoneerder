@@ -17,6 +17,9 @@
     "proj4": "~2.3.6",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git#0.1.0",
     "ol": "https://github.com/OnroerendErfgoed/ol3-amd.git#0.2.0",
-    "font-awesome": "~4.3.0"
+    "font-awesome": "~4.3.0",
+    "dgrid": "~0.3.17",
+    "put-selector": "~0.3.6",
+    "xstyle": "~0.1.3"
   }
 }
