@@ -10,6 +10,7 @@ define([
   './ErfgoedService',
   './NiscodeService',
   './PerceelService',
+  './BeschermingService',
   'dojo/Evented',
   'dojo/when',
   'dojo/NodeList-dom'
@@ -26,6 +27,7 @@ define([
   ErfgoedService,
   NiscodeService,
   PerceelService,
+  BeschermingService,
   Evented,
   when
 ) {
@@ -39,6 +41,7 @@ define([
     config: null,
     erfgoedService: null,
     perceelService: null,
+    beschermingService: null,
     zone: null,
 
     postCreate: function () {
@@ -63,6 +66,9 @@ define([
 
       if (this.config.perceelUrl) {
         this.perceelService = new PerceelService({ url: this.config.perceelUrl });
+      }
+      if (this.config.beschermingUrl) {
+        this.beschermingService = new BeschermingService({ url: this.config.beschermingUrl });
       }
     },
 
@@ -89,6 +95,7 @@ define([
         var sidebarController = new SidebarController({
           mapController: mapController,
           perceelService: this.perceelService,
+          beschermingService: this.beschermingService,
           tabs: this.config.sidebar,
           crabpyUrl: this.config.crabpyUrl
         });

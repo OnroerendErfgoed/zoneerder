@@ -136,6 +136,15 @@ define([
                     console.warn("No parcel service available, please add 'perceelUrl' to config.");
                 }
 
+                var beschermButton = new Button({
+                    label: "Selecteer bescherming",
+                    'class': "sidebar-button",
+                    onClick: lang.hitch(this, function () {
+                        this.mapController.startBeschermingSelect(this.beschermingService);
+                    })
+                });
+                domConstruct.place(beschermButton.domNode, toolbarNode);
+
                 var cancelDrawButton = new Button({
                     label: "Annuleren",
                     'class': "sidebar-button",

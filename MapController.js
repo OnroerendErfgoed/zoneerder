@@ -15,7 +15,7 @@ define([
   request,
   xhr,
   array,
-  JSON,
+  json,
   ol,
   Popup
 ) {
@@ -30,6 +30,8 @@ define([
     fullExtent: null,
     erfgoedFeatures: null,
     mapInteractions: null,
+
+    flashingLayerName: 'flashingLayer',
 
     postCreate: function () {
       this.inherited(arguments);
@@ -82,7 +84,7 @@ define([
 
       var osmTileLayer = this._createOsmLayer('Open Streetmap');
 
-      var beschermdWmsLayer = new ol.layer.Tile({
+      this.beschermdWmsLayer = new ol.layer.Tile({
         title: "Beschermd Onroerend Erfgoed",
         extent: extentVlaanderen,
         source: new ol.source.TileWMS(({
@@ -138,7 +140,7 @@ define([
           grbTransTileLayer,
           grb_gbgTileLayer,
           grb_adpTileLayer,
-          beschermdWmsLayer,
+          this.beschermdWmsLayer,
           geoJsonLayer,
           oeFeaturesLayer
         ]
@@ -156,6 +158,17 @@ define([
       this._createInteractions();
       this._createPopup();
       //olMap.on('moveend', this._onMoveEnd);
+
+      this.vectorLayer = new ol.layer.Vector({
+        title: this.flashingLayerName,
+        source: new ol.source.Vector({}),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({color: '#FF0004', width: 1, opacity:1}),
+          fill: new ol.style.Fill({color: '#FF0004', opacity:0.4})
+        })
+      });
+
+      olMap.addLayer(this.vectorLayer);
 
       this.zoomToExtent(extentVlaanderen);
 
@@ -195,6 +208,21 @@ define([
       this.oeFeaturesLayer.getSource().addFeature(feature);
     },
 
+    drawBescherming: function (olFeature) {
+      if (olFeature) {
+        var beschSource = this.beschermdWmsLayer.getSource();
+        var geometry = olFeature.getGeometry();
+        var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+        var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+        olFeature.set('name', olFeature.get('CAPAKEY'));
+        olFeature.setGeometry(xyGeom);
+        beschSource.addFeature(olFeature);
+      }
+      else {
+        alert('Er werd geen perceel gevonden op deze locatie');
+      }
+    },
+
     drawPerceel: function (olFeature) {
       if (olFeature) {
         var perceelSource = this.geoJsonLayer.getSource();
@@ -224,6 +252,77 @@ define([
       }
       wktSource.addFeature(featureFromWKT);
       this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
+    },
+
+    zoomToFeature: function(olFeature){
+      var wktParser = new ol.Format.WKT();
+      var wkt = wktParser.write(new ol.Feature.Vector(olFeature.getGeometry()));
+      this.flashFeaturesInVectorLayer(wkt, 500, 3);
+    },
+
+    flashFeaturesInVectorLayer: function(wkts, timeout, maxCount, count) {
+      var scope = this;
+      if (!count) {
+        count = 1;
+      } else {
+        ++count;
+      }
+      if (!lang.isArray(wkts)) {
+        wkts = [wkts];
+      }
+      var features = [];
+      array.forEach(wkts, function(wkt) {
+        features.push(scope.drawInVectorLayer(wkt)[0]);
+      });
+      setTimeout(
+        function() {
+          array.forEach(features, function(feature) {
+            scope.deleteInVectorLayer( feature);
+          });
+          if (count < maxCount) {
+            setTimeout(
+              function() {
+                scope.flashFeaturesInVectorLayer(name, wkts, timeout, maxCount, count);
+              },
+              timeout
+            );
+          }
+        },
+        timeout
+      );
+    },
+
+    drawInVectorLayer: function(wkt, attributes, throwEvent) {
+      if (!attributes) {
+        attributes = {};
+      }
+      var vectorLayerSource = this.vectorLayer.getSource();
+      if (vectorLayerSource) {
+        var wktParser = new ol.Format.WKT();
+        var features = wktParser.read(wkt);
+        if (!lang.isArray(features)) {
+          features = [features];
+        }
+        array.forEach(features, function(feature) {
+          feature.attributes = attributes;
+        });
+        vectorLayerSource.addFeatures(features, {
+          silent: !throwEvent
+        });
+        return features;
+      }
+    },
+
+    deleteInVectorLayer: function(features) {
+      if (!lang.isArray(features)) {
+        features = [features];
+      }
+      var vectorLayerSource = this.vectorLayer.getSource();
+      if (vectorLayerSource) {
+        array.forEach(features, function(feature) {
+          vectorLayerSource.removeFeature(feature);
+        });
+      }
     },
 
 
@@ -558,6 +657,25 @@ define([
         });
       });
       this.mapInteractions.selectParcelKey = eventKey;
+    },
+
+    startBeschermingSelect: function (beschermingService) {
+      this.stopAllDrawActions();
+      this.popup.disable();
+
+      var controller = this,
+        map = this.olMap,
+        popup = this.popup, layer = this.beschermdWmsLayer;
+
+      var eventKey = map.on('click', function (evt) {
+        map.unByKey(eventKey);
+        var source = layer.getSource();
+        var beschUrl = source.getGetFeatureInfoUrl(evt.coordinate, map.getView().getResolution(), 'EPSG:3857', {'INFO_FORMAT': 'application/json'});
+        beschermingService.readFeatures(evt.coordinate).then(function(result){
+          controller.drawPerceel(result);
+        });
+        //this.mapInteractions.selectParcelKey = eventKey;
+      });
     },
 
     stopParcelSelect: function () {
