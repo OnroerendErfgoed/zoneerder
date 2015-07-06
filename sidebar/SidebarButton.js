@@ -11,7 +11,6 @@ define([
 ) {
   return declare([WidgetBase, TemplatedMixin, Evented], {
 
-    tab: null,
     label: null,
     iconClass: null,
     templateString: ''
@@ -34,7 +33,7 @@ define([
     _tabClick: function (evt) {
       evt.preventDefault();
       //console.debug('SidebarButton::_onClick', this.label);
-      this.emit('tabClick', {tab: this.tab});
+      this.emit('Click');
     }
 
   });

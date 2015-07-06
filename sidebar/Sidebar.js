@@ -8,7 +8,8 @@ define([
   'dojo/dom-class',
   'dojo/dom-construct',
   'dojo/on',
-  './SidebarButton'
+  './SidebarButton',
+  './SidebarTab'
 ], function (
   declare,
   WidgetBase,
@@ -19,7 +20,8 @@ define([
   domClass,
   domConstruct,
   on,
-  SidebarButton
+  SidebarButton,
+  SidebarTab
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -36,7 +38,7 @@ define([
     },
 
     openTab: function (tabPane) {
-      //console.debug('Sidebar::open', tabPane);
+      console.debug('Sidebar::open', tabPane);
       domClass.remove(this.containerNode, 'collapsed');
       query('.sidebar-pane.active', this.paneNode).removeClass('active');
       domClass.add(tabPane, 'active');
@@ -53,39 +55,22 @@ define([
       //console.debug('Sidebar::createTab', label);
 
       //add tab pane to paneNode
-      var pane = domConstruct.create('div', {
-        'class': 'sidebar-pane'
-      }, this.paneNode);
-
-      domConstruct.create('h2', {
-        'innerHTML': label
-      }, pane);
-
-      var paneBody = domConstruct.create('div', {
-        'class': 'pane-body'
-      }, pane);
-
-      domConstruct.create('div', {
-        'innerHTML': description,
-        'class': 'pane-description'
-      }, paneBody);
-
-      var contentContainer = domConstruct.create('div', {
-        'class': 'pane-content'
-      }, paneBody);
+      var tab = new SidebarTab({
+        label: label,
+        description: description
+      }).placeAt(this.paneNode);
 
       //add tab button to buttonNode
       var btn = new SidebarButton({
-        tab: pane,
         label: label,
-        iconClass: iconClass
+        iconClass: iconClass,
+        onClick: lang.hitch(this, function() {
+          console.warn('SidebarButton::onClick');
+          this._tabButtonClick(btn.domNode, tab.domNode);
+        })
       }).placeAt(this.buttonNode);
 
-      btn.on("tabClick", lang.hitch(this, function (evt) {
-        this._tabButtonClick(btn.domNode, evt.tab);
-      }));
-
-      return contentContainer;
+      return tab;
 
     },
 

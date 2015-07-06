@@ -143,7 +143,7 @@
 .sidebar-map .zoneerder-pane {
   border: 2px solid #52A7CF;
   padding: 0;
-  margin: 10px 0;
+  margin: 15px 0;
 }
 
 .sidebar-map .zoneerder-pane-header {
@@ -180,6 +180,32 @@
 }
 
 .sidebar-map ul.zoneerder-actionlist li a {
+  color: #52A7CF;
+  text-decoration: none;
+}
+
+.zone-grid .dgrid {
+  height: 125px;
+}
+
+.zone-grid .dgrid-row-odd {
+  background-color: #F5F5F5;
+}
+
+.zone-grid .dgrid-selected {
+  background-color: #96e1ff;
+}
+
+.zone-grid .dgrid-cell {
+  border: none;
+}
+
+.zone-grid .action-column {
+  width: 25px;
+  text-align: center;
+}
+
+.zone-grid .action-column a {
   color: #52A7CF;
   text-decoration: none;
 }
