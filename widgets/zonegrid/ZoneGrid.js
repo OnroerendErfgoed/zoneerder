@@ -5,8 +5,6 @@ define([
   'dojo/text!./ZoneGrid.html',
   'dojo/dom-construct',
   'dojo/_base/lang',
-  'dojo/store/Memory',
-  'dojo/store/Observable',
   'dgrid/OnDemandGrid',
   'dgrid/Selection',
   'dgrid/extensions/DijitRegistry',
@@ -18,8 +16,6 @@ define([
   template,
   domConstruct,
   lang,
-  Memory,
-  Observable,
   OnDemandGrid,
   Selection,
   DijitRegistry,
@@ -29,21 +25,15 @@ define([
 
     templateString: template,
     baseClass: 'zone-grid',
-    _store: null,
+    polygonStore: null,
     _grid: null,
 
     postCreate: function () {
       this.inherited(arguments);
       console.debug('ZoneGrid::postCreate');
 
-      this._store = new Observable( new Memory( {data: [
-        {'id': 1, 'naam': 'testpolygoon'},
-        {'id': 2, 'naam': 'testpolygoon2'},
-        {'id': 3, 'naam': 'testpolygoon3'}
-      ]} ));
-
       this._grid = this._createGrid({
-        store: this._store
+        store: this.polygonStore
       }, this.gridNode);
     },
 

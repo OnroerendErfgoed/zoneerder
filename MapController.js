@@ -6,6 +6,8 @@ define([
   'dojo/request/xhr',
   'dojo/_base/array',
   'dojo/json',
+  'dojo/store/Memory',
+  'dojo/store/Observable',
   'ol',
   './popup/Popup'
 ], function (
@@ -16,6 +18,8 @@ define([
   xhr,
   array,
   JSON,
+  Memory,
+  Observable,
   ol,
   Popup
 ) {
@@ -30,9 +34,16 @@ define([
     fullExtent: null,
     erfgoedFeatures: null,
     mapInteractions: null,
+    polygonStore: null,
 
     postCreate: function () {
       this.inherited(arguments);
+
+      this.polygonStore = new Observable( new Memory( {data: [
+        {'id': 1, 'naam': 'testpolygoon'},
+        {'id': 2, 'naam': 'testpolygoon2'},
+        {'id': 3, 'naam': 'testpolygoon3'}
+      ]} ));
 
       proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
       // Add crs urn alias to Lambert72 projection, in order for open layers to recognize it.
@@ -481,6 +492,7 @@ define([
         evt.feature.setProperties({
           'name': 'Polygoon'
         });
+        this._newPolygonStore({id:3, name:"Three"});
         this.popup.enable();
         window.setTimeout(function () {
           map.removeInteraction(drawInteraction);

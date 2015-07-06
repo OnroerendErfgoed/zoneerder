@@ -126,7 +126,9 @@ define([
         /* ZONE */
         var zonePane = domConstruct.create('div');
         drawTab.addContent(zonePane);
-        var zoneGrid = new ZoneGrid({}, zonePane);
+        var zoneGrid = new ZoneGrid({
+          polygonStore: this.mapController.polygonStore
+        }, zonePane);
         drawTab.registerWidget(zoneGrid);
 
         on(zoneGrid, 'click.zone.delete', lang.hitch(this, function () {
