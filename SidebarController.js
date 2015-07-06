@@ -3,17 +3,28 @@ define([
   'dojo/_base/lang',
   'mijit/_WidgetBase',
   'dojo/Evented',
-  "dojo/query",
+  'dojo/query',
+  'dojo/on',
   './sidebar/Sidebar',
   './layerswitcher/LayerSwitcher',
+  './widgets/zonegrid/ZoneGrid',
   'crabpy_dojo/CrabpyWidget',
   'dojo/dom-construct',
   'dojo-form-controls/Button',
-  'dojo-form-controls/Textarea',
-  "dojo/dom", "dojo/_base/fx", "dojo/on", "dojo/dom-style",
   'dojo/NodeList-dom'
-], function (declare, lang, WidgetBase, Evented, query, Sidebar, LayerSwitcher, CrabpyWidget, domConstruct, Button, TextArea,
-dom, fx, on, domStyle
+], function (
+  declare,
+  lang,
+  WidgetBase,
+  Evented,
+  query,
+  on,
+  Sidebar,
+  LayerSwitcher,
+  ZoneGrid,
+  CrabpyWidget,
+  domConstruct,
+  Button
 ) {
   return declare([WidgetBase, Evented], {
 
@@ -53,7 +64,7 @@ dom, fx, on, domStyle
           'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
 
         var layerNode = domConstruct.create("div");
-        domConstruct.place(layerNode, layerTab);
+        layerTab.addContent(layerNode);
 
         var layerSwitcher = new LayerSwitcher ({
           map: this.mapController.olMap,
@@ -72,7 +83,7 @@ dom, fx, on, domStyle
         });
 
         var crabNode = domConstruct.create("div");
-        domConstruct.place(crabNode, ZoomTab);
+        ZoomTab.addContent(crabNode);
         var crabZoomer = crabpyWidget.createCrabZoomer(crabNode);
         var self = this;
         var zoomButton = new Button({
@@ -88,10 +99,10 @@ dom, fx, on, domStyle
             }
           }
         });
-        domConstruct.place(zoomButton.domNode, ZoomTab);
+        ZoomTab.addContent(zoomButton.domNode);
 
         var capakeyNode = domConstruct.create("div");
-        domConstruct.place(capakeyNode, ZoomTab);
+        ZoomTab.addContent(capakeyNode);
         var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
         var capakeyZoomButton = new Button({
           label: "Zoom naar perceel",
@@ -106,61 +117,37 @@ dom, fx, on, domStyle
             }
           }
         });
-        domConstruct.place(capakeyZoomButton.domNode, ZoomTab);
+        ZoomTab.addContent(capakeyZoomButton.domNode);
       }
 
       if (this.tabs.draw) {
         var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan.');
 
         /* ZONE */
-        var zonePane = domConstruct.create('div', {'class': 'zoneerder-pane'}, drawTab);
+        var zonePane = domConstruct.create('div', {'class': 'zoneerder-pane'});
+        drawTab.addContent(zonePane);
+        var zoneGrid = new ZoneGrid({}, zonePane);
+        zoneGrid.startup();
 
-        var zoneHeader = domConstruct.create('div', {
-          'class': 'zoneerder-pane-header',
-          innerHTML: 'Zone'
-        }, zonePane);
-
-        domConstruct.create('a', {
-          title: 'Verwijder de volledige zone',
-          href: '#',
-          innerHTML: '<i class="fa fa-trash"></i> ',
-          onclick: lang.hitch(this, function (evt) {
-            evt.preventDefault();
-             console.info('zone::delete');
+        on(zoneGrid, 'click.zone.delete', lang.hitch(this, function () {
+             console.info('zonegrid::delete zone');
             this.mapController.stopAllDrawActions();
             this.mapController.geoJsonLayer.getSource().clear();
             this.zone = null;
             sidebar.emit("zone.deleted");
-          })
-        }, zoneHeader);
-
-        domConstruct.create('a', {
-          title: 'Zoom naar de zone',
-          href: '#',
-          innerHTML: '<i class="fa fa-search"></i> ',
-          onclick: lang.hitch(this, function (evt) {
-            evt.preventDefault();
+          }));
+        on(zoneGrid, 'click.zone.zoom', lang.hitch(this, function () {
+            console.info('zonegrid::zoom zone');
             console.info('TODO: implement zoom to zone');
-          })
-        }, zoneHeader);
-
-        domConstruct.create('a', {
-          title: 'Flash de zone',
-          href: '#',
-          innerHTML: '<i class="fa fa-flash"></i> ',
-          onclick: lang.hitch(this, function (evt) {
-            evt.preventDefault();
+        }));
+        on(zoneGrid, 'click.zone.flash', lang.hitch(this, function () {
+            console.info('zonegrid::zoom flash');
             console.info('TODO: implement flash zone');
-          })
-        }, zoneHeader);
-
-        domConstruct.create('div', {
-          'class': 'zoneerder-pane-content',
-          innerHTML: 'content'
-        }, zonePane);
+        }));
 
         /* TOEVOEGEN */
-        var addPane = domConstruct.create('div', {'class': 'zoneerder-pane'}, drawTab);
+        var addPane = domConstruct.create('div', {'class': 'zoneerder-pane'});
+        drawTab.addContent(addPane);
 
         domConstruct.create('div', {
           'class': 'zoneerder-pane-header',
@@ -269,7 +256,8 @@ dom, fx, on, domStyle
         //
 
         /* BUTTONS */
-        var bottomButtonsNode = domConstruct.create("div", {'class': 'zoneerder-draw-buttons'}, drawTab);
+        var bottomButtonsNode = domConstruct.create('div', {'class': 'zoneerder-draw-buttons'});
+        drawTab.addContent(bottomButtonsNode);
 
         new Button({
           label: "Bewaar",
@@ -299,7 +287,7 @@ dom, fx, on, domStyle
       }
 
       if (this.tabs.help) {
-        sidebar.createTab('Help', 'fa-question-circle', 'I need somebody </br> ... </br> <small>(to provide help content)</small>');
+        sidebar.createTab('Help', 'fa-question-circle', 'I need somebody');
       }
 
       return sidebar;
