@@ -70,7 +70,7 @@ define([
           map: this.mapController.olMap,
           div: layerNode
         });
-        layerSwitcher.startup();
+        layerTab.registerWidget(layerSwitcher);
       }
 
       if (this.tabs.zoom) {
@@ -124,10 +124,10 @@ define([
         var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan.');
 
         /* ZONE */
-        var zonePane = domConstruct.create('div', {'class': 'zoneerder-pane'});
+        var zonePane = domConstruct.create('div');
         drawTab.addContent(zonePane);
         var zoneGrid = new ZoneGrid({}, zonePane);
-        zoneGrid.startup();
+        drawTab.registerWidget(zoneGrid);
 
         on(zoneGrid, 'click.zone.delete', lang.hitch(this, function () {
              console.info('zonegrid::delete zone');

@@ -50,14 +50,11 @@ define([
     startup: function () {
       this.inherited(arguments);
       console.debug('ZoneGrid::startup');
-
       this._grid.startup();
     },
 
-
-    onShow: function(){
-      this.inherited(arguments);
-      console.debug('ZoneGrid::onShow');
+    refresh: function(){
+      console.debug('ZoneGrid::refresh');
       this._grid.resize();
     },
 

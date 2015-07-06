@@ -28,12 +28,12 @@ define([
     templateString: template,
 
     postCreate: function () {
-      //console.debug('Sidebar::postCreate');
+      console.debug('Sidebar::postCreate');
       this.inherited(arguments);
     },
 
     startup: function () {
-      //console.debug('Sidebar::startup');
+      console.debug('Sidebar::startup');
       this.inherited(arguments);
     },
 
@@ -41,7 +41,8 @@ define([
       console.debug('Sidebar::open', tabPane);
       domClass.remove(this.containerNode, 'collapsed');
       query('.sidebar-pane.active', this.paneNode).removeClass('active');
-      domClass.add(tabPane, 'active');
+      domClass.add(tabPane.domNode, 'active');
+      tabPane.refresh();
     },
 
     collapse: function() {
@@ -66,7 +67,7 @@ define([
         iconClass: iconClass,
         onClick: lang.hitch(this, function() {
           console.warn('SidebarButton::onClick');
-          this._tabButtonClick(btn.domNode, tab.domNode);
+          this._tabButtonClick(btn, tab);
         })
       }).placeAt(this.buttonNode);
 
@@ -76,14 +77,14 @@ define([
 
     _tabButtonClick: function (tabButton, tabPane) {
       //console.debug('Sidebar::_tabButtonClick', tabButton, tabPane, domClass.contains(tabButton, 'active'));
-      var tabActive = domClass.contains(tabButton, 'active');
+      var tabActive = domClass.contains(tabButton.domNode, 'active');
       query('li.active', this.buttonNode).removeClass('active');
 
       if (tabActive) {
         this.collapse();
       }
       else {
-        domClass.add(tabButton, 'active');
+        domClass.add(tabButton.domNode, 'active');
         this.openTab(tabPane);
       }
     }
