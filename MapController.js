@@ -320,7 +320,8 @@ define([
       var vectorSource = new ol.source.Vector({});
 
       var textStyleFunction = function (feature, resolution) {
-        var text = (resolution < 3 && feature.get('name') ) ? feature.get('name') : '';
+        //var text = (resolution < 3 && feature.get('name') ) ? feature.get('name') : '';
+        var text = feature.get('name') ? feature.get('name') : '?';
         return new ol.style.Text({
           font: '10px Verdana',
           text: text,
