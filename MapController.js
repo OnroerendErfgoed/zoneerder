@@ -25,7 +25,7 @@ define([
     popupContainer: null,
     olMap: null,
     mapProjection: null,
-    geoJsonLayer: null,
+    zoneLayer: null,
     oeFeaturesLayer: null,
     fullExtent: null,
     erfgoedFeatures: null,
@@ -106,13 +106,13 @@ define([
         visible: false
       });
 
-      var geoJsonLayer = this._createGeojsonLayer({
+      var zoneLayer = this._createVectorLayer({
         title: 'Zone',
         color: 'rgb(39, 146, 195)',
         fill:  'rgba(39, 146, 195, 0.3)'
       });
-      this.geoJsonLayer = geoJsonLayer;
-      var oeFeaturesLayer = this._createGeojsonLayer({
+      this.zoneLayer = zoneLayer;
+      var oeFeaturesLayer = this._createVectorLayer({
         title: 'Erfgoed Objecten',
         color: 'rgb(124, 47, 140)',
         fill:  'rgba(124, 47, 140, 0.3)'
@@ -139,7 +139,7 @@ define([
           grb_gbgTileLayer,
           grb_adpTileLayer,
           beschermdWmsLayer,
-          geoJsonLayer,
+          zoneLayer,
           oeFeaturesLayer
         ]
       });
@@ -197,7 +197,7 @@ define([
 
     drawPerceel: function (olFeature) {
       if (olFeature) {
-        var perceelSource = this.geoJsonLayer.getSource();
+        var perceelSource = this.zoneLayer.getSource();
         var geometry = olFeature.getGeometry();
         var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
@@ -212,7 +212,7 @@ define([
 
     drawWKTzone: function (wkt) {
       var wktParser = new ol.format.WKT();
-      var wktSource = this.geoJsonLayer.getSource();
+      var wktSource = this.zoneLayer.getSource();
       try {
         var featureFromWKT = wktParser.readFeature(wkt, {
           dataProjection: this.pLam,
@@ -316,21 +316,8 @@ define([
       });
     },
 
-    _createGeojsonLayer: function (options) {
+    _createVectorLayer: function (options) {
       var vectorSource = new ol.source.Vector({});
-      //var vectorSource = new ol.source.GeoJSON(
-      //  /** @type {olx.source.GeoJSONOptions} */ ({
-      //    object: {
-      //      'type': 'FeatureCollection',
-      //      'crs': {
-      //        'type': 'name',
-      //        'properties': {
-      //          'name': 'EPSG:900913'
-      //        }
-      //      },
-      //      'features': []
-      //    }
-      //  }));
 
       var textStyleFunction = function (feature, resolution) {
         var text = (resolution < 3 && feature.get('name') ) ? feature.get('name') : '';
@@ -393,13 +380,11 @@ define([
     },
 
     getZone: function () {
-      var geojsonSource = this.geoJsonLayer.getSource();
-
       //create empty zone multiPolygon
       var multiPolygon = new ol.geom.MultiPolygon([], 'XY');
 
       //add all polygons and multiPolygons from zone layer
-      array.forEach(geojsonSource.getFeatures(), function (feature) {
+      array.forEach(this.zoneLayer.getSource().getFeatures(), function (feature) {
         var cloneGeom = feature.clone().getGeometry();
         cloneGeom.transform('EPSG:900913', 'EPSG:31370');
         if (cloneGeom instanceof ol.geom.Polygon) {
@@ -436,8 +421,7 @@ define([
         geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
       });
 
-      var geojsonSource = this.geoJsonLayer.getSource();
-      geojsonSource.addFeature(feature);
+      this.zoneLayer.getSource().addFeature(feature);
     },
 
     getFeatures: function () {
@@ -468,8 +452,7 @@ define([
     },
 
     zoomToZone: function () {
-      var geojsonSource = this.geoJsonLayer.getSource();
-      this.zoomToExtent(geojsonSource.getExtent());
+      this.zoomToExtent(this.zoneLayer.getSource().getExtent());
     },
 
     zoomToExtent: function (extent) {
@@ -494,6 +477,9 @@ define([
       map.addInteraction(drawInteraction);
 
       drawInteraction.on('drawend', lang.hitch(this, function (evt) {
+        evt.feature.setProperties({
+          'name': 'Polygoon'
+        });
         this.popup.enable();
         window.setTimeout(function () {
           map.removeInteraction(drawInteraction);
@@ -514,7 +500,7 @@ define([
 
       var selectInteraction = new ol.interaction.Select({
         condition: ol.events.condition.click,
-        layers: [this.geoJsonLayer]
+        layers: [this.zoneLayer]
       });
 
       this.mapInteractions.select = selectInteraction;
@@ -524,7 +510,7 @@ define([
     removeSelectedItems: function () {
       var selectInteraction = this.mapInteractions.select;
       if (selectInteraction) {
-        var source = this.geoJsonLayer.getSource();
+        var source = this.zoneLayer.getSource();
         selectInteraction.getFeatures().forEach(function (feature) {
           source.removeFeature(feature);
         });
@@ -645,7 +631,7 @@ define([
 
     _createInteractions: function () {
       var drawInteraction = new ol.interaction.Draw({
-          source: this.geoJsonLayer.getSource(),
+          source: this.zoneLayer.getSource(),
           type: /** @type {ol.geom.GeometryType} */ ('Polygon')
       });
 

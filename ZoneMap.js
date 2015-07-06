@@ -123,7 +123,7 @@ define([
 
     resetZone: function (val) {
       this.mapController.stopAllDrawActions();
-      this.mapController.geoJsonLayer.getSource().clear();
+      this.mapController.zoneLayer.getSource().clear();
       if (val) {
         this.setZone(val);
       }

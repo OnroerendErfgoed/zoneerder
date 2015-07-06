@@ -132,7 +132,7 @@ define([
         on(zoneGrid, 'click.zone.delete', lang.hitch(this, function () {
              console.info('zonegrid::delete zone');
             this.mapController.stopAllDrawActions();
-            this.mapController.geoJsonLayer.getSource().clear();
+            this.mapController.zoneLayer.getSource().clear();
             this.zone = null;
             sidebar.emit("zone.deleted");
           }));
