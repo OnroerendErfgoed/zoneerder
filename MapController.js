@@ -174,6 +174,7 @@ define([
     startup: function () {
       this.inherited(arguments);
       this.popup.startup();
+      this._observePolygonStore();
     },
 
     clearFeatures: function () {
@@ -431,9 +432,14 @@ define([
         name: 'Zone'
       });
 
+      try {
+        this.polygonStore.add({id: 'zone', naam: 'Zone', feature: feature});
+      } catch (e) {
+        console.warn("the zone was already added to the map!");
+        return;
+      }
       this.zoneLayer.getSource().addFeature(feature);
 
-      this.polygonStore.put({id: 'zone', naam: 'Zone', feature: feature});
     },
 
     getFeatures: function () {
@@ -668,6 +674,21 @@ define([
         map: this.olMap,
         layer: this.oeFeaturesLayer
       }, this.popupContainer);
+    },
+
+    _observePolygonStore: function () {
+      var results = this.polygonStore.query({});
+      results.observe(lang.hitch(this, function(object, removedFrom, insertedInto){
+        if(removedFrom > -1){ // existing object removed
+          this._removePolygonFromZone(object.feature);
+        }
+        if(insertedInto > -1){ // new or updated object inserted
+        }
+      }));
+    },
+
+    _removePolygonFromZone: function (polygon) {
+      this.zoneLayer.getSource().removeFeature(polygon);
     }
   });
 });

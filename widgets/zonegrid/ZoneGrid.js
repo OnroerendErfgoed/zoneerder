@@ -87,10 +87,10 @@ define([
           sortable: false,
           className: 'action-column',
           renderCell: lang.hitch(this, function (object, value, node, options) {
-            return this._createActionColumn("Verwijder deze polygoon", "fa-trash", function (evt) {
-                evt.preventDefault();
-                console.debug('zonegrid::remove', object);
-              });
+            return this._createActionColumn("Verwijder deze polygoon", "fa-trash", lang.hitch(this, function (evt) {
+              evt.preventDefault();
+              this._deletePolygon(object);
+            }));
           })
         }
       };
@@ -122,7 +122,6 @@ define([
     _deleteZone: function (evt) {
       evt.preventDefault();
       this.polygonStore.query().forEach(function (polygon) {
-        console.log(' - delete polygon', polygon);
         this.polygonStore.remove(polygon.id);
       }, this);
       this.emit("click.zone.delete");
@@ -137,6 +136,14 @@ define([
     _flashZone: function (evt) {
       evt.preventDefault();
       this.emit("click.zone.flash");
+    },
+
+    _deletePolygon: function (polygonToDelete) {
+      this.polygonStore.query().forEach(function (polygon) {
+        if (polygonToDelete.id == polygon.id) {
+          this.polygonStore.remove(polygonToDelete.id);
+        }
+      }, this);
     }
   });
 });
