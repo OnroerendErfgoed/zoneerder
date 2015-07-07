@@ -26,6 +26,8 @@
 
 <body>
 <div id="widgetNode"></div>
+<div id="setZoneNode"></div>
+<div id="getZoneNode"></div>
 <div id="button1Node"></div>
 <div id="button2Node"></div>
 <div id="button3Node"></div>
@@ -39,8 +41,9 @@
     "zoneerder/ZoneMap",
     'dojo/_base/lang',
     'dojo-form-controls/Button',
+    'dojo/json',
     "dojo/domReady!"
-  ], function (ZoneMap, lang, Button) {
+  ], function (ZoneMap, lang, Button, JSON) {
 
     var zoneMapConfig = {
       buttons: {
@@ -83,6 +86,24 @@
       })
     }, 'button1Node');
     myButton.startup();
+
+    var getZoneButton = new Button({
+      label: "get zone",
+      onClick: lang.hitch(this, function () {
+        console.log(JSON.stringify(widgetUnderTest.getZone()));
+      })
+    }, 'getZoneNode');
+    getZoneButton.startup();
+
+    var testzone = {"type":"MultiPolygon","coordinates":[[[[123796.3989870126,161922.68658473343],[125855.60320366417,162033.58173123002],[126451.84609249674,157270.33629081864],[126158.4321447326,156715.58044047095],[125322.48775104273,156816.1542271264],[123796.3989870126,161922.68658473343]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
+
+    var setZoneButton = new Button({
+      label: "set zone",
+      onClick: lang.hitch(this, function () {
+        widgetUnderTest.setZone(testzone);
+      })
+    }, 'setZoneNode');
+    setZoneButton.startup();
 
     var myButtonNis = new Button({
       label: "get niscodes",

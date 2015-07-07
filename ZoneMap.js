@@ -38,6 +38,7 @@ define([
                       '<div data-dojo-attach-point="popupNode"></div>' +
                     '</div>',
     mapController: null,
+    buttonController: null,
     config: null,
     erfgoedService: null,
     perceelService: null,
@@ -45,6 +46,7 @@ define([
     zone: null,
 
     postCreate: function () {
+      console.debug('ZoneMap::postCreate');
       this.inherited(arguments);
       if (!this.config) {
         this.config = {
@@ -70,45 +72,46 @@ define([
       if (this.config.beschermingUrl) {
         this.beschermingService = new BeschermingService({ url: this.config.beschermingUrl });
       }
-    },
+    
 
-    startup: function () {
-      this.inherited(arguments);
-
-      var zonemap = this;
-
-      var mapController = new MapController({
+      this.mapController = new MapController({
         mapContainer: this.mapNode,
         popupContainer: this.popupNode
       });
-      this.mapController = mapController;
-      mapController.startup();
 
-      var buttonController = new ButtonController({
-        map: mapController.olMap,
-        fullExtent: mapController.fullExtent,
+      this.buttonController = new ButtonController({
+        map: this.mapController.olMap,
+        fullExtent: this.mapController.fullExtent,
         mapButtons: this.config.buttons
       });
-      buttonController.startup();
 
       if (this.config.sidebar) {
-        var sidebarController = new SidebarController({
-          mapController: mapController,
+        this.sidebarController = new SidebarController({
+          mapController: this.mapController,
           perceelService: this.perceelService,
           beschermingService: this.beschermingService,
           tabs: this.config.sidebar,
           crabpyUrl: this.config.crabpyUrl
         });
-        var sidebar = sidebarController.createSidebar(this.sidebarNode);
+      }
+    },
+
+    startup: function () {
+      console.debug('ZoneMap::startup');
+      this.inherited(arguments);
+      this.mapController.startup();
+      this.buttonController.startup();
+      if (this.sidebarController) {
+        var sidebar = this.sidebarController.createSidebar(this.sidebarNode);
+        sidebar.on("zone.saved", lang.hitch(this, function(evt) {
+          this.zone = evt.zone;
+          this.emit("zonechanged", evt.zone);
+        }));
+        sidebar.on("zone.deleted", lang.hitch( this, function(evt) {
+          this.zone = null;
+          this.emit("zonechanged", null);
+        }));
         sidebar.startup();
-        sidebar.on("zone.saved", function(evt){
-          zonemap.zone = evt.zone;
-          zonemap.emit("zonechanged", evt.zone);
-        });
-        sidebar.on("zone.deleted", function(){
-          zonemap.zone = null;
-          zonemap.emit("zonechanged", null);
-        });
       }
     },
 
@@ -128,7 +131,7 @@ define([
 
     resetZone: function (val) {
       this.mapController.stopAllDrawActions();
-      this.mapController.geoJsonLayer.getSource().clear();
+      this.mapController.zoneLayer.getSource().clear();
       if (val) {
         this.setZone(val);
       }
