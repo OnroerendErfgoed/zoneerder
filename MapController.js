@@ -217,7 +217,7 @@ define([
         beschSource.addFeature(olFeature);
       }
       else {
-        alert('Er werd geen perceel gevonden op deze locatie');
+        alert('Er werd geen bescherming gevonden op deze locatie');
       }
     },
 
