@@ -15,7 +15,7 @@ define([
   request,
   xhr,
   array,
-  json,
+  JSON,
   ol,
   Popup
 ) {
@@ -30,8 +30,6 @@ define([
     fullExtent: null,
     erfgoedFeatures: null,
     mapInteractions: null,
-
-    flashingLayerName: 'flashingLayer',
 
     postCreate: function () {
       this.inherited(arguments);
@@ -84,7 +82,7 @@ define([
 
       var osmTileLayer = this._createOsmLayer('Open Streetmap');
 
-      this.beschermdWmsLayer = new ol.layer.Tile({
+      var beschermdWmsLayer = new ol.layer.Tile({
         title: "Beschermd Onroerend Erfgoed",
         extent: extentVlaanderen,
         source: new ol.source.TileWMS(({
@@ -107,6 +105,7 @@ define([
         type: 'overlay',
         visible: false
       });
+      this.beschermdWmsLayer = beschermdWmsLayer;
 
       var geoJsonLayer = this._createGeojsonLayer({
         title: 'Zone',
@@ -140,7 +139,7 @@ define([
           grbTransTileLayer,
           grb_gbgTileLayer,
           grb_adpTileLayer,
-          this.beschermdWmsLayer,
+          beschermdWmsLayer,
           geoJsonLayer,
           oeFeaturesLayer
         ]
@@ -160,7 +159,6 @@ define([
       //olMap.on('moveend', this._onMoveEnd);
 
       this.vectorLayer = new ol.layer.Vector({
-        title: this.flashingLayerName,
         source: new ol.source.Vector({}),
         style: new ol.style.Style({
           stroke: new ol.style.Stroke({color: '#FF0004', width: 1, opacity:1}),
