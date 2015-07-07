@@ -672,7 +672,7 @@ define([
         var source = layer.getSource();
         var beschUrl = source.getGetFeatureInfoUrl(evt.coordinate, map.getView().getResolution(), 'EPSG:3857', {'INFO_FORMAT': 'application/json'});
         beschermingService.readFeatures(evt.coordinate).then(function(result){
-          controller.drawPerceel(result);
+          controller.drawPerceel(result); //todo: drawPerceel voro een bscherming?
         });
         //todo: event key verwidjeren bij cancel
         //this.mapInteractions.selectParcelKey = eventKey;
