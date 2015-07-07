@@ -145,6 +145,16 @@ define([
             console.info('zonegrid::zoom flash');
             console.info('TODO: implement flash zone');
         }));
+        on(zoneGrid, 'click.polygon', lang.hitch(this, function (evt) {
+          switch(evt.action) {
+            case 'zoom':
+              this.mapController.zoomToPolygon(evt.polygon);
+              break;
+            case 'flash':
+              console.debug('TODO flash', evt.polygon);
+              break;
+          }
+        }));
 
         /* TOEVOEGEN */
         var addPane = domConstruct.create('div', {'class': 'zoneerder-pane'});

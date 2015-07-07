@@ -485,6 +485,10 @@ define([
       this.zoomToExtent(oeFeaturesSource.getExtent());
     },
 
+    zoomToPolygon: function (polygon) {
+      this.zoomToExtent(polygon.getGeometry().getExtent());
+    },
+
     startDraw: function () {
       console.debug('Mapcontroller::startDraw');
       this.stopAllDrawActions();

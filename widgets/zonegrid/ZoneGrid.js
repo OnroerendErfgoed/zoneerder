@@ -63,10 +63,10 @@ define([
           sortable: false,
           className: 'action-column',
           renderCell: lang.hitch(this, function (object, value, node, options) {
-            return this._createActionColumn("Flash deze polygoon", "fa-flash", function (evt) {
+            return this._createActionColumn("Flash deze polygoon", "fa-flash", lang.hitch(this, function (evt) {
                 evt.preventDefault();
-                console.debug('zonegrid::flash', object);
-              });
+                this._flashPolygon(object.feature);
+              }));
           })
         },
         zoom: {
@@ -75,10 +75,10 @@ define([
           sortable: false,
           className: 'action-column',
           renderCell: lang.hitch(this, function (object, value, node, options) {
-            return this._createActionColumn("Zoom naar deze polygoon", "fa-search", function (evt) {
+            return this._createActionColumn("Zoom naar deze polygoon", "fa-search", lang.hitch(this, function (evt) {
               evt.preventDefault();
-              console.debug('zonegrid::zoom', object);
-            });
+              this._zoomToPolygon(object.feature);
+            }));
           })
         },
         remove: {
@@ -144,6 +144,22 @@ define([
           this.polygonStore.remove(polygonToDelete.id);
         }
       }, this);
+    },
+
+    _zoomToPolygon: function (polygon) {
+      console.debug('ZoneGrid::_zoomToPolygon', polygon);
+      this.emit('click.polygon', {
+        action: 'zoom',
+        polygon: polygon
+      });
+    },
+
+    _flashPolygon: function (polygon) {
+      console.debug('ZoneGrid::_flashPolygon', polygon);
+      this.emit('click.polygon', {
+        action: 'flash',
+        polygon: polygon
+      });
     }
   });
 });
