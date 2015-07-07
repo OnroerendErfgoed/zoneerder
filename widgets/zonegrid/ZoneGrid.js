@@ -146,7 +146,6 @@ define([
     },
 
     _zoomToPolygon: function (polygon) {
-      console.debug('ZoneGrid::_zoomToPolygon', polygon);
       this.emit('click.polygon', {
         action: 'zoom',
         polygon: polygon
@@ -154,7 +153,6 @@ define([
     },
 
     _flashPolygon: function (polygon) {
-      console.debug('ZoneGrid::_flashPolygon', polygon);
       this.emit('click.polygon', {
         action: 'flash',
         polygon: polygon

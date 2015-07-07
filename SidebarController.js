@@ -226,6 +226,7 @@ define([
           onclick: lang.hitch(this, function (evt) {
             evt.preventDefault();
             this.mapController.startInputWKT(wktInput.value);
+            wktInput.value = '';
           })
         }, wktLi);
         var wktInput = domConstruct.create('input', {

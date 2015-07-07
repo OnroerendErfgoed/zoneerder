@@ -227,12 +227,18 @@ define([
           dataProjection: this.pLam,
           featureProjection: this.pDef
         });
+
+        var name = 'Polygoon ' + this._drawPolygonIndex++;
+        featureFromWKT.setProperties({
+          'name': name
+        });
+
+        wktSource.addFeature(featureFromWKT);
+        this.polygonStore.put({id: name, naam: name, feature: featureFromWKT});
       }
       catch (error) {
         alert("Dit is een ongeldige WKT geometrie.")
       }
-      wktSource.addFeature(featureFromWKT);
-      this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
     },
 
 
