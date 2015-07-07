@@ -27,6 +27,7 @@ define([
     mapProjection: null,
     geoJsonLayer: null,
     oeFeaturesLayer: null,
+    flashLayer: null,
     fullExtent: null,
     erfgoedFeatures: null,
     mapInteractions: null,
@@ -158,15 +159,14 @@ define([
       this._createPopup();
       //olMap.on('moveend', this._onMoveEnd);
 
-      this.vectorLayer = new ol.layer.Vector({
+      this.flashLayer = new ol.layer.Vector({
         source: new ol.source.Vector({}),
         style: new ol.style.Style({
           stroke: new ol.style.Stroke({color: '#FF0004', width: 1, opacity:1}),
           fill: new ol.style.Fill({color: '#FF0004', opacity:0.4})
         })
       });
-
-      olMap.addLayer(this.vectorLayer);
+      olMap.addLayer(this.flashLayer);
 
       this.zoomToExtent(extentVlaanderen);
 
@@ -295,7 +295,7 @@ define([
       if (!attributes) {
         attributes = {};
       }
-      var vectorLayerSource = this.vectorLayer.getSource();
+      var vectorLayerSource = this.flashLayer.getSource();
       if (vectorLayerSource) {
         var wktParser = new ol.Format.WKT();
         var features = wktParser.read(wkt);
@@ -316,7 +316,7 @@ define([
       if (!lang.isArray(features)) {
         features = [features];
       }
-      var vectorLayerSource = this.vectorLayer.getSource();
+      var vectorLayerSource = this.flashLayer.getSource();
       if (vectorLayerSource) {
         array.forEach(features, function(feature) {
           vectorLayerSource.removeFeature(feature);
