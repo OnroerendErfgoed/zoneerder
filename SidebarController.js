@@ -131,20 +131,23 @@ define([
         }, zonePane);
         drawTab.registerWidget(zoneGrid);
 
-        on(zoneGrid, 'click.zone.delete', lang.hitch(this, function () {
-             console.info('zonegrid::delete zone');
-            this.mapController.stopAllDrawActions();
-            this.zone = null;
-            sidebar.emit("zone.deleted");
-          }));
-        on(zoneGrid, 'click.zone.zoom', lang.hitch(this, function () {
-            console.info('zonegrid::zoom zone');
-            console.info('TODO: implement zoom to zone');
+        on(zoneGrid, 'click.zone', lang.hitch(this, function (evt) {
+          switch(evt.action) {
+            case 'delete':
+              this.mapController.stopAllDrawActions();
+              this.zone = null;
+              sidebar.emit('zone.deleted');
+              break;
+            case 'zoom':
+              this.mapController.zoomToZone();
+              break;
+            case 'flash':
+              console.info('zonegrid::zoom flash');
+              console.info('TODO: implement flash zone');
+              break;
+          }
         }));
-        on(zoneGrid, 'click.zone.flash', lang.hitch(this, function () {
-            console.info('zonegrid::zoom flash');
-            console.info('TODO: implement flash zone');
-        }));
+
         on(zoneGrid, 'click.polygon', lang.hitch(this, function (evt) {
           switch(evt.action) {
             case 'zoom':

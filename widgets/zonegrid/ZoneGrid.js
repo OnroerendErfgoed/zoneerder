@@ -124,18 +124,17 @@ define([
       this.polygonStore.query().forEach(function (polygon) {
         this.polygonStore.remove(polygon.id);
       }, this);
-      this.emit("click.zone.delete");
+      this.emit('click.zone', {action: 'delete'});
     },
 
     _zoomToZone: function (evt) {
       evt.preventDefault();
-      this.emit("click.zone.zoom");
-      this._grid.resize();
+      this.emit('click.zone', {action: 'zoom'});
     },
 
     _flashZone: function (evt) {
       evt.preventDefault();
-      this.emit("click.zone.flash");
+      this.emit('click.zone', {action: 'flash'});
     },
 
     _deletePolygon: function (polygonToDelete) {
