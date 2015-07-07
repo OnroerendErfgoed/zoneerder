@@ -35,15 +35,12 @@ define([
     erfgoedFeatures: null,
     mapInteractions: null,
     polygonStore: null,
+    _drawPolygonIndex: 1,
 
     postCreate: function () {
       this.inherited(arguments);
 
-      this.polygonStore = new Observable( new Memory( {data: [
-        {'id': 1, 'naam': 'testpolygoon'},
-        {'id': 2, 'naam': 'testpolygoon2'},
-        {'id': 3, 'naam': 'testpolygoon3'}
-      ]} ));
+      this.polygonStore = new Observable( new Memory( {data: []} ));
 
       proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
       // Add crs urn alias to Lambert72 projection, in order for open layers to recognize it.
@@ -430,10 +427,13 @@ define([
       var geometry = this.geoJsonFormatter.readGeometry(geojson);
 
       var feature = new ol.Feature({
-        geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
+        geometry: geometry.transform('EPSG:31370', 'EPSG:900913'),
+        name: 'Zone'
       });
 
       this.zoneLayer.getSource().addFeature(feature);
+
+      this.polygonStore.put({id: 'zone', naam: 'Zone', feature: feature});
     },
 
     getFeatures: function () {
@@ -480,28 +480,35 @@ define([
     },
 
     startDraw: function () {
+      console.debug('Mapcontroller::startDraw');
       this.stopAllDrawActions();
       this.popup.disable();
 
-      var map = this.olMap;
-
       var drawInteraction = this.mapInteractions.draw;
-      map.addInteraction(drawInteraction);
+      drawInteraction.setActive(true);
 
-      drawInteraction.on('drawend', lang.hitch(this, function (evt) {
+      this.mapInteractions.drawKey = drawInteraction.once('drawend', function (evt) {
+        console.debug('Mapcontroller::startDraw::drawend');
+        var name = 'Polygoon ' + this._drawPolygonIndex++;
         evt.feature.setProperties({
-          'name': 'Polygoon'
+          'name': name
         });
-        this._newPolygonStore({id:3, name:"Three"});
+        this.polygonStore.put({id: name, naam: name, feature: evt.feature});
         this.popup.enable();
-        window.setTimeout(function () {
-          map.removeInteraction(drawInteraction);
+        window.setTimeout(function () { //set timeout to prevent zoom after double click to end drawing
+          drawInteraction.setActive(false);
         }, 0);
-      }));
+      }, this);
     },
 
     stopDraw: function () {
-      this.olMap.removeInteraction(this.mapInteractions.draw);
+      if (this.mapInteractions.draw.getActive()) {
+        this.mapInteractions.draw.setActive(false);
+      }
+      if (this.mapInteractions.drawKey) {
+        this.mapInteractions.draw.unByKey(this.mapInteractions.drawKey);
+        this.mapInteractions.drawKey = null;
+      }
       this.popup.enable();
     },
 
@@ -643,10 +650,13 @@ define([
     },
 
     _createInteractions: function () {
+      console.debug("MapController::_createInteractions");
       var drawInteraction = new ol.interaction.Draw({
           source: this.zoneLayer.getSource(),
           type: /** @type {ol.geom.GeometryType} */ ('Polygon')
       });
+      this.olMap.addInteraction(drawInteraction);
+      drawInteraction.setActive(false);
 
       this.mapInteractions = {
         draw: drawInteraction

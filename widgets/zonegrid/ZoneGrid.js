@@ -43,7 +43,7 @@ define([
       this._grid.startup();
     },
 
-    refresh: function(){
+    refresh: function() {
       console.debug('ZoneGrid::refresh');
       this._grid.resize();
     },
@@ -100,7 +100,7 @@ define([
         selectionMode: 'single',
         columns: columns,
         sort: [{ attribute: 'naam' }],
-        noDataMessage: 'geen bestanden beschikbaar',
+        noDataMessage: 'geen polygonen beschikbaar',
         loadingMessage: "data aan het ophalen..."
       }, node);
     },
@@ -121,13 +121,17 @@ define([
 
     _deleteZone: function (evt) {
       evt.preventDefault();
+      this.polygonStore.query().forEach(function (polygon) {
+        console.log(' - delete polygon', polygon);
+        this.polygonStore.remove(polygon.id);
+      }, this);
       this.emit("click.zone.delete");
     },
 
     _zoomToZone: function (evt) {
       evt.preventDefault();
       this.emit("click.zone.zoom");
-      this._grid.resize()
+      this._grid.resize();
     },
 
     _flashZone: function (evt) {
