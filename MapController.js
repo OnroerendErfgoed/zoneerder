@@ -253,7 +253,8 @@ define([
       this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
     },
 
-    zoomToFeature: function(olFeature){
+    //todo: nog nodig?
+    flashFeature: function(olFeature){
       var wktParser = new ol.Format.WKT();
       var wkt = wktParser.write(new ol.Feature.Vector(olFeature.getGeometry()));
       this.flashFeaturesInVectorLayer(wkt, 500, 3);
