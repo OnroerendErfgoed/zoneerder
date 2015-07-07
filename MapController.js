@@ -206,6 +206,7 @@ define([
       this.oeFeaturesLayer.getSource().addFeature(feature);
     },
 
+    //todo: is deze nodig?
     drawBescherming: function (olFeature) {
       if (olFeature) {
         var beschSource = this.beschermdWmsLayer.getSource();
@@ -214,7 +215,7 @@ define([
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
         olFeature.set('name', olFeature.get('CAPAKEY'));
         olFeature.setGeometry(xyGeom);
-        beschSource.addFeature(olFeature);
+        beschSource.addFeature(olFeature); //todo: naar WMS schrijven?
       }
       else {
         alert('Er werd geen bescherming gevonden op deze locatie');
@@ -672,6 +673,7 @@ define([
         beschermingService.readFeatures(evt.coordinate).then(function(result){
           controller.drawPerceel(result);
         });
+        //todo: event key verwidjeren bij cancel
         //this.mapInteractions.selectParcelKey = eventKey;
       });
     },
