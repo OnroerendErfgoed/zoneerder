@@ -145,7 +145,7 @@ define([
               break;
             case 'flash':
               console.info('zonegrid::zoom flash');
-              console.info('TODO: implement flash zone');
+              this.mapController.flashFeature(zoneGrid.makeMultiPolygon());
               break;
           }
         }));
@@ -156,7 +156,7 @@ define([
               this.mapController.zoomToPolygon(evt.polygon);
               break;
             case 'flash':
-              console.debug('TODO flash', evt.polygon);
+              this.mapController.flashFeature(evt.polygon);
               break;
           }
         }));

@@ -31,6 +31,7 @@ define([
     mapProjection: null,
     zoneLayer: null,
     oeFeaturesLayer: null,
+    flashLayer: null,
     fullExtent: null,
     erfgoedFeatures: null,
     mapInteractions: null,
@@ -165,6 +166,15 @@ define([
       this._createPopup();
       //olMap.on('moveend', this._onMoveEnd);
 
+      this.flashLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({}),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({color: 'rgba(255,0,255, 1)', width: 1}),
+          fill: new ol.style.Fill({color: 'rgba(255,0,255, 0.4)'})
+        })
+      });
+      olMap.addLayer(this.flashLayer);
+
       this.zoomToExtent(extentVlaanderen);
 
       //console.log("projection:");
@@ -238,6 +248,77 @@ define([
       }
       catch (error) {
         alert("Dit is een ongeldige WKT geometrie.")
+      }
+    },
+
+    flashFeature: function(olFeature){
+      var wktParser = new ol.format.WKT();
+      var wkt = wktParser.writeFeature(new ol.Feature({geometry : olFeature.getGeometry(), name: 'Flashing polygon'}));
+      this.flashFeaturesInVectorLayer(wkt, 500, 3);
+    },
+
+    flashFeaturesInVectorLayer: function(wkts, timeout, maxCount, count) {
+      var scope = this;
+      if (!count) {
+        count = 1;
+      } else {
+        ++count;
+      }
+      if (!lang.isArray(wkts)) {
+        wkts = [wkts];
+      }
+      var features = [];
+      array.forEach(wkts, function(wkt) {
+        features.push(scope.drawInVectorLayer(wkt)[0]);
+      });
+      setTimeout(
+        function() {
+          array.forEach(features, function(feature) {
+            scope.deleteInVectorLayer( feature);
+          });
+          if (count < maxCount) {
+            setTimeout(
+              function() {
+                scope.flashFeaturesInVectorLayer(wkts, timeout, maxCount, count);
+              },
+              timeout
+            );
+          }
+        },
+        timeout
+      );
+    },
+
+    drawInVectorLayer: function(wkt, attributes, throwEvent) {
+      if (!attributes) {
+        attributes = {};
+      }
+      var vectorLayerSource = this.flashLayer.getSource();
+      if (vectorLayerSource) {
+        var wktParser = new ol.format.WKT();
+        var features = wktParser.readFeatures(wkt);
+        if (!lang.isArray(features)) {
+          features = [features];
+        }
+        array.forEach(features, function(feature) {
+          feature.attributes = attributes;
+        });
+        vectorLayerSource.addFeatures(features, {
+          silent: !throwEvent
+        });
+        return features;
+      }
+    },
+
+    deleteInVectorLayer: function(features) {
+      if (!lang.isArray(features)) {
+        features = [features];
+      }
+      var vectorLayerSource = this.flashLayer.getSource();
+      if (vectorLayerSource) {
+        array.forEach(features, function(feature) {
+          vectorLayerSource.removeFeature(feature);
+        });
       }
     },
 
