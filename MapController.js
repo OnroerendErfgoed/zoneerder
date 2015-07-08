@@ -269,18 +269,21 @@ define([
     },
 
     flashFeature: function(olFeature){
-      this._flashFeaturesInVectorLayer([olFeature], 500, 3);
+      this._flashFeaturesInVectorLayer([olFeature], 1000, 1);
     },
 
     flashFeatures: function(olFeatures){
-      this._flashFeaturesInVectorLayer(olFeatures, 500, 3);
+      this._flashFeaturesInVectorLayer(olFeatures, 1000, 1);
     },
 
     _flashFeaturesInVectorLayer: function(olFeatures, timeout, maxCount, count) {
       count ? ++count : count=1;
 
       var flashLayerSource = this.flashLayer.getSource();
-      flashLayerSource.addFeatures(olFeatures);
+      var allFeatures = flashLayerSource.getFeatures();
+      if(allFeatures.length === 0){
+        flashLayerSource.addFeatures(olFeatures);
+      }
 
       setTimeout(
         lang.hitch(this, function() {
