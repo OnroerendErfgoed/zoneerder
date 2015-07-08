@@ -43,7 +43,7 @@ define([
     zone: null,
 
     postCreate: function () {
-      console.debug('ZoneMap::postCreate');
+      //console.debug('ZoneMap::postCreate');
       this.inherited(arguments);
       if (!this.config) {
         this.config = {
@@ -89,7 +89,7 @@ define([
     },
 
     startup: function () {
-      console.debug('ZoneMap::startup');
+      //console.debug('ZoneMap::startup');
       this.inherited(arguments);
       this.mapController.startup();
       this.buttonController.startup();
