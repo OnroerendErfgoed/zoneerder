@@ -144,6 +144,7 @@ define([
             case 'flash':
               console.info('zonegrid::zoom flash');
               console.info('TODO: implement flash zone');
+              this.mapController.flashFeature(zoneGrid.makeMultiPolygon());
               break;
           }
         }));
@@ -155,6 +156,7 @@ define([
               break;
             case 'flash':
               console.debug('TODO flash', evt.polygon);
+              this.mapController.flashFeature(evt.polygon);
               break;
           }
         }));
@@ -162,24 +164,6 @@ define([
         /* TOEVOEGEN */
         var addPane = domConstruct.create('div', {'class': 'zoneerder-pane'});
         drawTab.addContent(addPane);
-                var beschermButton = new Button({
-                    label: "Selecteer bescherming",
-                    'class': "sidebar-button",
-                    onClick: lang.hitch(this, function () {
-                        this.mapController.startBeschermingSelect(this.beschermingService);
-                    })
-                });
-                domConstruct.place(beschermButton.domNode, toolbarNode);
-
-                var cancelDrawButton = new Button({
-                    label: "Annuleren",
-                    'class': "sidebar-button",
-                    onClick: lang.hitch(this, function () {
-                        this.mapController.stopDraw();
-                        this.mapController.stopParcelSelect();
-                    })
-                });
-                domConstruct.place(cancelDrawButton.domNode, toolbarNode);
 
         domConstruct.create('div', {
           'class': 'zoneerder-pane-header',
@@ -231,7 +215,8 @@ define([
           innerHTML: '<i class="fa  fa-hand-o-up"></i> Selecteer bescherming',
           onclick: lang.hitch(this, function (evt) {
             evt.preventDefault();
-             console.info('zone::select bescherming');
+            console.info('zone::select bescherming');
+            this.mapController.startBeschermingSelect(this.beschermingService);
           })
         }, domConstruct.create('li', {}, actionList));
 

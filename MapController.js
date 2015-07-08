@@ -170,8 +170,8 @@ define([
       this.flashLayer = new ol.layer.Vector({
         source: new ol.source.Vector({}),
         style: new ol.style.Style({
-          stroke: new ol.style.Stroke({color: '#FF0004', width: 1, opacity:1}),
-          fill: new ol.style.Fill({color: '#FF0004', opacity:0.4})
+          stroke: new ol.style.Stroke({color: 'rgba(255,0,255, 1)', width: 1}),
+          fill: new ol.style.Fill({color: 'rgba(255,0,255, 0.4)'})
         })
       });
       olMap.addLayer(this.flashLayer);
@@ -268,10 +268,9 @@ define([
       }
     },
 
-    //todo: nog nodig?
     flashFeature: function(olFeature){
-      var wktParser = new ol.Format.WKT();
-      var wkt = wktParser.write(new ol.Feature.Vector(olFeature.getGeometry()));
+      var wktParser = new ol.format.WKT();
+      var wkt = wktParser.writeFeature(new ol.Feature({geometry : olFeature.getGeometry(), name: 'Flashing polygon'}));
       this.flashFeaturesInVectorLayer(wkt, 500, 3);
     },
 
@@ -297,7 +296,7 @@ define([
           if (count < maxCount) {
             setTimeout(
               function() {
-                scope.flashFeaturesInVectorLayer(name, wkts, timeout, maxCount, count);
+                scope.flashFeaturesInVectorLayer(wkts, timeout, maxCount, count);
               },
               timeout
             );
@@ -313,8 +312,8 @@ define([
       }
       var vectorLayerSource = this.flashLayer.getSource();
       if (vectorLayerSource) {
-        var wktParser = new ol.Format.WKT();
-        var features = wktParser.read(wkt);
+        var wktParser = new ol.format.WKT();
+        var features = wktParser.readFeatures(wkt);
         if (!lang.isArray(features)) {
           features = [features];
         }
