@@ -269,76 +269,34 @@ define([
     },
 
     flashFeature: function(olFeature){
-      var wktParser = new ol.format.WKT();
-      var wkt = wktParser.writeFeature(new ol.Feature({geometry : olFeature.getGeometry(), name: 'Flashing polygon'}));
-      this.flashFeaturesInVectorLayer(wkt, 500, 3);
+      this._flashFeaturesInVectorLayer([olFeature], 500, 3);
     },
 
-    flashFeaturesInVectorLayer: function(wkts, timeout, maxCount, count) {
-      var scope = this;
-      if (!count) {
-        count = 1;
-      } else {
-        ++count;
-      }
-      if (!lang.isArray(wkts)) {
-        wkts = [wkts];
-      }
-      var features = [];
-      array.forEach(wkts, function(wkt) {
-        features.push(scope.drawInVectorLayer(wkt)[0]);
-      });
+    flashFeatures: function(olFeatures){
+      this._flashFeaturesInVectorLayer(olFeatures, 500, 3);
+    },
+
+    _flashFeaturesInVectorLayer: function(olFeatures, timeout, maxCount, count) {
+      count ? ++count : count=1;
+
+      var flashLayerSource = this.flashLayer.getSource();
+      flashLayerSource.addFeatures(olFeatures);
+
       setTimeout(
-        function() {
-          array.forEach(features, function(feature) {
-            scope.deleteInVectorLayer( feature);
-          });
+        lang.hitch(this, function() {
+          flashLayerSource.clear();
           if (count < maxCount) {
             setTimeout(
-              function() {
-                scope.flashFeaturesInVectorLayer(wkts, timeout, maxCount, count);
-              },
+              lang.hitch(this, function() {
+                this._flashFeaturesInVectorLayer(olFeatures, timeout, maxCount, count);
+              }),
               timeout
             );
           }
-        },
+        }),
         timeout
       );
     },
-
-    drawInVectorLayer: function(wkt, attributes, throwEvent) {
-      if (!attributes) {
-        attributes = {};
-      }
-      var vectorLayerSource = this.flashLayer.getSource();
-      if (vectorLayerSource) {
-        var wktParser = new ol.format.WKT();
-        var features = wktParser.readFeatures(wkt);
-        if (!lang.isArray(features)) {
-          features = [features];
-        }
-        array.forEach(features, function(feature) {
-          feature.attributes = attributes;
-        });
-        vectorLayerSource.addFeatures(features, {
-          silent: !throwEvent
-        });
-        return features;
-      }
-    },
-
-    deleteInVectorLayer: function(features) {
-      if (!lang.isArray(features)) {
-        features = [features];
-      }
-      var vectorLayerSource = this.flashLayer.getSource();
-      if (vectorLayerSource) {
-        array.forEach(features, function(feature) {
-          vectorLayerSource.removeFeature(feature);
-        });
-      }
-    },
-
 
     _onMoveEnd: function (evt) {
       var olMap = evt.map;

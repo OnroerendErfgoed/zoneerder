@@ -8,8 +8,7 @@ define([
   'dgrid/OnDemandGrid',
   'dgrid/Selection',
   'dgrid/extensions/DijitRegistry',
-  'dgrid/extensions/ColumnResizer',
-  'ol'
+  'dgrid/extensions/ColumnResizer'
 ], function (
   TemplatedMixin,
   WidgetBase,
@@ -20,8 +19,7 @@ define([
   OnDemandGrid,
   Selection,
   DijitRegistry,
-  ColumnResizer,
-  ol
+  ColumnResizer
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -127,18 +125,6 @@ define([
         this.polygonStore.remove(polygon.id);
       }, this);
       this.emit('click.zone', {action: 'delete'});
-    },
-
-    makeMultiPolygon: function(){
-      var poly = new ol.geom.MultiPolygon([], 'XY');
-      this.polygonStore.query().forEach(function (polygon) {
-        poly.appendPolygon(new ol.geom.Polygon(polygon.feature.getGeometry().getCoordinates(), 'XY'));
-      });
-      var feature = new ol.Feature({
-        geometry: poly,
-        name: 'flash multiPolygon'
-      });
-      return feature;
     },
 
     _zoomToZone: function (evt) {
