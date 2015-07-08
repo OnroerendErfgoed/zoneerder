@@ -22,17 +22,17 @@ define([
 
     postCreate: function () {
       this.inherited(arguments);
-      console.debug('SidebarTab::postCreate', this.label);
+      //console.debug('SidebarTab::postCreate', this.label);
       this.children = [];
     },
 
     startup: function () {
       this.inherited(arguments);
-      console.debug('SidebarTab::startup', this.label);
+      //console.debug('SidebarTab::startup', this.label);
     },
 
     getChildren: function () {
-      console.debug('SidebarTab::getChildren', this.label);
+      //console.debug('SidebarTab::getChildren', this.label);
 			return this.children;
 		},
 
@@ -45,9 +45,8 @@ define([
     },
 
     refresh: function () {
-      console.debug('SidebarTab::refresh', this.label);
+      //console.debug('SidebarTab::refresh', this.label);
       array.forEach(this.children, function (child) {
-        console.debug('   -', child);
         if (child.refresh) {
           child.refresh();
         }

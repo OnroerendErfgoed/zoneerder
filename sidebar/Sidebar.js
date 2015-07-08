@@ -28,17 +28,17 @@ define([
     templateString: template,
 
     postCreate: function () {
-      console.debug('Sidebar::postCreate');
+      //console.debug('Sidebar::postCreate');
       this.inherited(arguments);
     },
 
     startup: function () {
-      console.debug('Sidebar::startup');
+      //console.debug('Sidebar::startup');
       this.inherited(arguments);
     },
 
     openTab: function (tabPane) {
-      console.debug('Sidebar::open', tabPane);
+      //console.debug('Sidebar::open', tabPane);
       domClass.remove(this.containerNode, 'collapsed');
       query('.sidebar-pane.active', this.paneNode).removeClass('active');
       domClass.add(tabPane.domNode, 'active');
@@ -66,7 +66,6 @@ define([
         label: label,
         iconClass: iconClass,
         onClick: lang.hitch(this, function() {
-          console.warn('SidebarButton::onClick');
           this._tabButtonClick(btn, tab);
         })
       }).placeAt(this.buttonNode);

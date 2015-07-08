@@ -32,7 +32,7 @@ define([
 
     postCreate: function () {
       this.inherited(arguments);
-      console.debug('ZoneGrid::postCreate');
+      //console.debug('ZoneGrid::postCreate');
 
       this._grid = this._createGrid({
         store: this.polygonStore
@@ -41,12 +41,12 @@ define([
 
     startup: function () {
       this.inherited(arguments);
-      console.debug('ZoneGrid::startup');
+      //console.debug('ZoneGrid::startup');
       this._grid.startup();
     },
 
     refresh: function() {
-      console.debug('ZoneGrid::refresh');
+      //console.debug('ZoneGrid::refresh');
       this._grid.resize();
     },
 

@@ -8,6 +8,7 @@ define([
   './sidebar/Sidebar',
   './layerswitcher/LayerSwitcher',
   './widgets/zonegrid/ZoneGrid',
+  './widgets/zoneeditor/ZoneEditor',
   'crabpy_dojo/CrabpyWidget',
   'dojo/dom-construct',
   'dojo-form-controls/Button',
@@ -22,6 +23,7 @@ define([
   Sidebar,
   LayerSwitcher,
   ZoneGrid,
+  ZoneEditor,
   CrabpyWidget,
   domConstruct,
   Button
@@ -143,7 +145,6 @@ define([
               break;
             case 'flash':
               console.info('zonegrid::zoom flash');
-              console.info('TODO: implement flash zone');
               this.mapController.flashFeature(zoneGrid.makeMultiPolygon());
               break;
           }
@@ -155,13 +156,18 @@ define([
               this.mapController.zoomToPolygon(evt.polygon);
               break;
             case 'flash':
-              console.debug('TODO flash', evt.polygon);
               this.mapController.flashFeature(evt.polygon);
               break;
           }
         }));
 
         /* TOEVOEGEN */
+        var zoneEditPane = domConstruct.create('div');
+        drawTab.addContent(zoneEditPane);
+        var zoneEditor = new ZoneEditor({
+          mapController: this.mapController
+        }, zoneEditPane);
+        drawTab.registerWidget(zoneEditor);
         var addPane = domConstruct.create('div', {'class': 'zoneerder-pane'});
         drawTab.addContent(addPane);
 

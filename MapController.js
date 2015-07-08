@@ -594,7 +594,7 @@ define([
     },
 
     startDraw: function () {
-      console.debug('Mapcontroller::startDraw');
+      //console.debug('Mapcontroller::startDraw');
       this.stopAllDrawActions();
       this.popup.disable();
 
@@ -602,16 +602,15 @@ define([
       drawInteraction.setActive(true);
 
       this.mapInteractions.drawKey = drawInteraction.once('drawend', function (evt) {
-        console.debug('Mapcontroller::startDraw::drawend');
+        //console.debug('Mapcontroller::startDraw::drawend');
         var name = 'Polygoon ' + this._drawPolygonIndex++;
         evt.feature.setProperties({
           'name': name
         });
         this.polygonStore.put({id: name, naam: name, feature: evt.feature});
-        this.popup.enable();
-        window.setTimeout(function () { //set timeout to prevent zoom after double click to end drawing
-          drawInteraction.setActive(false);
-        }, 0);
+        window.setTimeout(lang.hitch(this, function () { //set timeout to prevent zoom after double click to end drawing
+          this.stopDraw();
+        }, 0));
       }, this);
     },
 
@@ -784,7 +783,7 @@ define([
     },
 
     _createInteractions: function () {
-      console.debug("MapController::_createInteractions");
+      //console.debug("MapController::_createInteractions");
       var drawInteraction = new ol.interaction.Draw({
           source: this.zoneLayer.getSource(),
           type: /** @type {ol.geom.GeometryType} */ ('Polygon')
