@@ -17,6 +17,7 @@ define([
 
     templateString: template,
     baseClass: 'zone-editor',
+    mapController: null,
 
     postCreate: function () {
       this.inherited(arguments);
