@@ -168,7 +168,8 @@ define([
         var zoneEditPane = domConstruct.create('div');
         drawTab.addContent(zoneEditPane);
         var zoneEditor = new ZoneEditor({
-          mapController: this.mapController
+          mapController: this.mapController,
+          perceelService: this.perceelService
         }, zoneEditPane);
         drawTab.registerWidget(zoneEditor);
 

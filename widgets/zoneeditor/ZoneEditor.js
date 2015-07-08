@@ -20,6 +20,7 @@ define([
     templateString: template,
     baseClass: 'zone-editor',
     mapController: null,
+    perceelService: null,
 
     postCreate: function () {
       this.inherited(arguments);
