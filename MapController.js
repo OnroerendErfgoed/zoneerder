@@ -510,10 +510,9 @@ define([
           'name': name
         });
         this.polygonStore.put({id: name, naam: name, feature: evt.feature});
-        this.popup.enable();
-        window.setTimeout(function () { //set timeout to prevent zoom after double click to end drawing
-          drawInteraction.setActive(false);
-        }, 0);
+        window.setTimeout(lang.hitch(this, function () { //set timeout to prevent zoom after double click to end drawing
+          this.stopDraw();
+        }, 0));
       }, this);
     },
 
