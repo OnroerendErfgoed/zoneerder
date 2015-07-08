@@ -1,7 +1,8 @@
 define([
   'dojo/_base/declare',
   'dojo/_base/lang',
-  'mijit/_WidgetBase',
+  'dojo/_base/array',
+  'dijit/_WidgetBase',
   'dojo/Evented',
   'dojo/query',
   'dojo/on',
@@ -16,6 +17,7 @@ define([
 ], function (
   declare,
   lang,
+  array,
   WidgetBase,
   Evented,
   query,
@@ -144,8 +146,9 @@ define([
               this.mapController.zoomToZone();
               break;
             case 'flash':
-              console.info('zonegrid::zoom flash');
-              this.mapController.flashFeature(zoneGrid.makeMultiPolygon());
+              this.mapController.flashFeatures(array.map(this.mapController.polygonStore.data, function (polygon) {
+                return polygon.feature;
+              }));
               break;
           }
         }));
