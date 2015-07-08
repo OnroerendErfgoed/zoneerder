@@ -129,18 +129,6 @@ define([
       this.emit('click.zone', {action: 'delete'});
     },
 
-    makeMultiPolygon: function(){
-      var poly = new ol.geom.MultiPolygon([], 'XY');
-      this.polygonStore.query().forEach(function (polygon) {
-        poly.appendPolygon(new ol.geom.Polygon(polygon.feature.getGeometry().getCoordinates(), 'XY'));
-      });
-      var feature = new ol.Feature({
-        geometry: poly,
-        name: 'flash multiPolygon'
-      });
-      return feature;
-    },
-
     _zoomToZone: function (evt) {
       evt.preventDefault();
       this.emit('click.zone', {action: 'zoom'});
