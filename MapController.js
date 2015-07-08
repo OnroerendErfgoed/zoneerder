@@ -566,38 +566,6 @@ define([
       this.popup.enable();
     },
 
-    startSelect: function () {
-      this.stopAllDrawActions();
-      this.popup.disable();
-
-      var map = this.olMap;
-
-      var selectInteraction = new ol.interaction.Select({
-        condition: ol.events.condition.click,
-        layers: [this.zoneLayer]
-      });
-
-      this.mapInteractions.select = selectInteraction;
-      map.addInteraction(selectInteraction);
-    },
-
-    removeSelectedItems: function () {
-      var selectInteraction = this.mapInteractions.select;
-      if (selectInteraction) {
-        var source = this.zoneLayer.getSource();
-        selectInteraction.getFeatures().forEach(function (feature) {
-          source.removeFeature(feature);
-        });
-      }
-      this.stopSelect();
-
-    },
-
-    stopSelect: function () {
-      this.olMap.removeInteraction(this.mapInteractions.select);
-      this.popup.enable();
-    },
-
     startParcelSelect: function (perceelService) {
       this.stopAllDrawActions();
       this.popup.disable();
@@ -628,7 +596,6 @@ define([
 
     stopAllDrawActions: function () {
       this.stopDraw();
-      this.stopSelect();
       this.stopParcelSelect();
     },
 

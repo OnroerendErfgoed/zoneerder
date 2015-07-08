@@ -173,40 +173,6 @@ define([
         }, zoneEditPane);
         drawTab.registerWidget(zoneEditor);
 
-        //var removeTitle = domConstruct.create("div", {innerHTML: "Verwijder een polygoon uit de selectie"});
-        //domConstruct.place(removeTitle, drawTab);
-        //
-        //var toolbarNode2 = domConstruct.create("div", {'class': 'buttons'});
-        //domConstruct.place(toolbarNode2, drawTab);
-        //
-        //var selectButton = new Button({
-        //  label: "Kies polygoon",
-        //  'class': "sidebar-button",
-        //  onClick: lang.hitch(this, function () {
-        //    this.mapController.startSelect();
-        //  })
-        //});
-        //domConstruct.place(selectButton.domNode, toolbarNode2);
-        //
-        //var removeButton = new Button({
-        //  label: "Verwijderen",
-        //  'class': "sidebar-button",
-        //  onClick: lang.hitch(this, function () {
-        //    this.mapController.removeSelectedItems();
-        //  })
-        //});
-        //domConstruct.place(removeButton.domNode, toolbarNode2);
-        //
-        //var cancelRemoveButton = new Button({
-        //  label: "Annuleren",
-        //  'class': "sidebar-button",
-        //  onClick: lang.hitch(this, function () {
-        //    this.mapController.stopSelect();
-        //  })
-        //});
-        //domConstruct.place(cancelRemoveButton.domNode, toolbarNode2);
-        //
-
         /* BUTTONS */
         var bottomButtonsNode = domConstruct.create('div', {'class': 'zoneerder-draw-buttons'});
         drawTab.addContent(bottomButtonsNode);
