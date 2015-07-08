@@ -1,26 +1,29 @@
 define([
   'dijit/_TemplatedMixin',
   'dijit/_WidgetBase',
+  'dojo/text!./ZoneEditor.html',
   'dojo/_base/declare',
   'dojo/_base/array',
-  'dojo/text!./ZoneEditor.html',
+  'dojo/_base/lang',
   'dojo/dom-construct',
-  'dojo/_base/lang'
+  'dojo/query',
+  'dojo/NodeList-manipulate'
 ], function (
   TemplatedMixin,
   WidgetBase,
+  template,
   declare,
   array,
-  template,
+  lang,
   domConstruct,
-  lang
+  query
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
     templateString: template,
     baseClass: 'zone-editor',
     mapController: null,
-    perceelService: null,
+    _activeTool: null,
 
     postCreate: function () {
       this.inherited(arguments);
@@ -31,24 +34,27 @@ define([
     startup: function () {
       this.inherited(arguments);
       console.debug('ZoneEditor::startup');
+    },
 
+    reset: function () {
+      this._resetTools();
     },
 
     _draw: function (evt) {
       evt.preventDefault();
       console.debug('ZoneEditor::_draw');
-      this.mapController.startDraw();
+      this._setActiveTool('draw');
     },
 
     _selectPerceel: function (evt) {
       evt.preventDefault();
       console.debug('ZoneEditor::_selectParcel');
-      this.mapController.startParcelSelect(this.perceelService);
+      this._setActiveTool('selectPerceel');
     },
 
     _selectBescherming: function (evt) {
       evt.preventDefault();
-      console.debug('ZoneEditor::_selectBescherming TODO');
+      this._setActiveTool('selectBescherming');
     },
 
     _drawWkt: function (evt) {
@@ -56,14 +62,14 @@ define([
       console.debug('ZoneEditor::_drawWkt');
       var wkt = this._filterWktFromString(this.wktInput.value.toUpperCase());
 
+      this._setActiveTool('drawWkt');
       if (wkt) {
         this.mapController.drawWKTzone(wkt);
       }
       else {
         alert('Het is niet mogelijk om een wkt string uit de opgegeven tekst te halen.');
       }
-
-      this.wktInput.value = '';
+      this._resetTools();
     },
 
     _filterWktFromString: function (stringWithWkt) {
@@ -125,6 +131,62 @@ define([
       }
 
       return null;
+    },
+
+    _setActiveTool: function (toolname) {
+      var toolIsActive = (this._activeTool == toolname);
+      console.debug('ZoneEditor::_setActiveTool', toolname, toolIsActive);
+      this._resetTools();
+      this._activeTool = toolname;
+
+      if (!toolIsActive) {
+        var tool = this[toolname + "Tool"];
+        var iList = query('i', tool);
+        var spanList = query('span', tool);
+
+        switch (toolname) {
+          case 'draw':
+            iList.removeClass('fa-pencil');
+            spanList.innerHTML('Annuleer tekenen');
+            this.mapController.startDraw(lang.hitch(this, this._resetTools));
+            break;
+          case 'selectPerceel':
+            iList.removeClass('fa-hand-o-up');
+            spanList.innerHTML('Annuleer perceel selecteren');
+            this.mapController.startParcelSelect(lang.hitch(this, this._resetTools));
+            break;
+          case 'selectBescherming':
+            iList.removeClass('fa-hand-o-up');
+            spanList.innerHTML('Annuleer bescherming selecteren');
+            this.mapController.startBeschermingSelect(lang.hitch(this, this._resetTools));
+            break;
+          case 'drawWkt':
+            break;
+          default:
+        }
+        query('i', tool).addClass('fa-ban');
+      }
+    },
+
+    _resetTools: function () {
+      console.debug('ZoneEditor::_resetTools');
+      this._activeTool = null;
+      query('i', this.rootNode).removeClass('fa-ban');
+
+      this.mapController.stopDraw();
+      query('i', this.drawTool).addClass('fa-pencil');
+      query('span', this.drawTool).innerHTML('Teken polygoon');
+
+      this.mapController.stopParcelSelect();
+      query('i', this.selectPerceelTool).addClass('fa-hand-o-up');
+      query('span', this.selectPerceelTool).innerHTML('Selecteer perceel');
+
+      this.mapController.stopBeschermingSelect();
+      query('i', this.selectBeschermingTool).addClass('fa-hand-o-up');
+      query('span', this.selectBeschermingTool).innerHTML('Selecteer bescherming');
+
+
+      this.wktInput.value = '';
     }
 
   });

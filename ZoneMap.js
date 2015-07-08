@@ -69,7 +69,8 @@ define([
 
       this.mapController = new MapController({
         mapContainer: this.mapNode,
-        popupContainer: this.popupNode
+        popupContainer: this.popupNode,
+        perceelService: this.perceelService
       });
 
       this.buttonController = new ButtonController({
@@ -81,7 +82,6 @@ define([
       if (this.config.sidebar) {
         this.sidebarController = new SidebarController({
           mapController: this.mapController,
-          perceelService: this.perceelService,
           tabs: this.config.sidebar,
           crabpyUrl: this.config.crabpyUrl
         });

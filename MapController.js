@@ -36,6 +36,7 @@ define([
     erfgoedFeatures: null,
     mapInteractions: null,
     polygonStore: null,
+    perceelService: null,
     _drawPolygonIndex: 1,
 
     postCreate: function () {
@@ -534,9 +535,8 @@ define([
       this.zoomToExtent(polygon.getGeometry().getExtent());
     },
 
-    startDraw: function () {
+    startDraw: function (onEnd) {
       //console.debug('Mapcontroller::startDraw');
-      this.stopAllDrawActions();
       this.popup.disable();
 
       var drawInteraction = this.mapInteractions.draw;
@@ -551,6 +551,8 @@ define([
         this.polygonStore.put({id: name, naam: name, feature: evt.feature});
         window.setTimeout(lang.hitch(this, function () { //set timeout to prevent zoom after double click to end drawing
           this.stopDraw();
+          this.popup.enable();
+          onEnd();
         }, 0));
       }, this);
     },
@@ -566,13 +568,13 @@ define([
       this.popup.enable();
     },
 
-    startParcelSelect: function (perceelService) {
-      this.stopAllDrawActions();
+    startParcelSelect: function (onEnd) {
       this.popup.disable();
 
       var controller = this,
           map = this.olMap,
-          popup = this.popup;
+          popup = this.popup,
+          perceelService = this.perceelService;
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
@@ -582,6 +584,7 @@ define([
         }, function (err) {
           console.error(err);
         }).always(function () {
+          onEnd();
           popup.enable();
         });
       });
@@ -592,11 +595,18 @@ define([
       if (this.mapInteractions.selectParcelKey) {
         this.olMap.unByKey(this.mapInteractions.selectParcelKey);
       }
+      this.popup.enable();
     },
 
-    stopAllDrawActions: function () {
-      this.stopDraw();
-      this.stopParcelSelect();
+    startBeschermingSelect: function (onEnd) {
+      console.debug('MapController::startBeschermingSelect');
+      this.popup.disable();
+      onEnd();
+    },
+
+    stopBeschermingSelect: function () {
+      console.debug('MapController::stopBeschermingSelect');
+      this.popup.enable();
     },
 
     _createInteractions: function () {
