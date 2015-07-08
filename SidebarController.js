@@ -8,6 +8,7 @@ define([
   './sidebar/Sidebar',
   './layerswitcher/LayerSwitcher',
   './widgets/zonegrid/ZoneGrid',
+  './widgets/zoneeditor/ZoneEditor',
   'crabpy_dojo/CrabpyWidget',
   'dojo/dom-construct',
   'dojo-form-controls/Button',
@@ -22,6 +23,7 @@ define([
   Sidebar,
   LayerSwitcher,
   ZoneGrid,
+  ZoneEditor,
   CrabpyWidget,
   domConstruct,
   Button
@@ -160,81 +162,12 @@ define([
         }));
 
         /* TOEVOEGEN */
-        var addPane = domConstruct.create('div', {'class': 'zoneerder-pane'});
-        drawTab.addContent(addPane);
-
-        domConstruct.create('div', {
-          'class': 'zoneerder-pane-header',
-          innerHTML: 'Toevoegen'
-        }, addPane);
-
-        var addContent = domConstruct.create('div', {
-          'class': 'zoneerder-pane-content'
-        }, addPane);
-
-        domConstruct.create('span', {
-          'class': 'zoneerder-actionlist-header',
-          innerHTML: 'Voeg een polygoon toe aan de zone: '
-        }, addContent);
-
-        var actionList = domConstruct.create('ul', {
-          'class': 'zoneerder-actionlist'
-        }, addContent);
-
-        domConstruct.create('a', {
-          title: 'Teken een polygoon',
-          href: '#',
-          innerHTML: '<i class="fa fa-pencil"></i> Teken polygoon',
-          onclick: lang.hitch(this, function (evt) {
-            evt.preventDefault();
-            this.mapController.startDraw();
-          })
-        }, domConstruct.create('li', {}, actionList));
-
-        if (this.perceelService){
-          domConstruct.create('a', {
-            title: 'Selecteer een perceel',
-            href: '#',
-            innerHTML: '<i class="fa  fa-hand-o-up"></i> Selecteer perceel',
-            onclick: lang.hitch(this, function (evt) {
-              evt.preventDefault();
-              console.info('zone::select perceel');
-              this.mapController.startParcelSelect(this.perceelService);
-            })
-          }, domConstruct.create('li', {}, actionList));
-        }
-        else {
-          console.warn("No parcel service available, please add 'perceelUrl' to config.");
-        }
-
-        domConstruct.create('a', {
-          title: 'Selecteer een bescherming',
-          href: '#',
-          innerHTML: '<i class="fa  fa-hand-o-up"></i> Selecteer bescherming',
-          onclick: lang.hitch(this, function (evt) {
-            evt.preventDefault();
-             console.info('zone::select bescherming');
-          })
-        }, domConstruct.create('li', {}, actionList));
-
-        var wktLi = domConstruct.create('li', {}, actionList);
-        domConstruct.create('a', {
-          title: 'Gebruik de WKT string',
-          'class': 'button',
-          href: '#',
-          innerHTML: 'WKT',
-          onclick: lang.hitch(this, function (evt) {
-            evt.preventDefault();
-            this.mapController.startInputWKT(wktInput.value);
-            wktInput.value = '';
-          })
-        }, wktLi);
-        var wktInput = domConstruct.create('input', {
-          type: 'text',
-          title: 'Vul de WKT (Well Known Text) van een polygoon in (projectie in Lambert 72)',
-          placeholder: 'WKT string (Lambert72)'
-        }, wktLi);
-
+        var zoneEditPane = domConstruct.create('div');
+        drawTab.addContent(zoneEditPane);
+        var zoneEditor = new ZoneEditor({
+          mapController: this.mapController
+        }, zoneEditPane);
+        drawTab.registerWidget(zoneEditor);
 
         //var removeTitle = domConstruct.create("div", {innerHTML: "Verwijder een polygoon uit de selectie"});
         //domConstruct.place(removeTitle, drawTab);
