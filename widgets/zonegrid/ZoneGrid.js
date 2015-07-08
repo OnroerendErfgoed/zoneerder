@@ -8,8 +8,7 @@ define([
   'dgrid/OnDemandGrid',
   'dgrid/Selection',
   'dgrid/extensions/DijitRegistry',
-  'dgrid/extensions/ColumnResizer',
-  'ol'
+  'dgrid/extensions/ColumnResizer'
 ], function (
   TemplatedMixin,
   WidgetBase,
@@ -20,8 +19,7 @@ define([
   OnDemandGrid,
   Selection,
   DijitRegistry,
-  ColumnResizer,
-  ol
+  ColumnResizer
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
