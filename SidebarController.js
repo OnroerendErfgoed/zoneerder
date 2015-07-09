@@ -138,7 +138,6 @@ define([
         on(zoneGrid, 'click.zone', lang.hitch(this, function (evt) {
           switch(evt.action) {
             case 'delete':
-              this.mapController.stopAllDrawActions();
               this.zone = null;
               sidebar.emit('zone.deleted');
               break;
@@ -172,36 +171,6 @@ define([
           perceelService: this.perceelService
         }, zoneEditPane);
         drawTab.registerWidget(zoneEditor);
-
-        /* BUTTONS */
-        var bottomButtonsNode = domConstruct.create('div', {'class': 'zoneerder-draw-buttons'});
-        drawTab.addContent(bottomButtonsNode);
-
-        new Button({
-          label: "Bewaar",
-          'class': "sidebar-button",
-          onClick: lang.hitch(this, function () {
-            var zone = this.mapController.getZone();
-            this.mapController.stopAllDrawActions();
-            if (zone) {
-              this.zone = zone;
-              sidebar.emit("zone.saved", {zone: zone});
-            }
-            else {
-              alert("Er is nog geen zone beschikbaar om op te slaan.");
-            }
-          })
-        }).placeAt(bottomButtonsNode);
-
-        new Button({
-          label: "Annuleer",
-          'class': "sidebar-button",
-          onClick: lang.hitch(this, function () {
-            console.info('TODO: implement cancel');
-            this.mapController.stopDraw();
-            this.mapController.stopParcelSelect();
-          })
-        }).placeAt(bottomButtonsNode);
       }
 
       if (this.tabs.help) {
