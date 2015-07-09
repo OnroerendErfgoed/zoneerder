@@ -51,6 +51,15 @@ define([
           child.refresh();
         }
       })
+    },
+
+    reset: function () {
+      //console.debug('SidebarTab::reset', this.label);
+      array.forEach(this.children, function (child) {
+        if (child.reset) {
+          child.reset();
+        }
+      })
     }
 
   });

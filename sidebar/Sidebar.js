@@ -4,6 +4,7 @@ define([
   'dijit/_TemplatedMixin',
   'dojo/text!./Sidebar.html',
   'dojo/_base/lang',
+  'dojo/_base/array',
   'dojo/query',
   'dojo/dom-class',
   'dojo/dom-construct',
@@ -16,6 +17,7 @@ define([
   TemplatedMixin,
   template,
   lang,
+  array,
   query,
   domClass,
   domConstruct,
@@ -26,15 +28,24 @@ define([
   return declare([WidgetBase, TemplatedMixin], {
 
     templateString: template,
+    _tabs: null,
 
     postCreate: function () {
       //console.debug('Sidebar::postCreate');
       this.inherited(arguments);
+      this._tabs = [];
     },
 
     startup: function () {
       //console.debug('Sidebar::startup');
       this.inherited(arguments);
+    },
+
+    reset: function () {
+      //console.debug('Sidebar::reset');
+      array.forEach(this._tabs, function (tab) {
+        tab.reset();
+      }, this);
     },
 
     openTab: function (tabPane) {
@@ -60,6 +71,8 @@ define([
         label: label,
         description: description
       }).placeAt(this.paneNode);
+
+      this._tabs.push(tab);
 
       //add tab button to buttonNode
       var btn = new SidebarButton({

@@ -41,6 +41,7 @@ define([
     erfgoedService: null,
     perceelService: null,
     _startZone: null,
+    _sidebar: null,
 
     postCreate: function () {
       //console.debug('ZoneMap::postCreate');
@@ -103,6 +104,7 @@ define([
           this.zone = null;
           this.emit("zonechanged", null);
         }));
+        this._sidebar = sidebar;
         sidebar.startup();
       }
     },
@@ -125,8 +127,12 @@ define([
       this.mapController.stopAllEditActions();
       this.mapController.clearFeatures();
       this.mapController.clearZone();
-      this.mapController.setZone(this._startZone);
-      this.mapController.zoomToZone();
+      this._sidebar.reset();
+
+      if (this._startZone) {
+        this.mapController.setZone(this._startZone);
+        this.mapController.zoomToZone();
+      }
     },
 
     getFeaturesInZone: function () {

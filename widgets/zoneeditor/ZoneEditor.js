@@ -27,28 +27,29 @@ define([
 
     postCreate: function () {
       this.inherited(arguments);
-      console.debug('ZoneEditor::postCreate');
+      //console.debug('ZoneEditor::postCreate');
 
     },
 
     startup: function () {
       this.inherited(arguments);
-      console.debug('ZoneEditor::startup');
+      //console.debug('ZoneEditor::startup');
     },
 
     reset: function () {
+      //console.debug('ZoneEditor::reset');
       this._resetTools();
     },
 
     _draw: function (evt) {
       evt.preventDefault();
-      console.debug('ZoneEditor::_draw');
+      //console.debug('ZoneEditor::_draw');
       this._setActiveTool('draw');
     },
 
     _selectPerceel: function (evt) {
       evt.preventDefault();
-      console.debug('ZoneEditor::_selectParcel');
+      //console.debug('ZoneEditor::_selectParcel');
       this._setActiveTool('selectPerceel');
     },
 
@@ -59,7 +60,7 @@ define([
 
     _drawWkt: function (evt) {
       evt.preventDefault();
-      console.debug('ZoneEditor::_drawWkt');
+      //console.debug('ZoneEditor::_drawWkt');
       var wkt = this._filterWktFromString(this.wktInput.value.toUpperCase());
 
       this._setActiveTool('drawWkt');
@@ -135,7 +136,7 @@ define([
 
     _setActiveTool: function (toolname) {
       var toolIsActive = (this._activeTool == toolname);
-      console.debug('ZoneEditor::_setActiveTool', toolname, toolIsActive);
+      //console.debug('ZoneEditor::_setActiveTool', toolname, toolIsActive);
       this._resetTools();
       this._activeTool = toolname;
 
@@ -169,7 +170,8 @@ define([
     },
 
     _resetTools: function () {
-      console.debug('ZoneEditor::_resetTools');
+      //console.debug('ZoneEditor::_resetTools');
+      this._activeTool = null;
       this._activeTool = null;
       query('i', this.rootNode).removeClass('fa-ban');
 
