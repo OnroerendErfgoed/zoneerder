@@ -6,7 +6,7 @@ define([
   'dijit/_TemplatedMixin',
   './MapController',
   './ButtonController',
-  './ErfgoedService',
+  './services/ErfgoedService',
   './services/NiscodeService',
   './services/PerceelService',
   './widgets/sidebar/Sidebar',
