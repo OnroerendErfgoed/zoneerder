@@ -9,7 +9,7 @@ define([
   'dojo/store/Memory',
   'dojo/store/Observable',
   'ol',
-  './popup/Popup'
+  './widgets/popup/Popup'
 ], function (
   declare,
   WidgetBase,

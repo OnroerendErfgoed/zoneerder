@@ -1,7 +1,7 @@
 @import "buttons.css";
-@import "../sidebar/sidebar.css";
-@import "../layerswitcher/layerswitcher.css";
-@import "../popup/popup.css";
+@import "../widgets/sidebar/sidebar.css";
+@import "../widgets/layerswitcher/layerswitcher.css";
+@import "../widgets/popup/popup.css";
 
 .map {
   width: 100%;
