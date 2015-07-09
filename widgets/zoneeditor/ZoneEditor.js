@@ -167,11 +167,13 @@ define([
         }
         query('i', tool).addClass('fa-ban');
       }
+      else {
+        this._activeTool = null;
+      }
     },
 
     _resetTools: function () {
       //console.debug('ZoneEditor::_resetTools');
-      this._activeTool = null;
       this._activeTool = null;
       query('i', this.rootNode).removeClass('fa-ban');
 
