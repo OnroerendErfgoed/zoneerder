@@ -193,8 +193,13 @@ define([
     },
 
     clearFeatures: function () {
-      var oeFeaturesSource = this.oeFeaturesLayer.getSource();
-      oeFeaturesSource.clear();
+      this.oeFeaturesLayer.getSource().clear();
+    },
+
+    clearZone: function () {
+      this.polygonStore.query().forEach(function (polygon) {
+        this.polygonStore.remove(polygon.id);
+      }, this);
     },
 
     addErfgoedFeature: function (geoJsonFeature) {
@@ -611,6 +616,12 @@ define([
     stopBeschermingSelect: function () {
       console.debug('MapController::stopBeschermingSelect');
       this.popup.enable();
+    },
+
+    stopAllEditActions: function () {
+      this.stopDraw();
+      this.stopParcelSelect();
+      this.stopBeschermingSelect();
     },
 
     _createInteractions: function () {

@@ -122,6 +122,9 @@ define([
     },
 
     resetZone: function () {
+      this.mapController.stopAllEditActions();
+      this.mapController.clearFeatures();
+      this.mapController.clearZone();
       this.mapController.setZone(this._startZone);
       this.mapController.zoomToZone();
     },
