@@ -20,6 +20,6 @@
     "font-awesome": "~4.3.0",
     "dgrid": "~0.3.17",
     "put-selector": "~0.3.6",
-    "xstyle": "~0.1.3"
+    "xstyle": "~0.2.1"
   }
 }
