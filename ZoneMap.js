@@ -2,16 +2,22 @@ define([
   'dojo/_base/declare',
   'dojo/_base/lang',
   'dojo/_base/array',
-  'mijit/_WidgetBase',
-  'mijit/_TemplatedMixin',
+  'dijit/_WidgetBase',
+  'dijit/_TemplatedMixin',
   './MapController',
   './ButtonController',
-  './SidebarController',
   './ErfgoedService',
   './NiscodeService',
   './PerceelService',
-  'dojo/Evented',
+  './sidebar/Sidebar',
+  './layerswitcher/LayerSwitcher',
+  './widgets/zonegrid/ZoneGrid',
+  './widgets/zoneeditor/ZoneEditor',
+  'crabpy_dojo/CrabpyWidget',
   'dojo/when',
+  'dojo/query',
+  'dojo/dom-construct',
+  'dojo-form-controls/Button',
   'dojo/NodeList-dom'
 
 ], function (
@@ -22,14 +28,20 @@ define([
   TemplatedMixin,
   MapController,
   ButtonController,
-  SidebarController,
   ErfgoedService,
   NiscodeService,
   PerceelService,
-  Evented,
-  when
+  Sidebar,
+  LayerSwitcher,
+  ZoneGrid,
+  ZoneEditor,
+  CrabpyWidget,
+  when,
+  query,
+  domConstruct,
+  Button
 ) {
-  return declare([WidgetBase, TemplatedMixin, Evented], {
+  return declare([WidgetBase, TemplatedMixin], {
 
     templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
                       '<div data-dojo-attach-point="sidebarNode"></div>' +
@@ -80,13 +92,13 @@ define([
         mapButtons: this.config.buttons
       });
 
-      if (this.config.sidebar) {
-        this.sidebarController = new SidebarController({
-          mapController: this.mapController,
-          tabs: this.config.sidebar,
-          crabpyUrl: this.config.crabpyUrl
-        });
-      }
+      //if (this.config.sidebar) {
+        //this.sidebarController = new SidebarController({
+        //  mapController: this.mapController,
+        //  tabs: this.config.sidebar,
+        //  crabpyUrl: this.config.crabpyUrl
+        //});
+      //}
     },
 
     startup: function () {
@@ -94,18 +106,23 @@ define([
       this.inherited(arguments);
       this.mapController.startup();
       this.buttonController.startup();
-      if (this.sidebarController) {
-        var sidebar = this.sidebarController.createSidebar(this.sidebarNode);
-        sidebar.on("zone.saved", lang.hitch(this, function(evt) {
-          this.zone = evt.zone;
-          this.emit("zonechanged", evt.zone);
-        }));
-        sidebar.on("zone.deleted", lang.hitch( this, function(evt) {
-          this.zone = null;
-          this.emit("zonechanged", null);
-        }));
-        this._sidebar = sidebar;
-        sidebar.startup();
+
+      if (this.config.sidebar) {
+        this._setDefaultParam(this.config.sidebar, "layers", false);
+        this._setDefaultParam(this.config.sidebar, "zoom", true);
+        this._setDefaultParam(this.config.sidebar, "draw", false);
+        this._setDefaultParam(this.config.sidebar, "help", true);
+        this._sidebar = this._createSidebar(this.sidebarNode);
+        //sidebar.on("zone.saved", lang.hitch(this, function(evt) {
+        //  this.zone = evt.zone;
+        //  this.emit("zonechanged", evt.zone);
+        //}));
+        //sidebar.on("zone.deleted", lang.hitch( this, function(evt) {
+        //  this.zone = null;
+        //  this.emit("zonechanged", null);
+        //}));
+        //this._sidebar = sidebar;
+        this._sidebar.startup();
       }
     },
 
@@ -164,6 +181,106 @@ define([
       array.forEach(features, function (feature) {
         this.mapController.addErfgoedFeature(feature);
       }, this);
+    },
+
+    _setDefaultParam: function (object, field, defValue) {
+      if (!lang.exists(field, object)) {
+        lang.setObject(field, defValue, object);
+      }
+    },
+
+    _createSidebar: function (node) {
+      var sidebar = new Sidebar({}, node);
+      query(".ol-attribution").addClass("sidebar-padding");
+
+      if (this.config.sidebar.layers) {
+        var layerTab = sidebar.createTab('Kaartlagen', 'fa-list',
+          'Hier kan je kiezen welke lagen er op de kaart moeten getoond worden en welke niet.');
+
+        var layerNode = domConstruct.create("div");
+        layerTab.addContent(layerNode);
+
+        var layerSwitcher = new LayerSwitcher ({
+          map: this.mapController.olMap,
+          div: layerNode
+        });
+        layerTab.registerWidget(layerSwitcher);
+      }
+
+      if (this.config.sidebar.zoom) {
+        var ZoomTab = sidebar.createTab('Zoom naar', 'fa-search',
+          'Hier kan je naar een perceel of adres zoomen (je moet minstens een gemeente kiezen).');
+
+        var crabpyWidget = new CrabpyWidget({
+          name: "location",
+          baseUrl: this.crabpyUrl
+        });
+
+        var crabNode = domConstruct.create("div");
+        ZoomTab.addContent(crabNode);
+        var crabZoomer = crabpyWidget.createCrabZoomer(crabNode);
+        var self = this;
+        var zoomButton = new Button({
+          label: "Zoom naar adres",
+          'class': "sidebar-button",
+          onClick: function () {
+            var bbox = crabZoomer.getBbox();
+            if (bbox) {
+              var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
+              self.mapController.zoomToExtent(extent);
+              crabZoomer.reset();
+              sidebar.collapse();
+            }
+          }
+        });
+        ZoomTab.addContent(zoomButton.domNode);
+
+        var capakeyNode = domConstruct.create("div");
+        ZoomTab.addContent(capakeyNode);
+        var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
+        var capakeyZoomButton = new Button({
+          label: "Zoom naar perceel",
+          'class': "sidebar-button",
+          onClick: function () {
+            var bbox = capakeyZoomer.getBbox();
+            if (bbox) {
+              var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
+              self.mapController.zoomToExtent(extent);
+              capakeyZoomer.reset();
+              sidebar.collapse();
+            }
+          }
+        });
+        ZoomTab.addContent(capakeyZoomButton.domNode);
+      }
+
+      if (this.config.sidebar.draw) {
+        var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Bepaal hier de zone.');
+
+        /* ZONE */
+        var zonePane = domConstruct.create('div');
+        drawTab.addContent(zonePane);
+        var zoneGrid = new ZoneGrid({
+          polygonStore: this.mapController.polygonStore,
+          mapController: this.mapController
+        }, zonePane);
+        drawTab.registerWidget(zoneGrid);
+
+        /* TOEVOEGEN */
+        var zoneEditPane = domConstruct.create('div');
+        drawTab.addContent(zoneEditPane);
+        var zoneEditor = new ZoneEditor({
+          mapController: this.mapController,
+          perceelService: this.perceelService
+        }, zoneEditPane);
+        drawTab.registerWidget(zoneEditor);
+      }
+
+      if (this.config.sidebar.help) {
+        sidebar.createTab('Help', 'fa-question-circle', 'I need somebody');
+      }
+
+      return sidebar;
     }
 
   });
