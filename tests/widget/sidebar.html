@@ -28,6 +28,7 @@
 <div id="widgetNode"></div>
 <div id="setZoneNode"></div>
 <div id="getZoneNode"></div>
+<div id="resetZoneNode"></div>
 <div id="button1Node"></div>
 <div id="button2Node"></div>
 <div id="button3Node"></div>
@@ -103,6 +104,13 @@
       })
     }, 'setZoneNode');
     setZoneButton.startup();
+
+    new Button({
+      label: "reset zoneerder",
+      onClick: lang.hitch(this, function () {
+        widgetUnderTest.resetZone();
+      })
+    }, 'resetZoneNode').startup();
 
     var myButtonNis = new Button({
       label: "get niscodes",
