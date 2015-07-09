@@ -131,37 +131,10 @@ define([
         var zonePane = domConstruct.create('div');
         drawTab.addContent(zonePane);
         var zoneGrid = new ZoneGrid({
-          polygonStore: this.mapController.polygonStore
+          polygonStore: this.mapController.polygonStore,
+          mapController: this.mapController
         }, zonePane);
         drawTab.registerWidget(zoneGrid);
-
-        on(zoneGrid, 'click.zone', lang.hitch(this, function (evt) {
-          switch(evt.action) {
-            case 'delete':
-              this.zone = null;
-              sidebar.emit('zone.deleted');
-              break;
-            case 'zoom':
-              this.mapController.zoomToZone();
-              break;
-            case 'flash':
-              this.mapController.flashFeatures(array.map(this.mapController.polygonStore.data, function (polygon) {
-                return polygon.feature;
-              }));
-              break;
-          }
-        }));
-
-        on(zoneGrid, 'click.polygon', lang.hitch(this, function (evt) {
-          switch(evt.action) {
-            case 'zoom':
-              this.mapController.zoomToPolygon(evt.polygon);
-              break;
-            case 'flash':
-              this.mapController.flashFeature(evt.polygon);
-              break;
-          }
-        }));
 
         /* TOEVOEGEN */
         var zoneEditPane = domConstruct.create('div');

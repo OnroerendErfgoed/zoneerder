@@ -5,6 +5,7 @@ define([
   'dojo/text!./ZoneGrid.html',
   'dojo/dom-construct',
   'dojo/_base/lang',
+  'dojo/_base/array',
   'dgrid/OnDemandGrid',
   'dgrid/Selection',
   'dgrid/extensions/DijitRegistry',
@@ -16,6 +17,7 @@ define([
   template,
   domConstruct,
   lang,
+  array,
   OnDemandGrid,
   Selection,
   DijitRegistry,
@@ -26,6 +28,7 @@ define([
     templateString: template,
     baseClass: 'zone-grid',
     polygonStore: null,
+    mapController: null,
     _grid: null,
 
     postCreate: function () {
@@ -124,17 +127,18 @@ define([
       this.polygonStore.query().forEach(function (polygon) {
         this.polygonStore.remove(polygon.id);
       }, this);
-      this.emit('click.zone', {action: 'delete'});
     },
 
     _zoomToZone: function (evt) {
       evt.preventDefault();
-      this.emit('click.zone', {action: 'zoom'});
+      this.mapController.zoomToZone();
     },
 
     _flashZone: function (evt) {
       evt.preventDefault();
-      this.emit('click.zone', {action: 'flash'});
+      this.mapController.flashFeatures(array.map(this.polygonStore.data, function (polygon) {
+        return polygon.feature;
+      }));
     },
 
     _deletePolygon: function (polygonToDelete) {
@@ -146,17 +150,11 @@ define([
     },
 
     _zoomToPolygon: function (polygon) {
-      this.emit('click.polygon', {
-        action: 'zoom',
-        polygon: polygon
-      });
+      this.mapController.zoomToPolygon(polygon);
     },
 
     _flashPolygon: function (polygon) {
-      this.emit('click.polygon', {
-        action: 'flash',
-        polygon: polygon
-      });
+      this.mapController.flashFeature(polygon);
     }
   });
 });
