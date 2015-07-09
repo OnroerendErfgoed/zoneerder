@@ -40,7 +40,7 @@ define([
     config: null,
     erfgoedService: null,
     perceelService: null,
-    zone: null,
+    _startZone: null,
 
     postCreate: function () {
       //console.debug('ZoneMap::postCreate');
@@ -108,26 +108,22 @@ define([
     },
 
     resize: function() {
-      this.mapController.olMap.updateSize();
+      this.mapController.resize();
     },
 
     getZone: function () {
-      return this.zone;
+      return this.mapController.getZone();
     },
 
     setZone: function (val) {
+      this._startZone = val;
       this.mapController.setZone(val);
-      this.zone = this.mapController.getZone();
       this.mapController.zoomToZone();
     },
 
-    resetZone: function (val) {
-      this.mapController.stopAllDrawActions();
-      this.mapController.zoneLayer.getSource().clear();
-      if (val) {
-        this.setZone(val);
-      }
-
+    resetZone: function () {
+      this.mapController.setZone(this._startZone);
+      this.mapController.zoomToZone();
     },
 
     getFeaturesInZone: function () {

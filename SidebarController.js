@@ -125,7 +125,7 @@ define([
       }
 
       if (this.tabs.draw) {
-        var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Baken een zone af voor het beheersplan.');
+        var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Bepaal hier de zone.');
 
         /* ZONE */
         var zonePane = domConstruct.create('div');

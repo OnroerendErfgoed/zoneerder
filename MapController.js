@@ -188,6 +188,10 @@ define([
       this._observePolygonStore();
     },
 
+    resize: function () {
+      this.olMap.updateSize();
+    },
+
     clearFeatures: function () {
       var oeFeaturesSource = this.oeFeaturesLayer.getSource();
       oeFeaturesSource.clear();
