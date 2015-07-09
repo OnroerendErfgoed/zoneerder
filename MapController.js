@@ -658,7 +658,9 @@ define([
         else if(insertedInto > -1){ // new or updated object inserted
           this._addPolygonToZone(object.feature);
         }
-        this.emit("zonechanged", {zone: this.getZone()});
+        if (object.id!='zone') {
+          this.emit("zonechanged", {zone: this.getZone()});
+        }
       }));
     },
 
