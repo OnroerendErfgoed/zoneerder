@@ -5,7 +5,7 @@ define([
   'dojo/request',
   'dojo/request/xhr',
   'dojo/_base/array',
-  'dojo/json',
+  'dojo/Evented',
   'dojo/store/Memory',
   'dojo/store/Observable',
   'ol',
@@ -17,13 +17,13 @@ define([
   request,
   xhr,
   array,
-  JSON,
+  Evented,
   Memory,
   Observable,
   ol,
   Popup
 ) {
-  return declare([WidgetBase], {
+  return declare([WidgetBase, Evented], {
 
     mapContainer: null,
     popupContainer: null,
@@ -158,6 +158,15 @@ define([
       //beschermdWmsLayer.setVisible(true);
       grbTileLayer.setVisible(true);
 
+      this.drawLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({}),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({color: 'rgb(255, 255, 255)', width: 1}),
+          fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.3)'})
+        })
+      });
+      olMap.addLayer(this.drawLayer);
+
       olMap.addControl(new ol.control.ScaleLine());
       olMap.addControl(new ol.control.Attribution({
         collapsible: false
@@ -226,13 +235,12 @@ define([
 
     drawPerceel: function (olFeature) {
       if (olFeature) {
-        var perceelSource = this.zoneLayer.getSource();
-        var geometry = olFeature.getGeometry();
-        var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+        var xyCoords = this._transformXyzToXy(olFeature.getGeometry().getCoordinates());
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
-        olFeature.set('name', olFeature.get('CAPAKEY'));
+        var name = "Perceel " + olFeature.get('CAPAKEY');
+        olFeature.set('name', name);
         olFeature.setGeometry(xyGeom);
-        perceelSource.addFeature(olFeature);
+        this.polygonStore.add({id: name, naam: name, feature: olFeature});
       }
       else {
         alert('Er werd geen perceel gevonden op deze locatie');
@@ -241,7 +249,6 @@ define([
 
     drawWKTzone: function (wkt) {
       var wktParser = new ol.format.WKT();
-      var wktSource = this.zoneLayer.getSource();
       try {
         var featureFromWKT = wktParser.readFeature(wkt, {
           dataProjection: this.pLam,
@@ -252,8 +259,6 @@ define([
         featureFromWKT.setProperties({
           'name': name
         });
-
-        wktSource.addFeature(featureFromWKT);
         this.polygonStore.put({id: name, naam: name, feature: featureFromWKT});
       }
       catch (error) {
@@ -491,10 +496,7 @@ define([
         this.polygonStore.add({id: 'zone', naam: 'Zone', feature: feature});
       } catch (e) {
         console.warn("the zone was already added to the map!");
-        return;
       }
-      this.zoneLayer.getSource().addFeature(feature);
-
     },
 
     getFeatures: function () {
@@ -547,6 +549,7 @@ define([
     startDraw: function (onEnd) {
       //console.debug('Mapcontroller::startDraw');
       this.popup.disable();
+      this.drawLayer.getSource().clear();
 
       var drawInteraction = this.mapInteractions.draw;
       drawInteraction.setActive(true);
@@ -567,6 +570,7 @@ define([
     },
 
     stopDraw: function () {
+      this.drawLayer.getSource().clear();
       if (this.mapInteractions.draw.getActive()) {
         this.mapInteractions.draw.setActive(false);
       }
@@ -627,7 +631,7 @@ define([
     _createInteractions: function () {
       //console.debug("MapController::_createInteractions");
       var drawInteraction = new ol.interaction.Draw({
-          source: this.zoneLayer.getSource(),
+          source: this.drawLayer.getSource(),
           type: /** @type {ol.geom.GeometryType} */ ('Polygon')
       });
       this.olMap.addInteraction(drawInteraction);
@@ -651,13 +655,19 @@ define([
         if(removedFrom > -1){ // existing object removed
           this._removePolygonFromZone(object.feature);
         }
-        if(insertedInto > -1){ // new or updated object inserted
+        else if(insertedInto > -1){ // new or updated object inserted
+          this._addPolygonToZone(object.feature);
         }
+        this.emit("zonechanged", {zone: this.getZone()});
       }));
     },
 
     _removePolygonFromZone: function (polygon) {
       this.zoneLayer.getSource().removeFeature(polygon);
+    },
+
+    _addPolygonToZone: function (polygon) {
+      this.zoneLayer.getSource().addFeature(polygon);
     }
   });
 });

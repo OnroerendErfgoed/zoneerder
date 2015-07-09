@@ -91,20 +91,17 @@ define([
         fullExtent: this.mapController.fullExtent,
         mapButtons: this.config.buttons
       });
-
-      //if (this.config.sidebar) {
-        //this.sidebarController = new SidebarController({
-        //  mapController: this.mapController,
-        //  tabs: this.config.sidebar,
-        //  crabpyUrl: this.config.crabpyUrl
-        //});
-      //}
     },
 
     startup: function () {
       //console.debug('ZoneMap::startup');
       this.inherited(arguments);
+
       this.mapController.startup();
+      this.mapController.on("zonechanged", lang.hitch(this, function(evt) {
+        this.emit("zonechanged", {zone: evt.zone});
+      }));
+
       this.buttonController.startup();
 
       if (this.config.sidebar) {
@@ -113,15 +110,6 @@ define([
         this._setDefaultParam(this.config.sidebar, "draw", false);
         this._setDefaultParam(this.config.sidebar, "help", true);
         this._sidebar = this._createSidebar(this.sidebarNode);
-        //sidebar.on("zone.saved", lang.hitch(this, function(evt) {
-        //  this.zone = evt.zone;
-        //  this.emit("zonechanged", evt.zone);
-        //}));
-        //sidebar.on("zone.deleted", lang.hitch( this, function(evt) {
-        //  this.zone = null;
-        //  this.emit("zonechanged", null);
-        //}));
-        //this._sidebar = sidebar;
         this._sidebar.startup();
       }
     },
