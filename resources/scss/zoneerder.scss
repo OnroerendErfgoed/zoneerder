@@ -49,6 +49,11 @@
   overflow: hidden;
   transition: all 80ms;
 }
+
+@-moz-document url-prefix() {
+    .sidebar-tabs > li {padding-top:10px;}
+}
+
 .sidebar-tabs > li:hover,
 .sidebar-tabs > li.active {
   color: #ffffff;
