@@ -243,7 +243,7 @@ define([
       }
 
       if (this.config.sidebar.draw) {
-        var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Bepaal hier de zone.');
+        var drawTab = sidebar.createTab('Bepaal zone', 'fa-connectdevelop', 'Bepaal hier de zone.');
 
         /* ZONE */
         var zonePane = domConstruct.create('div');
