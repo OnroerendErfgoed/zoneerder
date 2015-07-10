@@ -210,7 +210,7 @@ define([
         var self = this;
         var zoomButton = new Button({
           label: "Zoom naar adres",
-          'class': "sidebar-button",
+          'class': "button tiny expand",
           onClick: function () {
             var bbox = crabZoomer.getBbox();
             if (bbox) {
@@ -228,7 +228,7 @@ define([
         var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
         var capakeyZoomButton = new Button({
           label: "Zoom naar perceel",
-          'class': "sidebar-button",
+          'class': "button tiny expand",
           onClick: function () {
             var bbox = capakeyZoomer.getBbox();
             if (bbox) {
