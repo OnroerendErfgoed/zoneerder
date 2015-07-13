@@ -199,9 +199,11 @@ define([
         var ZoomTab = sidebar.createTab('Zoom naar', 'fa-search',
           'Hier kan je naar een perceel of adres zoomen (je moet minstens een gemeente kiezen).');
 
+        console.log(this.crabpyUrl);
+        console.log(this.config.crabpyUrl);
         var crabpyWidget = new CrabpyWidget({
           name: "location",
-          baseUrl: this.crabpyUrl
+          baseUrl: this.config.crabpyUrl
         });
 
         var crabNode = domConstruct.create("div");
