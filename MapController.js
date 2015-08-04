@@ -644,18 +644,25 @@ define([
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
-        var source = layer.getSource();
-        var beschUrl = source.getGetFeatureInfoUrl(evt.coordinate, map.getView().getResolution(), 'EPSG:3857', {'INFO_FORMAT': 'application/json'});
+        //var source = layer.getSource();
+        //var beschUrl = source.getGetFeatureInfoUrl(evt.coordinate, map.getView().getResolution(), 'EPSG:3857', {'INFO_FORMAT': 'application/json'});
         beschermingService.readFeatures(evt.coordinate).then(function(result){
-          controller.drawPerceel(result); //todo: drawPerceel voro een bscherming?
+          console.debug('WFS bescherming response: ', result);
+         }, function (err) {
+          console.error(err);
+        }).always(function () {
+          onEnd();
+          popup.enable();
         });
-        //todo: event key verwidjeren bij cancel
-        //this.mapInteractions.selectParcelKey = eventKey;
       });
+      this.mapInteractions.selectBschermingKey = eventKey;
     },
 
     stopBeschermingSelect: function () {
       console.debug('MapController::stopBeschermingSelect');
+      if (this.mapInteractions.selectBschermingKey) {
+        this.olMap.unByKey(this.mapInteractions.selectBschermingKey);
+      }
       this.popup.enable();
     },
 
