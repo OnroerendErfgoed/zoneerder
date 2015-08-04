@@ -37,6 +37,7 @@ define([
     mapInteractions: null,
     polygonStore: null,
     perceelService: null,
+    beschermingService: null,
     _drawPolygonIndex: 1,
 
     postCreate: function () {
@@ -624,13 +625,22 @@ define([
       this.mapInteractions.selectParcelKey = eventKey;
     },
 
-    startBeschermingSelect: function (beschermingService) {
-      this.stopAllDrawActions();
+    stopParcelSelect: function () {
+      if (this.mapInteractions.selectParcelKey) {
+        this.olMap.unByKey(this.mapInteractions.selectParcelKey);
+      }
+      this.popup.enable();
+    },
+
+    startBeschermingSelect: function (onEnd) {
+      //this.stopAllDrawActions();
       this.popup.disable();
 
       var controller = this,
         map = this.olMap,
-        popup = this.popup, layer = this.beschermdWmsLayer;
+        popup = this.popup,
+        beschermingService = this.beschermingService,
+        layer = this.beschermdWmsLayer;
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
@@ -642,19 +652,6 @@ define([
         //todo: event key verwidjeren bij cancel
         //this.mapInteractions.selectParcelKey = eventKey;
       });
-    },
-
-    stopParcelSelect: function () {
-      if (this.mapInteractions.selectParcelKey) {
-        this.olMap.unByKey(this.mapInteractions.selectParcelKey);
-      }
-      this.popup.enable();
-    },
-
-    startBeschermingSelect: function (onEnd) {
-      console.debug('MapController::startBeschermingSelect');
-      this.popup.disable();
-      onEnd();
     },
 
     stopBeschermingSelect: function () {

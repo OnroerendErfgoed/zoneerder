@@ -91,7 +91,8 @@ define([
       this.mapController = new MapController({
         mapContainer: this.mapNode,
         popupContainer: this.popupNode,
-        perceelService: this.perceelService
+        perceelService: this.perceelService,
+        beschermingService: this.beschermingService
       });
 
       this.buttonController = new ButtonController({
