@@ -9,6 +9,7 @@ define([
   './services/ErfgoedService',
   './services/NiscodeService',
   './services/PerceelService',
+  './services/BeschermingService',
   './widgets/sidebar/Sidebar',
   './widgets/layerswitcher/LayerSwitcher',
   './widgets/zonegrid/ZoneGrid',
@@ -31,6 +32,7 @@ define([
   ErfgoedService,
   NiscodeService,
   PerceelService,
+  BeschermingService,
   Sidebar,
   LayerSwitcher,
   ZoneGrid,
@@ -52,6 +54,7 @@ define([
     config: null,
     erfgoedService: null,
     perceelService: null,
+    beschermingService: null,
     _startZone: null,
     _sidebar: null,
 
@@ -79,6 +82,11 @@ define([
       if (this.config.perceelUrl) {
         this.perceelService = new PerceelService({ url: this.config.perceelUrl });
       }
+      
+      if (this.config.beschermingUrl) {
+        this.beschermingService = new BeschermingService({ url: this.config.beschermingUrl });
+      }
+    
 
       this.mapController = new MapController({
         mapContainer: this.mapNode,

@@ -115,6 +115,7 @@ define([
         type: 'overlay',
         visible: false
       });
+      this.beschermdWmsLayer = beschermdWmsLayer;
 
       var zoneLayer = this._createVectorLayer({
         title: 'Zone',
@@ -231,6 +232,22 @@ define([
         description: geoJsonFeature.description
       });
       this.oeFeaturesLayer.getSource().addFeature(feature);
+    },
+
+    //todo: is deze nodig?
+    drawBescherming: function (olFeature) {
+      if (olFeature) {
+        var beschSource = this.beschermdWmsLayer.getSource();
+        var geometry = olFeature.getGeometry();
+        var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+        var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+        olFeature.set('name', olFeature.get('CAPAKEY'));
+        olFeature.setGeometry(xyGeom);
+        beschSource.addFeature(olFeature); //todo: naar WMS schrijven?
+      }
+      else {
+        alert('Er werd geen bescherming gevonden op deze locatie');
+      }
     },
 
     drawPerceel: function (olFeature) {
@@ -605,6 +622,26 @@ define([
         });
       });
       this.mapInteractions.selectParcelKey = eventKey;
+    },
+
+    startBeschermingSelect: function (beschermingService) {
+      this.stopAllDrawActions();
+      this.popup.disable();
+
+      var controller = this,
+        map = this.olMap,
+        popup = this.popup, layer = this.beschermdWmsLayer;
+
+      var eventKey = map.on('click', function (evt) {
+        map.unByKey(eventKey);
+        var source = layer.getSource();
+        var beschUrl = source.getGetFeatureInfoUrl(evt.coordinate, map.getView().getResolution(), 'EPSG:3857', {'INFO_FORMAT': 'application/json'});
+        beschermingService.readFeatures(evt.coordinate).then(function(result){
+          controller.drawPerceel(result); //todo: drawPerceel voro een bscherming?
+        });
+        //todo: event key verwidjeren bij cancel
+        //this.mapInteractions.selectParcelKey = eventKey;
+      });
     },
 
     stopParcelSelect: function () {
