@@ -49,6 +49,7 @@ define([
       // Add crs urn alias to Lambert72 projection, in order for open layers to recognize it.
       proj4.defs('urn:ogc:def:crs:EPSG::31370', proj4.defs('EPSG:31370'));
       proj4.defs('urn:ogc:def:crs:EPSG:6.9:31370', proj4.defs('EPSG:31370'));
+      proj4.defs('urn:x-ogc:def:crs:EPSG:31370', proj4.defs('EPSG:31370'));
 
       this.pDef = ol.proj.get('EPSG:3857');
       this.pMerc = ol.proj.get('EPSG:900913');
@@ -648,6 +649,8 @@ define([
         //var beschUrl = source.getGetFeatureInfoUrl(evt.coordinate, map.getView().getResolution(), 'EPSG:3857', {'INFO_FORMAT': 'application/json'});
         beschermingService.readFeatures(evt.coordinate).then(function(result){
           console.debug('WFS bescherming response: ', result);
+          var bescherming = beschermingService.readWfs(result);
+          console.debug('bescherming: ', bescherming);
          }, function (err) {
           console.error(err);
         }).always(function () {
