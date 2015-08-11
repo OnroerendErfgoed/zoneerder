@@ -119,6 +119,22 @@ define([
       });
       this.beschermdWmsLayer = beschermdWmsLayer;
 
+      this.beschermdWmsQueryLayer = new ol.layer.Tile({
+        title: "Beschermd Onroerend Erfgoed getfeature",
+        extent: extentVlaanderen,
+        source: new ol.source.TileWMS(({
+          url: 'https://dev-geo.onroerenderfgoed.be/mapproxy/service', //todo: move to config
+          params: {
+            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
+            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
+            'vioe_geoportaal:beschermde_archeologische_zones,' +
+            'vioe_geoportaal:beschermde_monumenten',
+            'TILED': true
+          }
+        })),
+        visible: false
+      });
+
       var zoneLayer = this._createVectorLayer({
         title: 'Zone',
         color: 'rgb(39, 146, 195)',
@@ -634,26 +650,24 @@ define([
     },
 
     startBeschermingSelect: function (onEnd) {
-      //this.stopAllDrawActions();
       this.popup.disable();
 
       var controller = this,
         map = this.olMap,
         popup = this.popup,
         beschermingService = this.beschermingService,
-        layer = this.beschermdWmsLayer;
+        layer = this.beschermdWmsQueryLayer;
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
-        //var source = layer.getSource();
-        //var beschUrl = source.getGetFeatureInfoUrl(evt.coordinate, map.getView().getResolution(), 'EPSG:3857', {'INFO_FORMAT': 'application/json'});
-        beschermingService.readFeatures(evt.coordinate).then(function(result){
-          console.debug('WFS bescherming response: ', result);
-          var bescherming = beschermingService.readWfs(result);
-          console.debug('bescherming: ', bescherming);
-         }, function (err) {
-          console.error(err);
-        }).always(function () {
+        beschermingService.searchErfgoed(layer, map.getView().getResolution(), evt.coordinate).then(
+          function(result){
+            var beschermingen = beschermingService.readWfs(result);
+            console.debug('bescherming: ', beschermingen);
+          }, function (err) {
+            console.error(err);
+          }
+        ).always(function () {
           onEnd();
           popup.enable();
         });

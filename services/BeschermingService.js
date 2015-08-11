@@ -16,6 +16,25 @@ define([
       this.inherited(arguments);
     },
 
+    searchErfgoed: function (layer, resolution, coordinate) {
+      var requestUrl = layer.getSource().getGetFeatureInfoUrl(
+        coordinate,
+        resolution,
+        'EPSG:3857',
+        {
+          'info_format': 'application/vnd.ogc.gml',
+          'feature_count': '10'
+        }
+      );
+
+      return xhr.get(requestUrl, {
+        handleAs: 'xml',
+        headers: {
+          "X-Requested-With": ""
+        }
+      })
+    },
+
     readFeatures: function (coordinate) {
 
       var data =
@@ -53,15 +72,25 @@ define([
     },
 
     readWfs: function (wfs) {
-      var formatter = new ol.format.WFS({
-        featureNS: "https://geo.agiv.be/ogc/wfs/grb",
-        featureType: "vioe_geoportaal:beschermde_monumenten"
-      });
-      var features = formatter.readFeatures(wfs, {
-        dataProjection: 'EPSG:31370',
-        featureProjection: 'EPSG:900913'
-      });
-      return features[0];
+      try {
+        var formatter = new ol.format.WFS({
+          featureNS: "http://www.erfgoed.net/geoportaal",
+          featureType: [
+            'beschermde_landschappen',
+            'beschermde_dorps_en_stadsgezichten',
+            'beschermde_archeologische_zones',
+            'beschermde_monumenten'
+          ]
+        });
+        var features = formatter.readFeatures(wfs, {
+          dataProjection: 'EPSG:31370',
+          featureProjection: 'EPSG:900913'
+        });
+        return features[0];
+      } catch (e) {
+        console.error(e);
+        return [];
+      }
     }
   });
 });
