@@ -66,6 +66,9 @@ define([
           erfgoedUrl: null,
           niscodeUrl: null,
           perceelUrl: null,
+          crabpyUrl: null,
+          beschermingUrl: null,
+          mapproxyUrl: null,
           buttons: null,
           sidebar: null
         };
@@ -83,16 +86,18 @@ define([
         this.perceelService = new PerceelService({ url: this.config.perceelUrl });
       }
       
-      if (this.config.beschermingUrl) {
-        this.beschermingService = new BeschermingService({ url: this.config.beschermingUrl });
+      if (this.config.mapproxyUrl) {
+        this.beschermingService = new BeschermingService();
       }
-    
+
 
       this.mapController = new MapController({
         mapContainer: this.mapNode,
         popupContainer: this.popupNode,
         perceelService: this.perceelService,
-        beschermingService: this.beschermingService
+        beschermingService: this.beschermingService,
+        beschermingUrl: this.config.beschermingUrl,
+        mapproxyUrl: this.config.mapproxyUrl
       });
 
       this.buttonController = new ButtonController({
@@ -208,8 +213,6 @@ define([
         var ZoomTab = sidebar.createTab('Zoom naar', 'fa-search',
           'Hier kan je naar een perceel of adres zoomen (je moet minstens een gemeente kiezen).');
 
-        console.log(this.crabpyUrl);
-        console.log(this.config.crabpyUrl);
         var crabpyWidget = new CrabpyWidget({
           name: "location",
           baseUrl: this.config.crabpyUrl

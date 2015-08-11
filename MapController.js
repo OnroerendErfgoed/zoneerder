@@ -38,6 +38,8 @@ define([
     polygonStore: null,
     perceelService: null,
     beschermingService: null,
+    beschermingUrl: null,
+    mapproxyUrl: null,
     _drawPolygonIndex: 1,
 
     postCreate: function () {
@@ -99,7 +101,7 @@ define([
         title: "Beschermd Onroerend Erfgoed",
         extent: extentVlaanderen,
         source: new ol.source.TileWMS(({
-          url: 'https://geo.onroerenderfgoed.be/geoserver/wms', //todo: move to config
+          url: this.beschermingUrl,
           params: {
             'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
             'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
@@ -118,13 +120,12 @@ define([
         type: 'overlay',
         visible: false
       });
-      this.beschermdWmsLayer = beschermdWmsLayer;
 
       this.beschermdWmsQueryLayer = new ol.layer.Tile({
         title: "Beschermd Onroerend Erfgoed getfeature",
         extent: extentVlaanderen,
         source: new ol.source.TileWMS(({
-          url: 'https://dev-geo.onroerenderfgoed.be/mapproxy/service', //todo: move to config
+          url: this.mapproxyUrl,
           params: {
             'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
             'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
@@ -175,7 +176,6 @@ define([
       });
       olMap.addLayer(layers);
 
-      //beschermdWmsLayer.setVisible(true);
       grbTileLayer.setVisible(true);
 
       this.drawLayer = new ol.layer.Vector({
