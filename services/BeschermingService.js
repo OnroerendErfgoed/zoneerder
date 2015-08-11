@@ -16,7 +16,7 @@ define([
       this.inherited(arguments);
     },
 
-    searchErfgoed: function (layer, resolution, coordinate) {
+    searchBeschermingen: function (layer, resolution, coordinate) {
       var requestUrl = layer.getSource().getGetFeatureInfoUrl(
         coordinate,
         resolution,
@@ -80,13 +80,13 @@ define([
             'beschermde_dorps_en_stadsgezichten',
             'beschermde_archeologische_zones',
             'beschermde_monumenten'
-          ]
+          ],
+          gmlFormat: new ol.format.GML2()
         });
-        var features = formatter.readFeatures(wfs, {
+        return formatter.readFeatures(wfs, {
           dataProjection: 'EPSG:31370',
           featureProjection: 'EPSG:900913'
         });
-        return features[0];
       } catch (e) {
         console.error(e);
         return [];

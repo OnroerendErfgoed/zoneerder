@@ -50,6 +50,7 @@ define([
       proj4.defs('urn:ogc:def:crs:EPSG::31370', proj4.defs('EPSG:31370'));
       proj4.defs('urn:ogc:def:crs:EPSG:6.9:31370', proj4.defs('EPSG:31370'));
       proj4.defs('urn:x-ogc:def:crs:EPSG:31370', proj4.defs('EPSG:31370'));
+      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#31370', proj4.defs('EPSG:31370'));
 
       this.pDef = ol.proj.get('EPSG:3857');
       this.pMerc = ol.proj.get('EPSG:900913');
@@ -252,16 +253,14 @@ define([
       this.oeFeaturesLayer.getSource().addFeature(feature);
     },
 
-    //todo: is deze nodig?
     drawBescherming: function (olFeature) {
       if (olFeature) {
-        var beschSource = this.beschermdWmsLayer.getSource();
-        var geometry = olFeature.getGeometry();
-        var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+        var xyCoords = this._transformXyzToXy(olFeature.getGeometry().getCoordinates());
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
-        olFeature.set('name', olFeature.get('CAPAKEY'));
+        var name = olFeature.get('NAAM');
+        olFeature.set('name', name);
         olFeature.setGeometry(xyGeom);
-        beschSource.addFeature(olFeature); //todo: naar WMS schrijven?
+        this.polygonStore.add({id: name, naam: name, feature: olFeature});
       }
       else {
         alert('Er werd geen bescherming gevonden op deze locatie');
@@ -660,10 +659,12 @@ define([
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
-        beschermingService.searchErfgoed(layer, map.getView().getResolution(), evt.coordinate).then(
+        beschermingService.searchBeschermingen(layer, map.getView().getResolution(), evt.coordinate).then(
           function(result){
             var beschermingen = beschermingService.readWfs(result);
-            console.debug('bescherming: ', beschermingen);
+            array.forEach(beschermingen, function(bescherming) {
+              controller.drawBescherming(bescherming);
+            }, this);
           }, function (err) {
             console.error(err);
           }
