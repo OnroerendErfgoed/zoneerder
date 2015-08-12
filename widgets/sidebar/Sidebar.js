@@ -4,30 +4,36 @@ define([
   'dijit/_TemplatedMixin',
   'dojo/text!./Sidebar.html',
   'dojo/_base/lang',
+  'dojo/_base/array',
   'dojo/query',
   'dojo/dom-class',
   'dojo/dom-construct',
   'dojo/on',
-  './SidebarButton'
+  './SidebarButton',
+  './SidebarTab'
 ], function (
   declare,
   WidgetBase,
   TemplatedMixin,
   template,
   lang,
+  array,
   query,
   domClass,
   domConstruct,
   on,
-  SidebarButton
+  SidebarButton,
+  SidebarTab
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
     templateString: template,
+    _tabs: null,
 
     postCreate: function () {
       //console.debug('Sidebar::postCreate');
       this.inherited(arguments);
+      this._tabs = [];
     },
 
     startup: function () {
@@ -35,11 +41,19 @@ define([
       this.inherited(arguments);
     },
 
+    reset: function () {
+      //console.debug('Sidebar::reset');
+      array.forEach(this._tabs, function (tab) {
+        tab.reset();
+      }, this);
+    },
+
     openTab: function (tabPane) {
       //console.debug('Sidebar::open', tabPane);
       domClass.remove(this.containerNode, 'collapsed');
       query('.sidebar-pane.active', this.paneNode).removeClass('active');
-      domClass.add(tabPane, 'active');
+      domClass.add(tabPane.domNode, 'active');
+      tabPane.refresh();
     },
 
     collapse: function() {
@@ -53,52 +67,36 @@ define([
       //console.debug('Sidebar::createTab', label);
 
       //add tab pane to paneNode
-      var pane = domConstruct.create('div', {
-        'class': 'sidebar-pane'
-      }, this.paneNode);
+      var tab = new SidebarTab({
+        label: label,
+        description: description
+      }).placeAt(this.paneNode);
 
-      domConstruct.create('h2', {
-        'innerHTML': label
-      }, pane);
-
-      var paneBody = domConstruct.create('div', {
-        'class': 'pane-body'
-      }, pane);
-
-      domConstruct.create('div', {
-        'innerHTML': description,
-        'class': 'pane-description'
-      }, paneBody);
-
-      var contentContainer = domConstruct.create('div', {
-        'class': 'pane-content'
-      }, paneBody);
+      this._tabs.push(tab);
 
       //add tab button to buttonNode
       var btn = new SidebarButton({
-        tab: pane,
         label: label,
-        iconClass: iconClass
+        iconClass: iconClass,
+        onClick: lang.hitch(this, function() {
+          this._tabButtonClick(btn, tab);
+        })
       }).placeAt(this.buttonNode);
 
-      btn.on("tabClick", lang.hitch(this, function (evt) {
-        this._tabButtonClick(btn.domNode, evt.tab);
-      }));
-
-      return contentContainer;
+      return tab;
 
     },
 
     _tabButtonClick: function (tabButton, tabPane) {
       //console.debug('Sidebar::_tabButtonClick', tabButton, tabPane, domClass.contains(tabButton, 'active'));
-      var tabActive = domClass.contains(tabButton, 'active');
+      var tabActive = domClass.contains(tabButton.domNode, 'active');
       query('li.active', this.buttonNode).removeClass('active');
 
       if (tabActive) {
         this.collapse();
       }
       else {
-        domClass.add(tabButton, 'active');
+        domClass.add(tabButton.domNode, 'active');
         this.openTab(tabPane);
       }
     }

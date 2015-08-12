@@ -7,7 +7,8 @@
   <title>zoneerder met sidebar</title>
 
   <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../../resources/zonemap.css" />
+  <link rel="stylesheet" href="../../resources/pyoes-compiled-app.css">
+  <link rel="stylesheet" href="../../resources/zoneerder.css" />
   <link rel="stylesheet" href="../../ol/ol.css" />
   <style>
     html, body {
@@ -26,6 +27,9 @@
 
 <body>
 <div id="widgetNode"></div>
+<div id="setZoneNode"></div>
+<div id="getZoneNode"></div>
+<div id="resetZoneNode"></div>
 <div id="button1Node"></div>
 <div id="button2Node"></div>
 <div id="button3Node"></div>
@@ -39,8 +43,9 @@
     "zoneerder/ZoneMap",
     'dojo/_base/lang',
     'dojo-form-controls/Button',
+    'dojo/json',
     "dojo/domReady!"
-  ], function (ZoneMap, lang, Button) {
+  ], function (ZoneMap, lang, Button, JSON) {
 
     var zoneMapConfig = {
       buttons: {
@@ -59,7 +64,9 @@
       erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
       niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',
       perceelUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
-      crabpyUrl: 'https://dev-geo.onroerenderfgoed.be'
+      beschermingUrl: 'https://dev-geo.onroerenderfgoed.be/geoserver/wms',
+      crabpyUrl: 'https://dev-geo.onroerenderfgoed.be',
+      mapproxyUrl: 'https://dev-geo.onroerenderfgoed.be/mapproxy/service'
     };
 
     // init widget
@@ -69,8 +76,7 @@
     widgetUnderTest.startup();
 
     widgetUnderTest.on("zonechanged", function(event){
-      console.log("zone changed event: ");
-      console.log(event);
+      console.log("zone changed event: ", event.zone);
     });
 
     var myButton = new Button({
@@ -82,6 +88,31 @@
       })
     }, 'button1Node');
     myButton.startup();
+
+    var getZoneButton = new Button({
+      label: "get zone",
+      onClick: lang.hitch(this, function () {
+        console.log(JSON.stringify(widgetUnderTest.getZone()));
+      })
+    }, 'getZoneNode');
+    getZoneButton.startup();
+
+    var testzone = {"type":"MultiPolygon","coordinates":[[[[123796.3989870126,161922.68658473343],[125855.60320366417,162033.58173123002],[126451.84609249674,157270.33629081864],[126158.4321447326,156715.58044047095],[125322.48775104273,156816.1542271264],[123796.3989870126,161922.68658473343]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
+
+    var setZoneButton = new Button({
+      label: "set zone",
+      onClick: lang.hitch(this, function () {
+        widgetUnderTest.setZone(testzone);
+      })
+    }, 'setZoneNode');
+    setZoneButton.startup();
+
+    new Button({
+      label: "reset zoneerder",
+      onClick: lang.hitch(this, function () {
+        widgetUnderTest.resetZone();
+      })
+    }, 'resetZoneNode').startup();
 
     var myButtonNis = new Button({
       label: "get niscodes",

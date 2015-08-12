@@ -23,6 +23,8 @@ Voorbeeld config:
         erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
         niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',
         perceelUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
-        crabpyUrl: 'https://dev-geo.onroerenderfgoed.be'
+        crabpyUrl: 'https://dev-geo.onroerenderfgoed.be',
+        mapproxyUrl: 'https://dev-geo.onroerenderfgoed.be/mapproxy/service',
+        beschermingUrl: 'https://dev-geo.onroerenderfgoed.be/geoserver/wms'
     };
 ```

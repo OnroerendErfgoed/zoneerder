@@ -1,7 +1,7 @@
 define([
   'dojo/_base/declare',
   'dojo/_base/lang',
-  'mijit/_WidgetBase',
+  'dijit/_WidgetBase',
   'dojo/query',
   'dojo/on',
   'dojo/dom-construct',

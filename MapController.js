@@ -1,13 +1,15 @@
 define([
   'dojo/_base/declare',
-  'mijit/_WidgetBase',
+  'dijit/_WidgetBase',
   'dojo/_base/lang',
   'dojo/request',
   'dojo/request/xhr',
   'dojo/_base/array',
-  'dojo/json',
+  'dojo/Evented',
+  'dojo/store/Memory',
+  'dojo/store/Observable',
   'ol',
-  './popup/Popup'
+  './widgets/popup/Popup'
 ], function (
   declare,
   WidgetBase,
@@ -15,29 +17,42 @@ define([
   request,
   xhr,
   array,
-  JSON,
+  Evented,
+  Memory,
+  Observable,
   ol,
   Popup
 ) {
-  return declare([WidgetBase], {
+  return declare([WidgetBase, Evented], {
 
     mapContainer: null,
     popupContainer: null,
     olMap: null,
     mapProjection: null,
-    geoJsonLayer: null,
+    zoneLayer: null,
     oeFeaturesLayer: null,
+    flashLayer: null,
     fullExtent: null,
     erfgoedFeatures: null,
     mapInteractions: null,
+    polygonStore: null,
+    perceelService: null,
+    beschermingService: null,
+    beschermingUrl: null,
+    mapproxyUrl: null,
+    _drawPolygonIndex: 1,
 
     postCreate: function () {
       this.inherited(arguments);
+
+      this.polygonStore = new Observable( new Memory( {data: []} ));
 
       proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
       // Add crs urn alias to Lambert72 projection, in order for open layers to recognize it.
       proj4.defs('urn:ogc:def:crs:EPSG::31370', proj4.defs('EPSG:31370'));
       proj4.defs('urn:ogc:def:crs:EPSG:6.9:31370', proj4.defs('EPSG:31370'));
+      proj4.defs('urn:x-ogc:def:crs:EPSG:31370', proj4.defs('EPSG:31370'));
+      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#31370', proj4.defs('EPSG:31370'));
 
       this.pDef = ol.proj.get('EPSG:3857');
       this.pMerc = ol.proj.get('EPSG:900913');
@@ -86,7 +101,7 @@ define([
         title: "Beschermd Onroerend Erfgoed",
         extent: extentVlaanderen,
         source: new ol.source.TileWMS(({
-          url: 'https://geo.onroerenderfgoed.be/geoserver/wms', //todo: move to config
+          url: this.beschermingUrl,
           params: {
             'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
             'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
@@ -106,13 +121,29 @@ define([
         visible: false
       });
 
-      var geoJsonLayer = this._createGeojsonLayer({
+      this.beschermdWmsQueryLayer = new ol.layer.Tile({
+        title: "Beschermd Onroerend Erfgoed getfeature",
+        extent: extentVlaanderen,
+        source: new ol.source.TileWMS(({
+          url: this.mapproxyUrl,
+          params: {
+            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
+            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
+            'vioe_geoportaal:beschermde_archeologische_zones,' +
+            'vioe_geoportaal:beschermde_monumenten',
+            'TILED': true
+          }
+        })),
+        visible: false
+      });
+
+      var zoneLayer = this._createVectorLayer({
         title: 'Zone',
         color: 'rgb(39, 146, 195)',
         fill:  'rgba(39, 146, 195, 0.3)'
       });
-      this.geoJsonLayer = geoJsonLayer;
-      var oeFeaturesLayer = this._createGeojsonLayer({
+      this.zoneLayer = zoneLayer;
+      var oeFeaturesLayer = this._createVectorLayer({
         title: 'Erfgoed Objecten',
         color: 'rgb(124, 47, 140)',
         fill:  'rgba(124, 47, 140, 0.3)'
@@ -139,14 +170,22 @@ define([
           grb_gbgTileLayer,
           grb_adpTileLayer,
           beschermdWmsLayer,
-          geoJsonLayer,
+          zoneLayer,
           oeFeaturesLayer
         ]
       });
       olMap.addLayer(layers);
 
-      //beschermdWmsLayer.setVisible(true);
       grbTileLayer.setVisible(true);
+
+      this.drawLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({}),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({color: 'rgb(255, 255, 255)', width: 1}),
+          fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.3)'})
+        })
+      });
+      olMap.addLayer(this.drawLayer);
 
       olMap.addControl(new ol.control.ScaleLine());
       olMap.addControl(new ol.control.Attribution({
@@ -157,6 +196,15 @@ define([
       this._createPopup();
       //olMap.on('moveend', this._onMoveEnd);
 
+      this.flashLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({}),
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({color: 'rgba(255,0,255, 1)', width: 1}),
+          fill: new ol.style.Fill({color: 'rgba(255,0,255, 0.4)'})
+        })
+      });
+      olMap.addLayer(this.flashLayer);
+
       this.zoomToExtent(extentVlaanderen);
 
       //console.log("projection:");
@@ -166,11 +214,21 @@ define([
     startup: function () {
       this.inherited(arguments);
       this.popup.startup();
+      this._observePolygonStore();
+    },
+
+    resize: function () {
+      this.olMap.updateSize();
     },
 
     clearFeatures: function () {
-      var oeFeaturesSource = this.oeFeaturesLayer.getSource();
-      oeFeaturesSource.clear();
+      this.oeFeaturesLayer.getSource().clear();
+    },
+
+    clearZone: function () {
+      this.polygonStore.query().forEach(function (polygon) {
+        this.polygonStore.remove(polygon.id);
+      }, this);
     },
 
     addErfgoedFeature: function (geoJsonFeature) {
@@ -195,15 +253,28 @@ define([
       this.oeFeaturesLayer.getSource().addFeature(feature);
     },
 
+    drawBescherming: function (olFeature) {
+      if (olFeature) {
+        var xyCoords = this._transformXyzToXy(olFeature.getGeometry().getCoordinates());
+        var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
+        var name = olFeature.get('NAAM');
+        olFeature.set('name', name);
+        olFeature.setGeometry(xyGeom);
+        this.polygonStore.add({id: name, naam: name, feature: olFeature});
+      }
+      else {
+        alert('Er werd geen bescherming gevonden op deze locatie');
+      }
+    },
+
     drawPerceel: function (olFeature) {
       if (olFeature) {
-        var perceelSource = this.geoJsonLayer.getSource();
-        var geometry = olFeature.getGeometry();
-        var xyCoords = this._transformXyzToXy(geometry.getCoordinates());
+        var xyCoords = this._transformXyzToXy(olFeature.getGeometry().getCoordinates());
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
-        olFeature.set('name', olFeature.get('CAPAKEY'));
+        var name = "Perceel " + olFeature.get('CAPAKEY');
+        olFeature.set('name', name);
         olFeature.setGeometry(xyGeom);
-        perceelSource.addFeature(olFeature);
+        this.polygonStore.add({id: name, naam: name, feature: olFeature});
       }
       else {
         alert('Er werd geen perceel gevonden op deze locatie');
@@ -212,20 +283,55 @@ define([
 
     drawWKTzone: function (wkt) {
       var wktParser = new ol.format.WKT();
-      var wktSource = this.geoJsonLayer.getSource();
       try {
         var featureFromWKT = wktParser.readFeature(wkt, {
           dataProjection: this.pLam,
           featureProjection: this.pDef
         });
+
+        var name = 'Polygoon ' + this._drawPolygonIndex++;
+        featureFromWKT.setProperties({
+          'name': name
+        });
+        this.polygonStore.put({id: name, naam: name, feature: featureFromWKT});
       }
       catch (error) {
         alert("Dit is een ongeldige WKT geometrie.")
       }
-      wktSource.addFeature(featureFromWKT);
-      this.zoomToExtent(featureFromWKT.getGeometry().getExtent());
     },
 
+    flashFeature: function(olFeature){
+      this._flashFeaturesInVectorLayer([olFeature], 1000, 1);
+    },
+
+    flashFeatures: function(olFeatures){
+      this._flashFeaturesInVectorLayer(olFeatures, 1000, 1);
+    },
+
+    _flashFeaturesInVectorLayer: function(olFeatures, timeout, maxCount, count) {
+      count ? ++count : count=1;
+
+      var flashLayerSource = this.flashLayer.getSource();
+      var allFeatures = flashLayerSource.getFeatures();
+      if(allFeatures.length === 0){
+        flashLayerSource.addFeatures(olFeatures);
+      }
+
+      setTimeout(
+        lang.hitch(this, function() {
+          flashLayerSource.clear();
+          if (count < maxCount) {
+            setTimeout(
+              lang.hitch(this, function() {
+                this._flashFeaturesInVectorLayer(olFeatures, timeout, maxCount, count);
+              }),
+              timeout
+            );
+          }
+        }),
+        timeout
+      );
+    },
 
     _onMoveEnd: function (evt) {
       var olMap = evt.map;
@@ -316,24 +422,12 @@ define([
       });
     },
 
-    _createGeojsonLayer: function (options) {
+    _createVectorLayer: function (options) {
       var vectorSource = new ol.source.Vector({});
-      //var vectorSource = new ol.source.GeoJSON(
-      //  /** @type {olx.source.GeoJSONOptions} */ ({
-      //    object: {
-      //      'type': 'FeatureCollection',
-      //      'crs': {
-      //        'type': 'name',
-      //        'properties': {
-      //          'name': 'EPSG:900913'
-      //        }
-      //      },
-      //      'features': []
-      //    }
-      //  }));
 
       var textStyleFunction = function (feature, resolution) {
-        var text = (resolution < 3 && feature.get('name') ) ? feature.get('name') : '';
+        //var text = (resolution < 3 && feature.get('name') ) ? feature.get('name') : '';
+        var text = feature.get('name') ? feature.get('name') : '?';
         return new ol.style.Text({
           font: '10px Verdana',
           text: text,
@@ -393,13 +487,11 @@ define([
     },
 
     getZone: function () {
-      var geojsonSource = this.geoJsonLayer.getSource();
-
       //create empty zone multiPolygon
       var multiPolygon = new ol.geom.MultiPolygon([], 'XY');
 
       //add all polygons and multiPolygons from zone layer
-      array.forEach(geojsonSource.getFeatures(), function (feature) {
+      array.forEach(this.zoneLayer.getSource().getFeatures(), function (feature) {
         var cloneGeom = feature.clone().getGeometry();
         cloneGeom.transform('EPSG:900913', 'EPSG:31370');
         if (cloneGeom instanceof ol.geom.Polygon) {
@@ -433,11 +525,15 @@ define([
       var geometry = this.geoJsonFormatter.readGeometry(geojson);
 
       var feature = new ol.Feature({
-        geometry: geometry.transform('EPSG:31370', 'EPSG:900913')
+        geometry: geometry.transform('EPSG:31370', 'EPSG:900913'),
+        name: 'Zone'
       });
 
-      var geojsonSource = this.geoJsonLayer.getSource();
-      geojsonSource.addFeature(feature);
+      try {
+        this.polygonStore.add({id: 'zone', naam: 'Zone', feature: feature});
+      } catch (e) {
+        console.warn("the zone was already added to the map!");
+      }
     },
 
     getFeatures: function () {
@@ -468,8 +564,7 @@ define([
     },
 
     zoomToZone: function () {
-      var geojsonSource = this.geoJsonLayer.getSource();
-      this.zoomToExtent(geojsonSource.getExtent());
+      this.zoomToExtent(this.zoneLayer.getSource().getExtent());
     },
 
     zoomToExtent: function (extent) {
@@ -484,67 +579,52 @@ define([
       this.zoomToExtent(oeFeaturesSource.getExtent());
     },
 
-    startDraw: function () {
-      this.stopAllDrawActions();
-      this.popup.disable();
+    zoomToPolygon: function (polygon) {
+      this.zoomToExtent(polygon.getGeometry().getExtent());
+    },
 
-      var map = this.olMap;
+    startDraw: function (onEnd) {
+      //console.debug('Mapcontroller::startDraw');
+      this.popup.disable();
+      this.drawLayer.getSource().clear();
 
       var drawInteraction = this.mapInteractions.draw;
-      map.addInteraction(drawInteraction);
+      drawInteraction.setActive(true);
 
-      drawInteraction.on('drawend', lang.hitch(this, function (evt) {
-        this.popup.enable();
-        window.setTimeout(function () {
-          map.removeInteraction(drawInteraction);
-        }, 0);
-      }));
+      this.mapInteractions.drawKey = drawInteraction.once('drawend', function (evt) {
+        //console.debug('Mapcontroller::startDraw::drawend');
+        var name = 'Polygoon ' + this._drawPolygonIndex++;
+        evt.feature.setProperties({
+          'name': name
+        });
+        this.polygonStore.put({id: name, naam: name, feature: evt.feature});
+        window.setTimeout(lang.hitch(this, function () { //set timeout to prevent zoom after double click to end drawing
+          this.stopDraw();
+          this.popup.enable();
+          onEnd();
+        }, 0));
+      }, this);
     },
 
     stopDraw: function () {
-      this.olMap.removeInteraction(this.mapInteractions.draw);
-      this.popup.enable();
-    },
-
-    startSelect: function () {
-      this.stopAllDrawActions();
-      this.popup.disable();
-
-      var map = this.olMap;
-
-      var selectInteraction = new ol.interaction.Select({
-        condition: ol.events.condition.click,
-        layers: [this.geoJsonLayer]
-      });
-
-      this.mapInteractions.select = selectInteraction;
-      map.addInteraction(selectInteraction);
-    },
-
-    removeSelectedItems: function () {
-      var selectInteraction = this.mapInteractions.select;
-      if (selectInteraction) {
-        var source = this.geoJsonLayer.getSource();
-        selectInteraction.getFeatures().forEach(function (feature) {
-          source.removeFeature(feature);
-        });
+      this.drawLayer.getSource().clear();
+      if (this.mapInteractions.draw.getActive()) {
+        this.mapInteractions.draw.setActive(false);
       }
-      this.stopSelect();
-
-    },
-
-    stopSelect: function () {
-      this.olMap.removeInteraction(this.mapInteractions.select);
+      if (this.mapInteractions.drawKey) {
+        this.mapInteractions.draw.unByKey(this.mapInteractions.drawKey);
+        this.mapInteractions.drawKey = null;
+      }
       this.popup.enable();
     },
 
-    startParcelSelect: function (perceelService) {
-      this.stopAllDrawActions();
+    startParcelSelect: function (onEnd) {
       this.popup.disable();
 
       var controller = this,
           map = this.olMap,
-          popup = this.popup;
+          popup = this.popup,
+          perceelService = this.perceelService;
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
@@ -554,6 +634,7 @@ define([
         }, function (err) {
           console.error(err);
         }).always(function () {
+          onEnd();
           popup.enable();
         });
       });
@@ -564,90 +645,59 @@ define([
       if (this.mapInteractions.selectParcelKey) {
         this.olMap.unByKey(this.mapInteractions.selectParcelKey);
       }
+      this.popup.enable();
     },
 
-    stopAllDrawActions: function () {
+    startBeschermingSelect: function (onEnd) {
+      this.popup.disable();
+
+      var controller = this,
+        map = this.olMap,
+        popup = this.popup,
+        beschermingService = this.beschermingService,
+        layer = this.beschermdWmsQueryLayer;
+
+      var eventKey = map.on('click', function (evt) {
+        map.unByKey(eventKey);
+        beschermingService.searchBeschermingen(layer, map.getView().getResolution(), evt.coordinate).then(
+          function(result){
+            var beschermingen = beschermingService.readWfs(result);
+            array.forEach(beschermingen, function(bescherming) {
+              controller.drawBescherming(bescherming);
+            }, this);
+          }, function (err) {
+            console.error(err);
+          }
+        ).always(function () {
+          onEnd();
+          popup.enable();
+        });
+      });
+      this.mapInteractions.selectBschermingKey = eventKey;
+    },
+
+    stopBeschermingSelect: function () {
+      console.debug('MapController::stopBeschermingSelect');
+      if (this.mapInteractions.selectBschermingKey) {
+        this.olMap.unByKey(this.mapInteractions.selectBschermingKey);
+      }
+      this.popup.enable();
+    },
+
+    stopAllEditActions: function () {
       this.stopDraw();
-      this.stopSelect();
       this.stopParcelSelect();
-    },
-
-    startInputWKT: function (wktInput) {
-      var wkt = this._filterWktFromString(wktInput.toUpperCase());
-      if (wkt) {
-        this.drawWKTzone(wkt);
-      }
-      else {
-        alert('Het is niet mogelijk om een wkt string uit de opgegeven tekst te halen.');
-      }
-    },
-
-    _filterWktFromString: function (stringWithWkt) {
-      var supportedGeometries = ["MULTIPOLYGON", "POLYGON"];
-      var wkt = null;
-      var wktFound;
-
-      //first check: clean wkt string
-      wktFound = array.some(supportedGeometries, function (geometryType) {
-        if (stringWithWkt.lastIndexOf(geometryType, 0) === 0) {
-          wkt = stringWithWkt;
-          return true;
-        }
-      });
-      if (wktFound) {
-        return wkt;
-      }
-
-      //second check: see if input is tab delimited (QGIS)
-      var mySplitStringArray = stringWithWkt.split(/\s{2,}|\t|\n/); //split on 2 or more spaces OR tab OR newline
-      wktFound = array.some(mySplitStringArray, lang.hitch(this, function (part) {
-        return array.some(supportedGeometries, function (geometryType) {
-          if (part.lastIndexOf(geometryType, 0) === 0) {
-            wkt = part;
-            return true;
-          }
-        })
-      }));
-      if (wktFound) {
-        return wkt;
-      }
-
-      //last check: find geometry type in the string and iterate over characters after it, counting the bracket pairs
-      wktFound = array.some(supportedGeometries, function (geometryType) {
-        var geometryTypeIdx = stringWithWkt.indexOf(geometryType);
-        if (geometryTypeIdx > -1) {
-          var split = stringWithWkt.split(geometryType);
-          if (split[1]) {
-            var polygonStart = split[1].trim();
-            var bracketPairs = 0;
-            wkt = geometryType;
-            for (var x = 0; x < polygonStart.length; x++) {
-              var c = polygonStart.charAt(x);
-              if (c == '(') {
-                bracketPairs++;
-              } else if (c == ')') {
-                bracketPairs--;
-              }
-              wkt += c;
-              if (bracketPairs === 0) {
-                return true;
-              }
-            }
-          }
-        }
-      });
-      if (wktFound) {
-        return wkt;
-      }
-
-      return null;
+      this.stopBeschermingSelect();
     },
 
     _createInteractions: function () {
+      //console.debug("MapController::_createInteractions");
       var drawInteraction = new ol.interaction.Draw({
-          source: this.geoJsonLayer.getSource(),
+          source: this.drawLayer.getSource(),
           type: /** @type {ol.geom.GeometryType} */ ('Polygon')
       });
+      this.olMap.addInteraction(drawInteraction);
+      drawInteraction.setActive(false);
 
       this.mapInteractions = {
         draw: drawInteraction
@@ -659,6 +709,29 @@ define([
         map: this.olMap,
         layer: this.oeFeaturesLayer
       }, this.popupContainer);
+    },
+
+    _observePolygonStore: function () {
+      var results = this.polygonStore.query({});
+      results.observe(lang.hitch(this, function(object, removedFrom, insertedInto){
+        if(removedFrom > -1){ // existing object removed
+          this._removePolygonFromZone(object.feature);
+        }
+        else if(insertedInto > -1){ // new or updated object inserted
+          this._addPolygonToZone(object.feature);
+        }
+        if (object.id!='zone') {
+          this.emit("zonechanged", {zone: this.getZone()});
+        }
+      }));
+    },
+
+    _removePolygonFromZone: function (polygon) {
+      this.zoneLayer.getSource().removeFeature(polygon);
+    },
+
+    _addPolygonToZone: function (polygon) {
+      this.zoneLayer.getSource().addFeature(polygon);
     }
   });
 });

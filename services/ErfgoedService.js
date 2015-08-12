@@ -1,10 +1,12 @@
 define([
     "dojo/_base/declare",
-    "mijit/_WidgetBase",
+    "dijit/_WidgetBase",
     "dojo/request/xhr",
+    "dojo/_base/array",
+    "dojo/json",
     "dojo/when"
 
-], function (declare, WidgetBase, xhr, when) {
+], function (declare, WidgetBase, xhr, array, JSON, when) {
     return declare([WidgetBase], {
 
         url: null,
@@ -25,12 +27,11 @@ define([
             this.inherited(arguments);
         },
 
-        searchNiscodes: function (zone) {
+        searchErfgoedFeatures: function (zone) {
             if (zone && zone.coordinates.length > 0) {
                 var url = this.url;
                 var data = {
-									  type: 'gemeente',
-                    geef_geometrie: 0,
+                    categorie: "objecten",
                     geometrie: zone
                 };
                 return xhr.post(url, {
