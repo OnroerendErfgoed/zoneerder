@@ -14,7 +14,7 @@
   "dependencies": {
     "dojo": "~1.10.4",
     "dijit": "~1.10.4",
-    "proj4": "~2.3.6",
+    "proj4": "2.3.6",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git#update_style_zoneerder",
     "ol": "https://github.com/OnroerendErfgoed/ol3-amd.git#0.2.0",
     "font-awesome": "~4.3.0",
