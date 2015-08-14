@@ -227,17 +227,10 @@ define([
     },
 
     addErfgoedFeature: function (geoJsonFeature) {
-      var formatter = new ol.format.GeoJSON({
-        defaultDataProjection: ol.proj.get('EPSG:4326')
-      });
-      //var feature = formatter.readFeature(geoJsonFeature); //only the geometry property is in a valid geoJSON format
-      var geometry = formatter.readGeometry(geoJsonFeature.geometrie, {
-        dataProjection: ol.proj.get(geoJsonFeature.geometrie.crs.properties.name),
-        featureProjection: this.mapProjection
-      });
+      var geometry = this.geoJsonFormatter.readGeometry(geoJsonFeature.geometrie);
       var feature = new ol.Feature({
         geometry: geometry,
-        name: geoJsonFeature.id,
+        name: geoJsonFeature.naam,
         naam: geoJsonFeature.naam,
         id: geoJsonFeature.id,
         type: geoJsonFeature.type,
