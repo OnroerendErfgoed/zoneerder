@@ -34,8 +34,8 @@ define([
         '<ogc:Filter>' +
         '<ogc:Contains>' +
         '<ogc:PropertyName>SHAPE</ogc:PropertyName>' +
-        '<gml:Point srsName="urn:x-ogc:def:crs:EPSG:3857">' +
-        '<gml:pos srsName="urn:x-ogc:def:crs:EPSG:3857">' + coordinate[0] + ' ' + coordinate[1] + '</gml:pos>' +
+        '<gml:Point srsName="urn:x-ogc:def:crs:EPSG:31370">' +
+        '<gml:pos srsName="urn:x-ogc:def:crs:EPSG:31370">' + coordinate[0] + ' ' + coordinate[1] + '</gml:pos>' +
         '</gml:Point>' +
         '</ogc:Contains>' +
         '</ogc:Filter>' +
@@ -56,10 +56,7 @@ define([
         featureNS: "https://geo.agiv.be/ogc/wfs/grb",
         featureType: "GRB_-_Adp_-_administratief_perceel"
       });
-      var features = formatter.readFeatures(wfs, {
-        dataProjection: 'EPSG:31370',
-        featureProjection: 'EPSG:900913'
-      });
+      var features = formatter.readFeatures(wfs, {});
       return features[0];
     }
   });
