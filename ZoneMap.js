@@ -228,8 +228,7 @@ define([
           onClick: function () {
             var bbox = crabZoomer.getBbox();
             if (bbox) {
-              var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
-              self.mapController.zoomToExtent(extent);
+              self.mapController.zoomToExtent(bbox);
               crabZoomer.reset();
               sidebar.collapse();
             }
@@ -246,8 +245,7 @@ define([
           onClick: function () {
             var bbox = capakeyZoomer.getBbox();
             if (bbox) {
-              var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
-              self.mapController.zoomToExtent(extent);
+              self.mapController.zoomToExtent(bbox);
               capakeyZoomer.reset();
               sidebar.collapse();
             }
