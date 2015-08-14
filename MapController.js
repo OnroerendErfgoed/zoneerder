@@ -2,8 +2,6 @@ define([
   'dojo/_base/declare',
   'dijit/_WidgetBase',
   'dojo/_base/lang',
-  'dojo/request',
-  'dojo/request/xhr',
   'dojo/_base/array',
   'dojo/Evented',
   'dojo/store/Memory',
@@ -14,8 +12,6 @@ define([
   declare,
   WidgetBase,
   lang,
-  request,
-  xhr,
   array,
   Evented,
   Memory,
@@ -47,36 +43,54 @@ define([
 
       this.polygonStore = new Observable( new Memory( {data: []} ));
 
-      proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
-      // Add crs urn alias to Lambert72 projection, in order for open layers to recognize it.
-      proj4.defs('urn:ogc:def:crs:EPSG::31370', proj4.defs('EPSG:31370'));
-      proj4.defs('urn:ogc:def:crs:EPSG:6.9:31370', proj4.defs('EPSG:31370'));
-      proj4.defs('urn:x-ogc:def:crs:EPSG:31370', proj4.defs('EPSG:31370'));
-      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#31370', proj4.defs('EPSG:31370'));
-
-      this.pDef = ol.proj.get('EPSG:3857');
-      this.pMerc = ol.proj.get('EPSG:900913');
-      this.pWgs84 = ol.proj.get('EPSG:4326');
-      this.pLam = ol.proj.get('EPSG:31370');
-      this.mapProjection = this.pMerc;
-
-      var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
-      var centerVlaanderen = [483613.49323354336, 6632162.6232922375];
-      this.fullExtent = extentVlaanderen;
+      var projection = this.mapProjection = this._defineProjection();
+      var map = this.olMap = this._createMap(projection, this.mapContainer);
+      this._createLayers(map);
 
       this.geoJsonFormatter =  new ol.format.GeoJSON({
           defaultDataProjection: 'EPSG:31370'
       });
 
-      var view = new ol.View({
-        projection: this.mapProjection,
-        maxZoom: 21,
-        minZoom: 8
-      });
+      map.addControl(new ol.control.ScaleLine());
+      map.addControl(new ol.control.Attribution({
+        collapsible: false
+      }));
 
-      var olMap = new ol.Map({
-        target: this.mapContainer,
-        view: view,
+      this._createInteractions();
+      this._createPopup();
+      //map.on('moveend', this._onMoveEnd);
+
+      this.zoomToExtent(projection.getExtent());
+    },
+
+    _defineProjection: function () {
+      proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
+
+      // Define aliases
+      proj4.defs('urn:ogc:def:crs:EPSG::31370', proj4.defs('EPSG:31370'));
+      proj4.defs('urn:ogc:def:crs:EPSG:6.9:31370', proj4.defs('EPSG:31370'));
+      proj4.defs('urn:x-ogc:def:crs:EPSG:31370', proj4.defs('EPSG:31370'));
+      proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#31370', proj4.defs('EPSG:31370'));
+
+      //this.pDef = ol.proj.get('EPSG:3857');
+      //this.pMerc = ol.proj.get('EPSG:900913');
+      //this.pWgs84 = ol.proj.get('EPSG:4326');
+      //this.pLam = ol.proj.get('EPSG:31370');
+
+      var proj = ol.proj.get('EPSG:31370');
+
+      //set extent
+      proj.setExtent([9928.0, 66928.0, 272072.0, 329072.0]);
+
+      return proj;
+    },
+
+    _createMap: function (projection, container) {
+      return new ol.Map({
+        target: container,
+        view: new ol.View({
+          projection: projection
+        }),
         controls: ol.control.defaults({
           attribution: false,
           rotate: false,
@@ -84,22 +98,37 @@ define([
         }),
         logo: false
       });
-      this.olMap = olMap;
+    },
 
+    _createLayers: function(map) {
+
+      /* base layers */
       var orthoTileLayer = this._createGrbLayer("orthoklm", "Ortho", true);
       var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
       var grbTileLayer = this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true);
       var grb_grTileLayer = this._createGrbLayer("grb_bsk_gr", "GRB-Basiskaart in grijswaarden", true);
       var ferrarisTileLayer = this._createGrbLayer("ferrarisx", "Ferraris", true);
+
+      map.addLayer(new ol.layer.Group({
+        title: 'Basislagen',
+        layers: [
+          orthoTileLayer,
+          gewestplanTileLayer,
+          grbTileLayer,
+          grb_grTileLayer,
+          ferrarisTileLayer
+        ]
+      }));
+
+      grbTileLayer.setVisible(true);
+
+      /* overlays */
       var grbTransTileLayer = this._createGrbLayer("grb_bsk_nb", "GRB-Basiskaart overlay", false);
       var grb_gbgTileLayer = this._createGrbLayer("grb_gbg", "GRB-Gebouwenlaag", false);
       var grb_adpTileLayer = this._createGrbLayer("grb_adp", "GRB-Percelenlaag", false);
-
-      var osmTileLayer = this._createOsmLayer('Open Streetmap');
-
       var beschermdWmsLayer = new ol.layer.Tile({
         title: "Beschermd Onroerend Erfgoed",
-        extent: extentVlaanderen,
+        extent: this.mapProjection.getExtent(),
         source: new ol.source.TileWMS(({
           url: this.beschermingUrl,
           params: {
@@ -120,23 +149,6 @@ define([
         type: 'overlay',
         visible: false
       });
-
-      this.beschermdWmsQueryLayer = new ol.layer.Tile({
-        title: "Beschermd Onroerend Erfgoed getfeature",
-        extent: extentVlaanderen,
-        source: new ol.source.TileWMS(({
-          url: this.mapproxyUrl,
-          params: {
-            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
-            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
-            'vioe_geoportaal:beschermde_archeologische_zones,' +
-            'vioe_geoportaal:beschermde_monumenten',
-            'TILED': true
-          }
-        })),
-        visible: false
-      });
-
       var zoneLayer = this._createVectorLayer({
         title: 'Zone',
         color: 'rgb(39, 146, 195)',
@@ -150,20 +162,7 @@ define([
       });
       this.oeFeaturesLayer = oeFeaturesLayer;
 
-      var baseLayers = new ol.layer.Group({
-        title: 'Basislagen',
-        layers: [
-          orthoTileLayer,
-          gewestplanTileLayer,
-          grbTileLayer,
-          grb_grTileLayer,
-          osmTileLayer,
-          ferrarisTileLayer
-        ]
-      });
-      olMap.addLayer(baseLayers);
-
-      var layers = new ol.layer.Group({
+      map.addLayer( new ol.layer.Group({
         title: 'Overlays',
         layers: [
           grbTransTileLayer,
@@ -173,10 +172,24 @@ define([
           zoneLayer,
           oeFeaturesLayer
         ]
-      });
-      olMap.addLayer(layers);
+      }));
 
-      grbTileLayer.setVisible(true);
+      /* other layers */
+      this.beschermdWmsQueryLayer = new ol.layer.Tile({
+        title: "Beschermd Onroerend Erfgoed getfeature",
+        extent: this.mapProjection.getExtent(),
+        source: new ol.source.TileWMS(({
+          url: this.mapproxyUrl,
+          params: {
+            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
+            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
+            'vioe_geoportaal:beschermde_archeologische_zones,' +
+            'vioe_geoportaal:beschermde_monumenten',
+            'TILED': true
+          }
+        })),
+        visible: false
+      });
 
       this.drawLayer = new ol.layer.Vector({
         source: new ol.source.Vector({}),
@@ -185,16 +198,7 @@ define([
           fill: new ol.style.Fill({color: 'rgba(255, 255, 255, 0.3)'})
         })
       });
-      olMap.addLayer(this.drawLayer);
-
-      olMap.addControl(new ol.control.ScaleLine());
-      olMap.addControl(new ol.control.Attribution({
-        collapsible: false
-      }));
-
-      this._createInteractions();
-      this._createPopup();
-      //olMap.on('moveend', this._onMoveEnd);
+      map.addLayer(this.drawLayer);
 
       this.flashLayer = new ol.layer.Vector({
         source: new ol.source.Vector({}),
@@ -203,12 +207,7 @@ define([
           fill: new ol.style.Fill({color: 'rgba(255,0,255, 0.4)'})
         })
       });
-      olMap.addLayer(this.flashLayer);
-
-      this.zoomToExtent(extentVlaanderen);
-
-      //console.log("projection:");
-      //console.log(olMap.getView().getProjection());
+      map.addLayer(this.flashLayer);
     },
 
     startup: function () {
@@ -363,62 +362,36 @@ define([
     },
 
     _createGrbLayer: function (grbLayerId, title, isBaselayer) {
-      var proj = this.mapProjection;
-      var extentVlaanderen = [261640.36309339158, 6541049.685576308, 705586.6233736952, 6723275.561008167];
-      var grbResolutions = [
-        156543.033928041,
-        78271.5169640205,
-        39135.7584820102,
-        19567.8792410051,
-        9783.93962050256,
-        4891.96981025128,
-        2445.98490512564,
-        1222.99245256282,
-        611.49622628141,
-        305.748113140705,
-        152.874056570353,
-        76.4370282851763,
-        38.2185141425881,
-        19.1092570712941,
-        9.55462853564703,
-        4.77731426782352,
-        2.38865713391176,
-        1.19432856695588,
-        0.59716428347794,
-        0.29858214173897,
-        0.149291070869485,
-        0.0746455354347424];
-      var grbMatrixIds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
+      //retrieved with readCapabilties.html
+      var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
+      var matrixIds = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"];
 
-      var grbTileGrid = new ol.tilegrid.WMTS({
-        origin: ol.extent.getTopLeft(proj.getExtent()),
-        resolutions: grbResolutions,
-        matrixIds: grbMatrixIds
-      });
-
-      var grbProperties = {
+      var grbSource = new ol.source.WMTS({
+        url: 'http://grb.agiv.be/geodiensten/raadpleegdiensten/geocache/wmts/',
         layer: grbLayerId,
-        projection: proj,
-        format: "image/png",
-        matrixSet: 'GoogleMapsVL',
-        url: "//grb.agiv.be/geodiensten/raadpleegdiensten/geocache/wmts",
+        matrixSet: 'BPL72VL',
+        format: 'image/png',
+        projection: this.mapProjection,
         style: "default",
         version: "1.0.0",
-        tileGrid: grbTileGrid,
+        tileGrid: new ol.tilegrid.WMTS({
+          origin: ol.extent.getTopLeft(this.mapProjection.getExtent()),
+          resolutions: resolutions,
+          matrixIds: matrixIds
+        }),
         attributions: [
           new ol.Attribution({
             html: '© <a href="http://www.agiv.be" title="AGIV" class="copyrightLink copyAgiv">AGIV</a>'
           })
         ]
-
-      };
+      });
 
       return new ol.layer.Tile({
         title: title,
         visible: false,
         type: isBaselayer ? 'base' : 'overlay',
-        source: new ol.source.WMTS(grbProperties),
-        extent: extentVlaanderen
+        source: grbSource,
+        extent: this.mapProjection.getExtent()
       });
     },
 
