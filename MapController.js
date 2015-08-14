@@ -48,7 +48,7 @@ define([
       this._createLayers(map);
 
       this.geoJsonFormatter =  new ol.format.GeoJSON({
-          defaultDataProjection: 'EPSG:31370'
+        defaultDataProjection: this.mapProjection
       });
 
       map.addControl(new ol.control.ScaleLine());
@@ -72,16 +72,8 @@ define([
       proj4.defs('urn:x-ogc:def:crs:EPSG:31370', proj4.defs('EPSG:31370'));
       proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#31370', proj4.defs('EPSG:31370'));
 
-      //this.pDef = ol.proj.get('EPSG:3857');
-      //this.pMerc = ol.proj.get('EPSG:900913');
-      //this.pWgs84 = ol.proj.get('EPSG:4326');
-      //this.pLam = ol.proj.get('EPSG:31370');
-
       var proj = ol.proj.get('EPSG:31370');
-
-      //set extent
       proj.setExtent([9928.0, 66928.0, 272072.0, 329072.0]);
-
       return proj;
     },
 
@@ -238,11 +230,10 @@ define([
       var formatter = new ol.format.GeoJSON({
         defaultDataProjection: ol.proj.get('EPSG:4326')
       });
-      //var feature = formatter.readFeature(geoJsonFeature);
-      //only the geometry property is in a valid geoJSON format
+      //var feature = formatter.readFeature(geoJsonFeature); //only the geometry property is in a valid geoJSON format
       var geometry = formatter.readGeometry(geoJsonFeature.geometrie, {
         dataProjection: ol.proj.get(geoJsonFeature.geometrie.crs.properties.name),
-        featureProjection: this.pDef
+        featureProjection: this.mapProjection
       });
       var feature = new ol.Feature({
         geometry: geometry,
@@ -287,10 +278,7 @@ define([
     drawWKTzone: function (wkt) {
       var wktParser = new ol.format.WKT();
       try {
-        var featureFromWKT = wktParser.readFeature(wkt, {
-          dataProjection: this.pLam,
-          featureProjection: this.pDef
-        });
+        var featureFromWKT = wktParser.readFeature(wkt);
 
         var name = 'Polygoon ' + this._drawPolygonIndex++;
         featureFromWKT.setProperties({
@@ -470,7 +458,6 @@ define([
       //add all polygons and multiPolygons from zone layer
       array.forEach(this.zoneLayer.getSource().getFeatures(), function (feature) {
         var cloneGeom = feature.clone().getGeometry();
-        cloneGeom.transform('EPSG:900913', 'EPSG:31370');
         if (cloneGeom instanceof ol.geom.Polygon) {
           multiPolygon.appendPolygon(cloneGeom);
         }
@@ -484,7 +471,7 @@ define([
       if (multiPolygon.getCoordinates().length > 0) {
 
         //transform to geojson
-        var geojson = this.geoJsonFormatter.writeGeometryObject(multiPolygon, {featureProjection: 'EPSG:31370'});
+        var geojson = this.geoJsonFormatter.writeGeometryObject(multiPolygon);
         //hack to add crs. todo: remove when https://github.com/openlayers/ol3/issues/2078 is fixed
         geojson.crs = {type: "name"};
         geojson.crs.properties = {
@@ -499,15 +486,15 @@ define([
     },
 
     setZone: function (geojson) {
-      var geometry = this.geoJsonFormatter.readGeometry(geojson);
-
-      var feature = new ol.Feature({
-        geometry: geometry.transform('EPSG:31370', 'EPSG:900913'),
-        name: 'Zone'
-      });
-
       try {
-        this.polygonStore.add({id: 'zone', naam: 'Zone', feature: feature});
+        this.polygonStore.add({
+          id: 'zone',
+          naam: 'Zone',
+          feature:  new ol.Feature({
+            geometry: this.geoJsonFormatter.readGeometry(geojson),
+            name: 'Zone'
+          })
+        });
       } catch (e) {
         console.warn("the zone was already added to the map!");
       }
