@@ -220,6 +220,10 @@ define([
       this.olMap.updateSize();
     },
 
+    getFullExtent: function () {
+      return this.mapProjection.getExtent();
+    },
+
     clearFeatures: function () {
       this.oeFeaturesLayer.getSource().clear();
     },

@@ -102,7 +102,7 @@ define([
 
       this.buttonController = new ButtonController({
         map: this.mapController.olMap,
-        fullExtent: this.mapController.fullExtent,
+        fullExtent: this.mapController.getFullExtent(),
         mapButtons: this.config.buttons
       });
     },
