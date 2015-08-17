@@ -599,7 +599,7 @@ define([
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
-        beschermingService.searchBeschermingenPost(evt.coordinate, projectionName).then(
+        beschermingService.searchBeschermingenGet(evt.coordinate, projectionName).then(
           function(result){
             var beschermingen = beschermingService.readWfs(result);
             array.forEach(beschermingen, function(bescherming) {
