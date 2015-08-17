@@ -18,7 +18,7 @@ define([
     },
 
     searchBeschermingenGet: function (coordinate, srsname) {
-      console.debug('searchBeschermingenGet', coordinate, srsname);
+      //console.debug('searchBeschermingenGet', coordinate, srsname);
 
       var featureTypes = [
         'vioe_geoportaal:beschermde_landschappen',
@@ -40,7 +40,7 @@ define([
     },
 
     searchBeschermingenPost: function (coordinate, srsname) {
-      console.debug('searchBeschermingenPost', coordinate, srsname);
+      //console.debug('searchBeschermingenPost', coordinate, srsname);
 
       var featureTypes = [
         'beschermde_landschappen',

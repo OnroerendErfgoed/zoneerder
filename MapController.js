@@ -617,7 +617,7 @@ define([
     },
 
     stopBeschermingSelect: function () {
-      console.debug('MapController::stopBeschermingSelect');
+      //console.debug('MapController::stopBeschermingSelect');
       if (this.mapInteractions.selectBschermingKey) {
         this.olMap.unByKey(this.mapInteractions.selectBschermingKey);
       }
