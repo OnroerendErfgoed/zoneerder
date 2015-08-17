@@ -1,9 +1,10 @@
 define([
   'dojo/_base/declare',
   'mijit/_WidgetBase',
-  'dojo/request/xhr'
+  'dojo/request/xhr',
+  'ol'
 
-], function (declare, WidgetBase, xhr) {
+], function (declare, WidgetBase, xhr, ol) {
   return declare([WidgetBase], {
 
     beschermingWfsUrl: null,
