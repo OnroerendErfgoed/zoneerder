@@ -35,7 +35,6 @@ define([
     perceelService: null,
     beschermingService: null,
     beschermingUrl: null,
-    mapproxyUrl: null,
     _drawPolygonIndex: 1,
 
     postCreate: function () {
@@ -167,22 +166,6 @@ define([
       }));
 
       /* other layers */
-      this.beschermdWmsQueryLayer = new ol.layer.Tile({
-        title: "Beschermd Onroerend Erfgoed getfeature",
-        extent: this.mapProjection.getExtent(),
-        source: new ol.source.TileWMS(({
-          url: this.mapproxyUrl,
-          params: {
-            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
-            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
-            'vioe_geoportaal:beschermde_archeologische_zones,' +
-            'vioe_geoportaal:beschermde_monumenten',
-            'TILED': true
-          }
-        })),
-        visible: false
-      });
-
       this.drawLayer = new ol.layer.Vector({
         source: new ol.source.Vector({}),
         style: new ol.style.Style({
@@ -609,14 +592,14 @@ define([
       this.popup.disable();
 
       var controller = this,
-        map = this.olMap,
-        popup = this.popup,
-        beschermingService = this.beschermingService,
-        layer = this.beschermdWmsQueryLayer;
+          map = this.olMap,
+          popup = this.popup,
+          projectionName = this.mapProjection.getCode(),
+          beschermingService = this.beschermingService;
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
-        beschermingService.searchBeschermingen(layer, map.getView().getResolution(), evt.coordinate).then(
+        beschermingService.searchBeschermingenPost(evt.coordinate, projectionName).then(
           function(result){
             var beschermingen = beschermingService.readWfs(result);
             array.forEach(beschermingen, function(bescherming) {
