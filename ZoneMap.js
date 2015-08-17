@@ -68,7 +68,8 @@ define([
           perceelUrl: null,
           crabpyUrl: null,
           beschermingUrl: null,
-          mapproxyUrl: null,
+          beschermingWfsUrl: null,
+          ogcproxyUrl: null,
           buttons: null,
           sidebar: null
         };
@@ -86,8 +87,11 @@ define([
         this.perceelService = new PerceelService({ url: this.config.perceelUrl });
       }
       
-      if (this.config.mapproxyUrl) {
-        this.beschermingService = new BeschermingService();
+      if (this.config.beschermingWfsUrl && this.config.ogcproxyUrl) {
+        this.beschermingService = new BeschermingService({
+          beschermingWfsUrl: this.config.beschermingWfsUrl,
+          ogcproxyUrl: this.config.ogcproxyUrl
+        });
       }
 
 
@@ -96,13 +100,12 @@ define([
         popupContainer: this.popupNode,
         perceelService: this.perceelService,
         beschermingService: this.beschermingService,
-        beschermingUrl: this.config.beschermingUrl,
-        mapproxyUrl: this.config.mapproxyUrl
+        beschermingUrl: this.config.beschermingUrl
       });
 
       this.buttonController = new ButtonController({
         map: this.mapController.olMap,
-        fullExtent: this.mapController.fullExtent,
+        fullExtent: this.mapController.getFullExtent(),
         mapButtons: this.config.buttons
       });
     },
@@ -228,8 +231,7 @@ define([
           onClick: function () {
             var bbox = crabZoomer.getBbox();
             if (bbox) {
-              var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
-              self.mapController.zoomToExtent(extent);
+              self.mapController.zoomToExtent(bbox);
               crabZoomer.reset();
               sidebar.collapse();
             }
@@ -246,8 +248,7 @@ define([
           onClick: function () {
             var bbox = capakeyZoomer.getBbox();
             if (bbox) {
-              var extent = self.mapController.transformExtent(bbox,  'EPSG:31370', 'EPSG:900913');
-              self.mapController.zoomToExtent(extent);
+              self.mapController.zoomToExtent(bbox);
               capakeyZoomer.reset();
               sidebar.collapse();
             }
