@@ -6,7 +6,6 @@ var dojoConfig = {
     layers: {}
   },
   packages: [
-    { name: 'dojo-form-controls', location: '../dojo-form-controls' },
     { name: 'dijit', location: '../dijit' },
     { name: 'zoneerder', location: '..' },
     { name: 'crabpy_dojo', location: '../crabpy_dojo' },
