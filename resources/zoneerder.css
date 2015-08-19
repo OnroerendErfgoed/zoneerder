@@ -158,13 +158,13 @@
 }
 
 
-.sidebar-map .zoneerder-pane {
+.sidebar-map .widget-pane {
   border: 2px solid #52A7CF;
   padding: 0;
   margin: 15px 0;
 }
 
-.sidebar-map .zoneerder-pane-header {
+.sidebar-map .widget-pane-header {
   background-color: #52A7CF;
   color: white;
   text-align: center;
@@ -172,7 +172,7 @@
   padding: 5px;
 }
 
-.sidebar-map .zoneerder-pane-header a {
+.sidebar-map .widget-pane-header a {
   float: right;
   margin: 1px 8px 1px 0;
   font-size: 14px;
@@ -183,7 +183,7 @@
   text-align: center;
 }
 
-.sidebar-map .zoneerder-pane-content {
+.sidebar-map .widget-pane-content {
   padding: 5px;
 }
 
