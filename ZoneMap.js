@@ -18,7 +18,6 @@ define([
   'dojo/when',
   'dojo/query',
   'dojo/dom-construct',
-  'dijit/form/Button',
   'dojo/NodeList-dom'
 
 ], function (
@@ -40,8 +39,7 @@ define([
   CrabpyWidget,
   when,
   query,
-  domConstruct,
-  Button
+  domConstruct
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -225,10 +223,14 @@ define([
         ZoomTab.addContent(crabNode);
         var crabZoomer = crabpyWidget.createCrabZoomer(crabNode);
         var self = this;
-        var zoomButton = new Button({
-          label: "Zoom naar adres",
+
+        var zoomButton = domConstruct.create("a", {
+          href: "#",
+          title: "Zoom naar adres",
           'class': "button tiny expand",
-          onClick: function () {
+          innerHTML: "Zoom naar adres",
+          onclick: function (evt) {
+            evt.preventDefault();
             var bbox = crabZoomer.getBbox();
             if (bbox) {
               self.mapController.zoomToExtent(bbox);
@@ -237,15 +239,18 @@ define([
             }
           }
         });
-        ZoomTab.addContent(zoomButton.domNode);
+        ZoomTab.addContent(zoomButton);
 
         var capakeyNode = domConstruct.create("div");
         ZoomTab.addContent(capakeyNode);
         var capakeyZoomer = crabpyWidget.createCapakeyZoomer(capakeyNode);
-        var capakeyZoomButton = new Button({
-          label: "Zoom naar perceel",
+        var capakeyZoomButton = domConstruct.create("a", {
+          href: "#",
+          title: "Zoom naar perceel",
           'class': "button tiny expand",
-          onClick: function () {
+          innerHTML: "Zoom naar perceel",
+          onclick: function (evt) {
+            evt.preventDefault();
             var bbox = capakeyZoomer.getBbox();
             if (bbox) {
               self.mapController.zoomToExtent(bbox);
@@ -254,7 +259,7 @@ define([
             }
           }
         });
-        ZoomTab.addContent(capakeyZoomButton.domNode);
+        ZoomTab.addContent(capakeyZoomButton);
       }
 
       if (this.config.sidebar.draw) {
