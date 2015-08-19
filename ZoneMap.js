@@ -18,7 +18,7 @@ define([
   'dojo/when',
   'dojo/query',
   'dojo/dom-construct',
-  'dojo-form-controls/Button',
+  'dijit/form/Button',
   'dojo/NodeList-dom'
 
 ], function (
