@@ -51,9 +51,9 @@ define([
 
     _renderLayer: function(lyr, elm) {
       var panel = document.createElement('div');
-      panel.className = 'zoneerder-pane';
+      panel.className = 'widget-pane';
       var header = document.createElement('div');
-      header.className = 'zoneerder-pane-header';
+      header.className = 'widget-pane-header';
       header.innerHTML = lyr.get('title');
       panel.appendChild(header);
       elm.appendChild(panel);
