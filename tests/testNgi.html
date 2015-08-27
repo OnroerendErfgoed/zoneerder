@@ -49,14 +49,39 @@
           })
         ]
       });
-      var layer = new ol.layer.Tile({
+      var ngiLayer = new ol.layer.Tile({
         source: ngiSource,
         extent: proj.getExtent()
       });
 
+      var beschermdWmsLayer = new ol.layer.Tile({
+        title: "Beschermd Onroerend Erfgoed",
+        extent: proj.getExtent(),
+        source: new ol.source.TileWMS(({
+          url: 'https://dev-geo.onroerenderfgoed.be/geoserver/wms',
+          params: {
+            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
+            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
+            'vioe_geoportaal:beschermde_archeologische_zones,' +
+            'vioe_geoportaal:beschermde_monumenten,' +
+            'vioe_geoportaal:dibe_geheel,' +
+            'vioe_geoportaal:dibe_relict,' +
+            'vioe_geoportaal:ile_park,' +
+            'vioe_geoportaal:ile_boom',
+            'TILED': true
+          },
+          attributions: [new ol.Attribution({
+            html: '© <a href="https://www.onroerenderfgoed.be">Onroerend Erfgoed</a>'
+          })]
+        })),
+        type: 'overlay',
+        visible: true
+      });
+
 var map = new ol.Map({
   layers: [
-    layer,
+    ngiLayer,
+    beschermdWmsLayer,
     new ol.layer.Tile({
       source: new ol.source.TileDebug({
         projection: 'EPSG:3857',
