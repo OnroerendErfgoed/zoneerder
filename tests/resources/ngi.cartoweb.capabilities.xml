@@ -45,6 +45,7 @@ http://www.ngi.be/cartoweb/cartoweb_gebruiksvoorwaarden.pdf - http://www.ngi.be/
 </ows:ContactInfo>
 </ows:ServiceContact>
 </ows:ServiceProvider>
+<!-- START custom edit - this was added manually!!! -->
 <ows:OperationsMetadata>
 <ows:Operation name="GetCapabilities">
 <ows:DCP>
@@ -73,6 +74,7 @@ http://www.ngi.be/cartoweb/cartoweb_gebruiksvoorwaarden.pdf - http://www.ngi.be/
 </ows:DCP>
 </ows:Operation>
 </ows:OperationsMetadata>
+<!-- END edit -->
 <Contents>
 <Layer>
 <ows:Title xml:lang="nl">CartoWeb-TOPO</ows:Title>
