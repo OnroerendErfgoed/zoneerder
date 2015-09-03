@@ -18,8 +18,10 @@
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git#0.2.0",
     "ol": "https://github.com/OnroerendErfgoed/ol3-amd.git#0.2.0",
     "font-awesome": "~4.3.0",
-    "dgrid": "~0.3.17",
-    "put-selector": "~0.3.6",
-    "xstyle": "~0.2.1"
+    "dgrid": "~0.4.0",
+    "dstore": "1.1.0"
+  },
+  "resolutions": {
+    "dstore": "1.1.0"
   }
 }
