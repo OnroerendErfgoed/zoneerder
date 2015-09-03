@@ -34,7 +34,6 @@ define([
     postCreate: function () {
       this.inherited(arguments);
       //console.debug('ZoneGrid::postCreate');
-
       this._grid = this._createGrid({
         store: this.polygonStore
       }, this.gridNode);
@@ -99,10 +98,10 @@ define([
       };
 
       return new (declare([OnDemandGrid, Selection, DijitRegistry, ColumnResizer]))({
-        store: options.store,
+        collection: options.store,
         selectionMode: 'single',
         columns: columns,
-        sort: [{ attribute: 'naam' }],
+        sort: [{ property: 'naam' }],
         noDataMessage: 'geen polygonen beschikbaar',
         loadingMessage: "data aan het ophalen..."
       }, node);
@@ -124,7 +123,7 @@ define([
 
     _deleteZone: function (evt) {
       evt.preventDefault();
-      this.polygonStore.query().forEach(function (polygon) {
+      this.polygonStore.filter().forEach(function (polygon) {
         this.polygonStore.remove(polygon.id);
       }, this);
     },
@@ -142,7 +141,7 @@ define([
     },
 
     _deletePolygon: function (polygonToDelete) {
-      this.polygonStore.query().forEach(function (polygon) {
+      this.polygonStore.filter().forEach(function (polygon) {
         if (polygonToDelete.id == polygon.id) {
           this.polygonStore.remove(polygonToDelete.id);
         }
