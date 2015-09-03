@@ -9,8 +9,7 @@ define([
   'dgrid/OnDemandGrid',
   'dgrid/Selection',
   'dgrid/extensions/DijitRegistry',
-  'dgrid/extensions/ColumnResizer',
-  'dstore/legacy/StoreAdapter'
+  'dgrid/extensions/ColumnResizer'
 ], function (
   TemplatedMixin,
   WidgetBase,
@@ -22,8 +21,7 @@ define([
   OnDemandGrid,
   Selection,
   DijitRegistry,
-  ColumnResizer,
-  StoreAdapter
+  ColumnResizer
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -36,10 +34,8 @@ define([
     postCreate: function () {
       this.inherited(arguments);
       //console.debug('ZoneGrid::postCreate');
-      var adaptedStore = new StoreAdapter({objectStore: this.polygonStore});
-
       this._grid = this._createGrid({
-        store: adaptedStore
+        store: this.polygonStore
       }, this.gridNode);
     },
 
@@ -105,7 +101,7 @@ define([
         collection: options.store,
         selectionMode: 'single',
         columns: columns,
-        sort: [{ attribute: 'naam' }],
+        sort: [{ property: 'naam' }],
         noDataMessage: 'geen polygonen beschikbaar',
         loadingMessage: "data aan het ophalen..."
       }, node);

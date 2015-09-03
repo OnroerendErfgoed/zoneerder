@@ -4,8 +4,8 @@ define([
   'dojo/_base/lang',
   'dojo/_base/array',
   'dojo/Evented',
-  'dojo/store/Memory',
-  'dojo/store/Observable',
+  'dstore/Memory',
+  'dstore/Trackable',
   'ol',
   './widgets/popup/Popup'
 ], function (
@@ -15,7 +15,7 @@ define([
   array,
   Evented,
   Memory,
-  Observable,
+  Trackable,
   ol,
   Popup
 ) {
@@ -39,8 +39,11 @@ define([
 
     postCreate: function () {
       this.inherited(arguments);
-
-      this.polygonStore = new Observable( new Memory( {data: []} ));
+      var TrackedemoryStore = declare([Memory, Trackable]);
+      this.polygonStore = new TrackedemoryStore({
+        data: [],
+        idProperty: 'id'
+      });
 
       var projection = this.mapProjection = this._defineProjection();
       var map = this.olMap = this._createMap(projection, this.mapContainer);
@@ -188,7 +191,7 @@ define([
     startup: function () {
       this.inherited(arguments);
       this.popup.startup();
-      this._observePolygonStore();
+      this._observePolygonStore(this.polygonStore);
     },
 
     resize: function () {
@@ -204,7 +207,7 @@ define([
     },
 
     clearZone: function () {
-      this.polygonStore.query().forEach(function (polygon) {
+      this.polygonStore.filter().forEach(function (polygon) {
         this.polygonStore.remove(polygon.id);
       }, this);
     },
@@ -651,16 +654,25 @@ define([
       }, this.popupContainer);
     },
 
-    _observePolygonStore: function () {
-      var results = this.polygonStore.query({});
-      results.observe(lang.hitch(this, function(object, removedFrom, insertedInto){
-        if(removedFrom > -1){ // existing object removed
-          this._removePolygonFromZone(object.feature);
+    _observePolygonStore: function (store) {
+      store.on('delete', lang.hitch(this, function(event){
+        console.debug("ROW delete", event.target);
+        this._removePolygonFromZone(event.target.feature);
+        if (event.target.id!='zone') {
+          this.emit("zonechanged", {zone: this.getZone()});
         }
-        else if(insertedInto > -1){ // new or updated object inserted
-          this._addPolygonToZone(object.feature);
+      }));
+      store.on('add', lang.hitch(this, function(event){
+        console.debug("Row add", event.target);
+        this._addPolygonToZone(event.target.feature);
+        if (event.target.id!='zone') {
+          this.emit("zonechanged", {zone: this.getZone()});
         }
-        if (object.id!='zone') {
+      }));
+      store.on('update', lang.hitch(this, function(event){
+        console.debug("Row 'update'", event.target);
+        this._addPolygonToZone(event.target.feature);
+        if (event.target.id!='zone') {
           this.emit("zonechanged", {zone: this.getZone()});
         }
       }));
