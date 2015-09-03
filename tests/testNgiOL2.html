@@ -1,0 +1,41 @@
+<html>
+<head>
+  <title>OpenLayers Example</title>
+    <script src="http://dev.openlayers.org/releases/OpenLayers-2.13.1/OpenLayers.debug.js"></script>
+    </head>
+    <body>
+      <div style="width:100%; height:100%" id="map"></div>
+      <script defer="defer" type="text/javascript">
+        var map = new OpenLayers.Map({
+            div: "map",
+            projection: "EPSG:3857"
+        });
+        var osm = new OpenLayers.Layer.OSM();
+        map.addLayer(osm);
+
+        var resolutions = [1222.992453125,611.4962265625,305.74811328125,152.874056640625,76.4370283203125,38.21851416015625,19.109257080078127,9.554628540039063,4.777314270019532,2.388657135009766,1.194328567504883];
+        var matrixIds = ["7","8","9","10","11","12","13","14","15","16","17"];
+
+        var wmts = new OpenLayers.Layer.WMTS({
+            name: "ngi",
+            url: "http://www.ngi.be/cartoweb/1.0.0/topo/{style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png",
+            layer: "topo",
+            matrixSet: "3857",
+            matrixIds: matrixIds,
+            format: "image/png",
+            style: "default",
+            opacity: 0.7,
+            isBaseLayer: false,
+            requestEncoding: 'REST',
+            serverResolutions: resolutions
+
+        });
+        map.addLayer(wmts);
+
+        map.addControl(new OpenLayers.Control.LayerSwitcher());
+
+        map.setCenter(new OpenLayers.LonLat(424837.00,	6578017.78), 10);
+      </script>
+
+</body>
+</html>

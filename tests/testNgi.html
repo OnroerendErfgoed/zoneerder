@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Canvas tiles example</title>
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://openlayers.org/en/v3.8.2/css/ol.css" type="text/css">
+<script src="http://openlayers.org/en/v3.8.2/build/ol-debug.js"></script>
+  <script src="../proj4/dist/proj4.js" type="text/javascript"></script>
+
+</head>
+<body>
+<div class="container-fluid">
+
+<div class="row-fluid">
+  <div class="span12">
+    <div id="map" class="map"></div>
+  </div>
+</div>
+
+</div>
+<script>
+      proj4.defs("EPSG:3857","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
+      proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
+
+      var proj = ol.proj.get('EPSG:3857');
+      proj.setExtent([258066.1238419332, 6428498.665268857, 685272.2105003959, 6846683.673637151]);
+      var resolutions = [1222.992453125,611.4962265625,305.74811328125,152.874056640625,76.4370283203125,38.21851416015625,19.109257080078127,9.554628540039063,4.777314270019532,2.388657135009766,1.194328567504883];
+      var matrixIds = ["7","8","9","10","11","12","13","14","15","16","17"];
+
+      var ngiSource = new ol.source.WMTS({
+        urls: ['http://www.ngi.be/cartoweb/1.0.0/topo/{style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png'],
+        requestEncoding: 'REST',
+        layer: 'topo',
+        matrixSet: '3857',
+        format: 'image/png',
+        projection: proj,
+        style: "default",
+        version: "1.0.0",
+        tileGrid: new ol.tilegrid.WMTS({
+          origin: [-20037508, 20037508],
+          resolutions: resolutions,
+          matrixIds: matrixIds
+        }),
+        attributions: [
+          new ol.Attribution({
+            html: '© <a href="http://www.agiv.be" title="AGIV" class="copyrightLink copyAgiv">AGIV</a>'
+          })
+        ]
+      });
+      var ngiLayer = new ol.layer.Tile({
+        source: ngiSource,
+        extent: proj.getExtent()
+      });
+
+      var beschermdWmsLayer = new ol.layer.Tile({
+        title: "Beschermd Onroerend Erfgoed",
+        extent: proj.getExtent(),
+        source: new ol.source.TileWMS(({
+          url: 'https://dev-geo.onroerenderfgoed.be/geoserver/wms',
+          params: {
+            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
+            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
+            'vioe_geoportaal:beschermde_archeologische_zones,' +
+            'vioe_geoportaal:beschermde_monumenten,' +
+            'vioe_geoportaal:dibe_geheel,' +
+            'vioe_geoportaal:dibe_relict,' +
+            'vioe_geoportaal:ile_park,' +
+            'vioe_geoportaal:ile_boom',
+            'TILED': true
+          },
+          attributions: [new ol.Attribution({
+            html: '© <a href="https://www.onroerenderfgoed.be">Onroerend Erfgoed</a>'
+          })]
+        })),
+        type: 'overlay',
+        visible: true
+      });
+
+var map = new ol.Map({
+  layers: [
+    ngiLayer,
+    beschermdWmsLayer,
+    new ol.layer.Tile({
+      source: new ol.source.TileDebug({
+        projection: 'EPSG:3857',
+        tileGrid: ngiSource.getTileGrid()
+      })
+    })
+  ],
+  target: 'map',
+  controls: ol.control.defaults({
+    attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+      collapsible: false
+    })
+  }),
+  view: new ol.View({
+    center: [424837.00,	6578017.78],
+    projection: 'EPSG:3857',
+    zoom: 10
+  })
+});
+
+</script>
+</body>
+</html>

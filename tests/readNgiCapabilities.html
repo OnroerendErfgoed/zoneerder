@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>test read capabilties</title>
+
+  <style>
+    html, body, #testNode{
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #testNode {
+      background-color: darkblue;
+      color: white;
+    }
+  </style>
+
+  <script src="../proj4/dist/proj4.js" type="text/javascript"></script>
+</head>
+
+<body>
+<div id="testNode">starting...</div>
+
+
+<!-- load Dojo -->
+<script type="text/javascript" src="config.js"></script>
+<script type="text/javascript" src="../dojo/dojo.js"></script>
+
+<script>
+  require([
+    'dojo/request/xhr',
+    'ol',
+    'dojo/html',
+    'dojo/dom',
+    'dojo/json',
+    'dojo/domReady!'
+  ], function (xhr, ol, html, dom, JSON) {
+
+    var parser = new ol.format.WMTSCapabilities();
+    proj4.defs("EPSG:3857","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
+    var ngiUrl = "http://www.ngi.be/cartoweb/1.0.0/WMTSCapabilities.xml";
+    html.set(dom.byId("testNode"), "reading xml...");
+    xhr('./resources/ngi.cartoweb.capabilities.xml', {
+      handleAs: "xml"
+    }).then(function(response){
+
+      var capabilities = parser.read(response);
+      console.log('capabilities', capabilities);
+      try {
+        var options = ol.source.WMTS.optionsFromCapabilities(capabilities, {
+          layer: 'topo',
+          matrixSet: '3857',
+          style: 'default',
+          format: 'image/png',
+          requestEncoding: 'RESTful'
+        });
+        console.debug("optionsFromCapabilities: ", options);
+        html.set(dom.byId("testNode"), "options" + JSON.stringify(options));
+      }
+      catch(err) {
+        console.error('Error creating options', err);
+        html.set(dom.byId("testNode"), err);
+      }
+
+    }, function(err) {
+      console.error('Error getting capabilities from ngi', err);
+      html.set(dom.byId("testNode"), err);
+    });
+
+  });
+
+</script>
+</body>
+
+</html>
