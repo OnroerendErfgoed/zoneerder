@@ -127,7 +127,7 @@ define([
 
     _deleteZone: function (evt) {
       evt.preventDefault();
-      this.polygonStore.query().forEach(function (polygon) {
+      this.polygonStore.filter().forEach(function (polygon) {
         this.polygonStore.remove(polygon.id);
       }, this);
     },
@@ -145,7 +145,7 @@ define([
     },
 
     _deletePolygon: function (polygonToDelete) {
-      this.polygonStore.query().forEach(function (polygon) {
+      this.polygonStore.filter().forEach(function (polygon) {
         if (polygonToDelete.id == polygon.id) {
           this.polygonStore.remove(polygonToDelete.id);
         }
