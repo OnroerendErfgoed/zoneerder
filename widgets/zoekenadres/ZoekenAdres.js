@@ -37,11 +37,7 @@ define(
           this.inherited(arguments);
 
           this.store = new JsonRest({
-            target: this.baseUrl + '/geolocation/',
-            accepts: 'application/json',
-            headers: {
-              'X-Requested-With': null
-            }
+            target: this.baseUrl + '/geolocation/'
           });
 
           var zoekenAdres = new FilteringSelect({
@@ -63,6 +59,7 @@ define(
                   upperright.getCoordinates()[0], upperright.getCoordinates()[1]];
                 this.zoneMap.mapController.zoomToExtent(extent);
               }));
+
             }),
             'onFocus': lang.hitch(this, function(val) {
               fx.animateProperty({
