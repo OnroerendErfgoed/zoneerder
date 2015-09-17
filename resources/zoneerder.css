@@ -379,3 +379,53 @@ div.ol-control.left-bar button {
 .ol-popup-content li {
   font-size: 0.9em;
 }
+
+.zoekenAdres {
+  z-index: 1000;
+  display: inline-block;
+  height: 29px;
+  border: 1px solid lightgrey;
+  color: #fff !important;
+  background-color: rgba(39, 146, 195, 0.6);
+  padding-left: 10px;
+  width: 200px;
+}
+
+.zoekenAdres .dijitInputContainer .dijitInputInner {
+  color: #fff !important;
+  margin-top: -5px;
+}
+
+.zoekenAdres input::-webkit-input-placeholder {
+    color:    #fff;
+}
+.zoekenAdres input:-moz-placeholder {
+    color:    #fff;
+}
+.zoekenAdres input::-moz-placeholder {
+    color:    #fff;
+}
+.zoekenAdres input:-ms-input-placeholder {
+    color:    #fff;
+}
+
+/*.adresZoekenFocused {*/
+  /*width: 400px;*/
+/*}*/
+
+.searchBoxIcon {
+  font-size: 14px;
+  margin-top: 5px;
+  color: #fff;
+  margin-left: -20px;
+}
+
+.zoekenAdresContainer {
+  width: 100%;
+  z-index: 1000;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding-top: 5px;
+}
