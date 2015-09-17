@@ -58,6 +58,9 @@ define(
                 var extent = [lowerleft.getCoordinates()[0], lowerleft.getCoordinates()[1],
                   upperright.getCoordinates()[0], upperright.getCoordinates()[1]];
                 this.zoneMap.mapController.zoomToExtent(extent);
+                if (this.zoneMap.mapController.olMap.getView().getZoom() > 15) {
+                  this.zoneMap.mapController.olMap.getView().setZoom(15);
+                }
               }));
 
             }),
