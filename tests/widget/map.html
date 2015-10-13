@@ -38,15 +38,20 @@
         "zoneerder/ZoneMap",
         "dojo/domReady!"
     ], function (ZoneMap) {
-
-        var zoneMapConfig = {};
+      var testzone = {"type":"MultiPolygon","coordinates":[[[[123796.3989870126,161922.68658473343],[125855.60320366417,162033.58173123002],[126451.84609249674,157270.33629081864],[126158.4321447326,156715.58044047095],[125322.48775104273,156816.1542271264],[123796.3989870126,161922.68658473343]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
+      var zoneMapConfig = {
+          unclosablePopup: {
+          }
+        };
 
         // init widget
         var widgetUnderTest = new ZoneMap({
             config: zoneMapConfig
         }, 'widgetNode');
         widgetUnderTest.startup();
-
+        widgetUnderTest.setZone(testzone);
+      var html = "<h5>" + 'title' + "</h5><br/>" + 'info';
+      widgetUnderTest.openUnclosablePopup(testzone, html);
     });
 
 </script>
