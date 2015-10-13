@@ -19,6 +19,7 @@ define([
   'dojo/when',
   'dojo/query',
   'dojo/dom-construct',
+  './widgets/popup/UnclosablePopup',
   'dojo/NodeList-dom'
 
 ], function (
@@ -41,7 +42,8 @@ define([
   CrabpyWidget,
   when,
   query,
-  domConstruct
+  domConstruct,
+  UnclosablePopup
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -51,6 +53,7 @@ define([
     '<div data-dojo-attach-point="popupNode"></div>' +
     '</div>',
     mapController: null,
+    unclosablePopup: null,
     buttonController: null,
     config: null,
     erfgoedService: null,
@@ -138,10 +141,22 @@ define([
         }, this.adresNode);
         this._adresZoeken.startup();
       }
+
+      if(this.config.unclosablePopup){
+        this.unclosablePopup = new UnclosablePopup({
+          map: this.mapController.olMap,
+          layer: this.mapController.oeFeaturesLayer
+        }, this.popupNode);
+      }
     },
 
     resize: function() {
       this.mapController.resize();
+    },
+
+    openUnclosablePopup: function(location, html){
+      var feature = this.mapController.readGeomtryFromGeoJson(location);
+      this.unclosablePopup.openPopup(this.mapController.getCenterOfExtent(feature.getExtent()), html);
     },
 
     getZone: function () {
