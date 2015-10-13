@@ -155,15 +155,8 @@ define([
     },
 
     openUnclosablePopup: function(location, html){
-      var format = new ol.format.GeoJSON();
-      var feature = format.readGeometry(location);
-      this.unclosablePopup.openPopup(this.getCenterOfExtent(feature.getExtent()), html);
-    },
-
-    getCenterOfExtent: function(Extent){
-      var X = Extent[0] + (Extent[2]-Extent[0])/2;
-      var Y = Extent[1] + (Extent[3]-Extent[1])/2;
-      return [X, Y];
+      var feature = this.mapController.readGeomtryFromGeoJson(location);
+      this.unclosablePopup.openPopup(this.mapController.getCenterOfExtent(feature.getExtent()), html);
     },
 
     getZone: function () {
