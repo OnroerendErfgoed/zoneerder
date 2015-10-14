@@ -14,6 +14,7 @@ define([
   './widgets/layerswitcher/LayerSwitcher',
   './widgets/zonegrid/ZoneGrid',
   './widgets/zoneeditor/ZoneEditor',
+  './widgets/zoekenadres/ZoekenAdres',
   'crabpy_dojo/CrabpyWidget',
   'dojo/when',
   'dojo/query',
@@ -36,6 +37,7 @@ define([
   LayerSwitcher,
   ZoneGrid,
   ZoneEditor,
+  ZoekenAdres,
   CrabpyWidget,
   when,
   query,
@@ -44,9 +46,10 @@ define([
   return declare([WidgetBase, TemplatedMixin], {
 
     templateString: '<div data-dojo-attach-point="mapNode" class="map sidebar-map">' +
-                      '<div data-dojo-attach-point="sidebarNode"></div>' +
-                      '<div data-dojo-attach-point="popupNode"></div>' +
-                    '</div>',
+    '<div data-dojo-attach-point="adresNode"></div>' +
+    '<div data-dojo-attach-point="sidebarNode"></div>' +
+    '<div data-dojo-attach-point="popupNode"></div>' +
+    '</div>',
     mapController: null,
     buttonController: null,
     config: null,
@@ -84,7 +87,7 @@ define([
       if (this.config.perceelUrl) {
         this.perceelService = new PerceelService({ url: this.config.perceelUrl });
       }
-      
+
       if (this.config.beschermingWfsUrl && this.config.ogcproxyUrl) {
         this.beschermingService = new BeschermingService({
           beschermingWfsUrl: this.config.beschermingWfsUrl,
@@ -126,6 +129,14 @@ define([
         this._setDefaultParam(this.config.sidebar, "help", true);
         this._sidebar = this._createSidebar(this.sidebarNode);
         this._sidebar.startup();
+      }
+
+      if (this.config.zoekenadres) {
+        this._adresZoeken = new ZoekenAdres({
+          zoneMap: this,
+          baseUrl: this.config.crabpyUrl
+        }, this.adresNode);
+        this._adresZoeken.startup();
       }
     },
 

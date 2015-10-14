@@ -1,6 +1,10 @@
 zoneerder
 ===========
 
+Opgelet: er zijn nu 2 versies 0.3 en 0.4. De 0.4 versie gebruikt dgrid v0.4 en dstore.
+
+Development gebeurt op 2 aparte branches: dev-0.3 en dev-0.4.
+
 Dojo widget met een configureerbare Openlayers 3 kaart.
 
 Voorbeeld config:
