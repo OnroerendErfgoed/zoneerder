@@ -2,7 +2,7 @@ define([
   'dojo/_base/declare',
   'dijit/_WidgetBase',
   'dijit/_TemplatedMixin',
-  'dojo/text!./UnclosablePopup.html',
+  'dojo/text!./OnZoneClickPopup.html',
   'ol'
 ], function (
   declare,
@@ -16,7 +16,7 @@ define([
     templateString: template,
     map: null,
     layer: null,
-    _enabled: true,
+    enabled: false,
     _overlay: null,
 
     postCreate: function () {
@@ -30,17 +30,18 @@ define([
     },
 
     enable: function () {
-      this._enabled = true;
+      this.enabled = true;
     },
 
     disable: function () {
-      this._enabled = false;
+      this.enabled = false;
     },
 
     /**
      * Add a click handler to the map to render the popup.
      */
     openPopup: function (location, html) {
+      this.enable();
       this.setContent(html);
       this._overlay.setPosition(location);
     },
@@ -60,16 +61,10 @@ define([
       }));
     },
 
-    /**
-     * Add a click handler to hide the popup.
-     * @return {boolean} Don't follow the href.
-     */
-    _closePopup: function(evt) {
+     closePopup: function() {
       //console.debug('Popup::_closePopup');
-      evt.preventDefault();
+      this.disable();
       this._overlay.setPosition(undefined);
-      this.popupcloser.blur();
-      return false;
     },
 
     setContent: function (content) {
