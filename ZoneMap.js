@@ -19,6 +19,7 @@ define([
   'dojo/when',
   'dojo/query',
   'dojo/dom-construct',
+  './widgets/popup/OnZoneClickPopup',
   'dojo/NodeList-dom'
 
 ], function (
@@ -41,7 +42,8 @@ define([
   CrabpyWidget,
   when,
   query,
-  domConstruct
+  domConstruct,
+  OnZoneClickPopup
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -51,6 +53,7 @@ define([
     '<div data-dojo-attach-point="popupNode"></div>' +
     '</div>',
     mapController: null,
+    doubleClickPopup: null,
     buttonController: null,
     config: null,
     erfgoedService: null,
@@ -138,10 +141,30 @@ define([
         }, this.adresNode);
         this._adresZoeken.startup();
       }
+
+      if(this.config.onZoneClickPopup){
+        this.OnZoneClickPopup = new OnZoneClickPopup({
+          map: this.mapController.olMap,
+          layer: this.mapController.oeFeaturesLayer
+        }, this.popupNode);
+      }
     },
 
     resize: function() {
       this.mapController.resize();
+    },
+
+    initOnZoneClickPopup: function(location, html){
+      var map = this.mapController.olMap;
+      map.on("click", lang.hitch(this, function(e) {
+        map.forEachFeatureAtPixel(e.pixel, lang.hitch(this, function (feature) {
+          if(this.OnZoneClickPopup.enabled){
+            this.OnZoneClickPopup.closePopup();
+          } else {
+            this.OnZoneClickPopup.openPopup(this.mapController.getCenterOfExtent(feature.getGeometry().getExtent()), html);
+          }
+        }));
+      }));
     },
 
     getZone: function () {
