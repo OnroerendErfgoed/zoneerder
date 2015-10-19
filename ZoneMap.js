@@ -19,7 +19,7 @@ define([
   'dojo/when',
   'dojo/query',
   'dojo/dom-construct',
-  './widgets/popup/UnclosablePopup',
+  './widgets/popup/OnZoneClickPopup',
   'dojo/NodeList-dom'
 
 ], function (
@@ -43,7 +43,7 @@ define([
   when,
   query,
   domConstruct,
-  UnclosablePopup
+  OnZoneClickPopup
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -53,7 +53,7 @@ define([
     '<div data-dojo-attach-point="popupNode"></div>' +
     '</div>',
     mapController: null,
-    unclosablePopup: null,
+    doubleClickPopup: null,
     buttonController: null,
     config: null,
     erfgoedService: null,
@@ -142,8 +142,8 @@ define([
         this._adresZoeken.startup();
       }
 
-      if(this.config.unclosablePopup){
-        this.unclosablePopup = new UnclosablePopup({
+      if(this.config.onZoneClickPopup){
+        this.OnZoneClickPopup = new OnZoneClickPopup({
           map: this.mapController.olMap,
           layer: this.mapController.oeFeaturesLayer
         }, this.popupNode);
@@ -154,9 +154,17 @@ define([
       this.mapController.resize();
     },
 
-    openUnclosablePopup: function(location, html){
-      var feature = this.mapController.readGeomtryFromGeoJson(location);
-      this.unclosablePopup.openPopup(this.mapController.getCenterOfExtent(feature.getExtent()), html);
+    initOnZoneClickPopup: function(location, html){
+      var map = this.mapController.olMap;
+      map.on("click", lang.hitch(this, function(e) {
+        map.forEachFeatureAtPixel(e.pixel, lang.hitch(this, function (feature) {
+          if(this.OnZoneClickPopup.enabled){
+            this.OnZoneClickPopup.closePopup();
+          } else {
+            this.OnZoneClickPopup.openPopup(this.mapController.getCenterOfExtent(feature.getGeometry().getExtent()), html);
+          }
+        }));
+      }));
     },
 
     getZone: function () {
