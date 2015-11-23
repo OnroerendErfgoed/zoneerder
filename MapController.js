@@ -95,9 +95,10 @@ define([
     },
 
     transformGeometryToLambert: function(geometry){
-      return this.geoJsonFormatter.readGeometry(geometry, {
-            featureProjection: 'EPSG:31370'
-          });
+      var geom = this.geoJsonFormatter.readGeometry(geometry, {
+        featureProjection: 'EPSG:31370'
+      });
+      return this.geoJsonFormatter.writeGeometry(geom);
     },
 
     _createLayers: function(map) {
