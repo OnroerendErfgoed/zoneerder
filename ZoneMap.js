@@ -214,7 +214,7 @@ define([
     },
 
     transformGeometryToLambert: function(geometry){
-      return this.mapController.geoJsonFormatter(geometry);
+      return this.mapController.transformGeometryToLambert(geometry);
     },
 
     setFeatures: function(features) {
