@@ -94,6 +94,12 @@ define([
       });
     },
 
+    transformGeometryToLambert: function(geometry){
+      return this.geoJsonFormatter.readGeometry(geometry, {
+            featureProjection: 'EPSG:31370'
+          });
+    },
+
     _createLayers: function(map) {
 
       /* base layers */

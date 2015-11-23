@@ -213,6 +213,10 @@ define([
       }
     },
 
+    transformGeometryToLambert: function(geometry){
+      return this.mapController.geoJsonFormatter(geometry);
+    },
+
     setFeatures: function(features) {
       this.mapController.clearFeatures();
       array.forEach(features, function (feature) {
