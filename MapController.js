@@ -53,6 +53,9 @@ define([
         defaultDataProjection: this.mapProjection
       });
 
+      this.geoJsonFormatterDefault =  new ol.format.GeoJSON({
+      });
+
       map.addControl(new ol.control.ScaleLine());
       map.addControl(new ol.control.Attribution({
         collapsible: false
@@ -92,6 +95,13 @@ define([
         }),
         logo: false
       });
+    },
+
+    transformGeometryToLambert: function(geometry){
+      var geom = this.geoJsonFormatterDefault.readGeometry(geometry, {
+        featureProjection: 'EPSG:31370'
+      });
+      return this.geoJsonFormatter.writeGeometry(geom);
     },
 
     _createLayers: function(map) {
