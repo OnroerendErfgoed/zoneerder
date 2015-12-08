@@ -92,13 +92,12 @@ define([
     },
 
     _createLayers: function(map) {
-
       /* base layers */
-      var orthoTileLayer = this._createGrbLayer("orthoklm", "Ortho", true);
+      var orthoTileLayer = this._createGrbLayer("omwrgbmrvl", "Ortho", true);
       var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
+      var grb_grTileLayer = this._createGrbLayer("grb_bsk_grijs", "GRB-Basiskaart in grijswaarden", true);
+      var ferrarisTileLayer = this._createGrbLayer("ferraris", "Ferraris", true);
       var grbTileLayer = this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true);
-      var grb_grTileLayer = this._createGrbLayer("grb_bsk_gr", "GRB-Basiskaart in grijswaarden", true);
-      var ferrarisTileLayer = this._createGrbLayer("ferrarisx", "Ferraris", true);
 
       map.addLayer(new ol.layer.Group({
         title: 'Basislagen',
@@ -114,9 +113,12 @@ define([
       grbTileLayer.setVisible(true);
 
       /* overlays */
-      var grbTransTileLayer = this._createGrbLayer("grb_bsk_nb", "GRB-Basiskaart overlay", false);
-      var grb_gbgTileLayer = this._createGrbLayer("grb_gbg", "GRB-Gebouwenlaag", false);
-      var grb_adpTileLayer = this._createGrbLayer("grb_adp", "GRB-Percelenlaag", false);
+      var grbTransTileLayer = this._createGrbWMSLayer('GRB_ADP_GRENS,GRB_GBG,GRB_SBN,GRB_TRN,GRB_WBN,GRB_WTZ,GRB_WLAS,GRB_KNW,' +
+        'GRB_GBA,GRB_WGA,GRB_WVB,GRB_WGR,GRB_WGO,GRB_WLI,GRB_WTI,GRB_WRL,GRB_WRI,GRB_WPI,GRB_WKN,GRB_ADT,GRB_HNR_ADP,GRB_HNR_KNW,' +
+        'GRB_HNR_GBG,GRB_WNM,GRB_SNM,GEM_GRENS', 'GRB-Basiskaart overlay', false);
+      var grb_gbgTileLayer = this._createGrbWMSLayer('GRB_GBG', 'GRB-Gebouwenlaag', false);
+      var grb_adpTileLayer = this._createGrbWMSLayer('GRB_ADP_GRENS', 'GRB-Percelenlaag', false);
+
       var beschermdWmsLayer = new ol.layer.Tile({
         title: "Beschermd Onroerend Erfgoed",
         extent: this.mapProjection.getExtent(),
@@ -332,16 +334,16 @@ define([
     _createGrbLayer: function (grbLayerId, title, isBaselayer) {
       //retrieved with readCapabilties.html
       var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
-      var matrixIds = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"];
+      var matrixIds = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
 
       var grbSource = new ol.source.WMTS({
-        url: 'http://grb.agiv.be/geodiensten/raadpleegdiensten/geocache/wmts/',
+        url: 'http://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
         layer: grbLayerId,
         matrixSet: 'BPL72VL',
         format: 'image/png',
         projection: this.mapProjection,
-        style: "default",
-        version: "1.0.0",
+        style: '',
+        version: '1.0.0',
         tileGrid: new ol.tilegrid.WMTS({
           origin: ol.extent.getTopLeft(this.mapProjection.getExtent()),
           resolutions: resolutions,
@@ -360,6 +362,21 @@ define([
         type: isBaselayer ? 'base' : 'overlay',
         source: grbSource,
         extent: this.mapProjection.getExtent()
+      });
+    },
+
+    _createGrbWMSLayer: function(wmsLayers, title, isBaseLayer) {
+      return new ol.layer.Tile({
+        title: title,
+        extent: this.mapProjection.getExtent(),
+        source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
+          url: 'http://geoservices.informatievlaanderen.be/raadpleegdiensten/GRB/wms',
+          params: {'LAYERS': wmsLayers ,'TILED': true},
+          serverType: 'geoserver'
+        })),
+        type: isBaseLayer ? 'base' : 'overlay',
+        maxResolution: 2000,
+        visible: false
       });
     },
 
@@ -562,9 +579,9 @@ define([
       this.popup.disable();
 
       var controller = this,
-          map = this.olMap,
-          popup = this.popup,
-          perceelService = this.perceelService;
+        map = this.olMap,
+        popup = this.popup,
+        perceelService = this.perceelService;
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
@@ -592,10 +609,10 @@ define([
       this.popup.disable();
 
       var controller = this,
-          map = this.olMap,
-          popup = this.popup,
-          projectionName = this.mapProjection.getCode(),
-          beschermingService = this.beschermingService;
+        map = this.olMap,
+        popup = this.popup,
+        projectionName = this.mapProjection.getCode(),
+        beschermingService = this.beschermingService;
 
       var eventKey = map.on('click', function (evt) {
         map.unByKey(eventKey);
@@ -609,9 +626,9 @@ define([
             console.error(err);
           }
         ).always(function () {
-          onEnd();
-          popup.enable();
-        });
+            onEnd();
+            popup.enable();
+          });
       });
       this.mapInteractions.selectBschermingKey = eventKey;
     },
@@ -633,8 +650,8 @@ define([
     _createInteractions: function () {
       //console.debug("MapController::_createInteractions");
       var drawInteraction = new ol.interaction.Draw({
-          source: this.drawLayer.getSource(),
-          type: /** @type {ol.geom.GeometryType} */ ('Polygon')
+        source: this.drawLayer.getSource(),
+        type: /** @type {ol.geom.GeometryType} */ ('Polygon')
       });
       this.olMap.addInteraction(drawInteraction);
       drawInteraction.setActive(false);
