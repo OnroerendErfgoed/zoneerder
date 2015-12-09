@@ -335,6 +335,7 @@ define([
       //retrieved with readCapabilties.html
       var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
       var matrixIds = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
+      var grbBoundingBoxLamb72 = [20072.35253136637, 153858.40239064768, 259615.89341193732, 247185.8377553355];
 
       var grbSource = new ol.source.WMTS({
         url: 'http://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
@@ -342,7 +343,7 @@ define([
         matrixSet: 'BPL72VL',
         format: 'image/png',
         projection: this.mapProjection,
-        style: '',
+        style: grbLayerId == 'gewestplan' ? ',,,,,,,,,,' : '', //TODO: remove this fix after update gewestplan layer
         version: '1.0.0',
         tileGrid: new ol.tilegrid.WMTS({
           origin: ol.extent.getTopLeft(this.mapProjection.getExtent()),
@@ -361,7 +362,8 @@ define([
         visible: false,
         type: isBaselayer ? 'base' : 'overlay',
         source: grbSource,
-        extent: this.mapProjection.getExtent()
+        extent: grbBoundingBoxLamb72,
+        maxResolution: grbLayerId == 'gewestplan' ? 17 : undefined
       });
     },
 
