@@ -35,6 +35,7 @@ define([
     perceelService: null,
     beschermingService: null,
     beschermingUrl: null,
+    historicLayers: null,
     _drawPolygonIndex: 1,
 
     postCreate: function () {
@@ -93,24 +94,22 @@ define([
 
     _createLayers: function(map) {
       /* base layers */
-      var orthoTileLayer = this._createGrbLayer("omwrgbmrvl", "Ortho", true);
-      var gewestplanTileLayer = this._createGrbLayerWithMaxResolution("gewestplan", "Gewestplan", true, 17);
-      var grb_grTileLayer = this._createGrbLayer("grb_bsk_grijs", "GRB-Basiskaart in grijswaarden", true);
-      var ferrarisTileLayer = this._createGrbLayer("ferraris", "Ferraris", true);
-      var grbTileLayer = this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true);
+      var baseLayers = [];
+      if (this.historicLayers) {
+        baseLayers.push(this._createGrbLayer("ferraris", "Ferraris", false));
+        baseLayers.push(this._createGrbLayer("popp", "Popp", false));
+        baseLayers.push(this._createGrbLayer("vandermaelen", "Vandermaelen", false));
+        baseLayers.push(this._createGrbLayer("abw", "Atlas der Buurtwegen", false));
+      }
+      baseLayers.push(this._createGrbLayer("omwrgbmrvl", "Orthofoto's", false));
+      baseLayers.push(this._createGrbLayerWithMaxResolution("gewestplan", "Gewestplan", false, 17));
+      baseLayers.push(this._createGrbLayer("grb_bsk_grijs", "GRB-Basiskaart in grijswaarden", false));
+      baseLayers.push(this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true));
 
       map.addLayer(new ol.layer.Group({
         title: 'Basislagen',
-        layers: [
-          orthoTileLayer,
-          gewestplanTileLayer,
-          grbTileLayer,
-          grb_grTileLayer,
-          ferrarisTileLayer
-        ]
+        layers: baseLayers
       }));
-
-      grbTileLayer.setVisible(true);
 
       /* overlays */
       var grbTransTileLayer = this._createGrbWMSLayer('GRB_ADP_GRENS,GRB_GBG,GRB_SBN,GRB_TRN,GRB_WBN,GRB_WTZ,GRB_WLAS,GRB_KNW,' +
@@ -331,7 +330,7 @@ define([
       });
     },
 
-    _createGrbLayer: function (grbLayerId, title, isBaselayer) {
+    _createGrbLayer: function (grbLayerId, title, visible) {
       //retrieved with readCapabilties.html
       var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
       var matrixIds = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
@@ -359,8 +358,8 @@ define([
 
       return new ol.layer.Tile({
         title: title,
-        visible: false,
-        type: isBaselayer ? 'base' : 'overlay',
+        visible: visible,
+        type: 'base',
         source: grbSource,
         extent: grbBoundingBoxLamb72
       });
@@ -381,15 +380,14 @@ define([
       });
     },
 
-    _createGrbLayerWithMaxResolution: function (grbLayerId, title, isBaselayer, resolution) {
+    _createGrbLayerWithMaxResolution: function (grbLayerId, title, visible, resolution) {
 
-      var grbLayer = this._createGrbLayer(grbLayerId, '', isBaselayer);
+      var grbLayer = this._createGrbLayer(grbLayerId, '', true);
       grbLayer.unset('title');
       grbLayer.unset('type');
       grbLayer.set('maxResolution', resolution);
-      grbLayer.set('visible', true);
 
-      var fillLayer = this._createGrbWMSLayer('AGROND,GEM_GRENS,TOPONIEM', '', isBaselayer);
+      var fillLayer = this._createGrbWMSLayer('AGROND,GEM_GRENS,TOPONIEM', '', true);
       fillLayer.unset('title');
       fillLayer.unset('type');
       fillLayer.set('minResolution', resolution);
@@ -397,8 +395,8 @@ define([
 
       return new ol.layer.Group({
         title: title,
-        visible: false,
-        type: isBaselayer ? 'base' : 'overlay',
+        visible: visible,
+        type: 'base',
         layers: [
           grbLayer,
           fillLayer
