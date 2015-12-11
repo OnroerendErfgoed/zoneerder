@@ -94,7 +94,7 @@ define([
     _createLayers: function(map) {
       /* base layers */
       var orthoTileLayer = this._createGrbLayer("omwrgbmrvl", "Ortho", true);
-      var gewestplanTileLayer = this._createGrbLayer("gewestplan", "Gewestplan", true);
+      var gewestplanTileLayer = this._createGrbLayerWithMaxResolution("gewestplan", "Gewestplan", true, 17);
       var grb_grTileLayer = this._createGrbLayer("grb_bsk_grijs", "GRB-Basiskaart in grijswaarden", true);
       var ferrarisTileLayer = this._createGrbLayer("ferraris", "Ferraris", true);
       var grbTileLayer = this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true);
@@ -362,8 +362,7 @@ define([
         visible: false,
         type: isBaselayer ? 'base' : 'overlay',
         source: grbSource,
-        extent: grbBoundingBoxLamb72,
-        maxResolution: grbLayerId == 'gewestplan' ? 17 : undefined
+        extent: grbBoundingBoxLamb72
       });
     },
 
@@ -380,6 +379,31 @@ define([
         maxResolution: 2000,
         visible: false
       });
+    },
+
+    _createGrbLayerWithMaxResolution: function (grbLayerId, title, isBaselayer, resolution) {
+
+      var grbLayer = this._createGrbLayer(grbLayerId, '', isBaselayer);
+      grbLayer.unset('title');
+      grbLayer.unset('type');
+      grbLayer.set('maxResolution', resolution);
+      grbLayer.set('visible', true);
+
+      var fillLayer = this._createGrbWMSLayer('AGROND,GEM_GRENS,TOPONIEM', '', isBaselayer);
+      fillLayer.unset('title');
+      fillLayer.unset('type');
+      fillLayer.set('minResolution', resolution);
+      fillLayer.set('visible', true);
+
+      return new ol.layer.Group({
+        title: title,
+        visible: false,
+        type: isBaselayer ? 'base' : 'overlay',
+        layers: [
+          grbLayer,
+          fillLayer
+        ]
+      })
     },
 
     _createVectorLayer: function (options) {
