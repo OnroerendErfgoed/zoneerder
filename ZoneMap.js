@@ -101,7 +101,8 @@ define([
         popupContainer: this.popupNode,
         perceelService: this.perceelService,
         beschermingService: this.beschermingService,
-        beschermingUrl: this.config.beschermingUrl
+        beschermingUrl: this.config.beschermingUrl,
+        historicLayers: this.config.historicLayers || false
       });
 
       this.buttonController = new ButtonController({
