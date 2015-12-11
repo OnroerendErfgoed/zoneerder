@@ -43,7 +43,7 @@ define([
                     }
                 });
             }
-            return when("[]");
+            return when([]);
         }
     });
 });
