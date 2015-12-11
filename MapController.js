@@ -93,20 +93,26 @@ define([
 
     _createLayers: function(map) {
       /* base layers */
-      var orthoTileLayer = this._createGrbLayer("omwrgbmrvl", "Ortho", true);
+      var orthoTileLayer = this._createGrbLayer("omwrgbmrvl", "Orthofoto's", true);
       var gewestplanTileLayer = this._createGrbLayerWithMaxResolution("gewestplan", "Gewestplan", true, 17);
       var grb_grTileLayer = this._createGrbLayer("grb_bsk_grijs", "GRB-Basiskaart in grijswaarden", true);
       var ferrarisTileLayer = this._createGrbLayer("ferraris", "Ferraris", true);
       var grbTileLayer = this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true);
+      var poppTileLayer = this._createGrbLayer("popp", "Popp", true);
+      var vdmTileLayer = this._createGrbLayer("vandermaelen", "Vandermaelen", true);
+      var abwTileLayer = this._createGrbLayer("abw", "Atlas der Buurtwegen", true);
 
       map.addLayer(new ol.layer.Group({
         title: 'Basislagen',
         layers: [
-          orthoTileLayer,
+          poppTileLayer,
+          vdmTileLayer,
+          abwTileLayer,
+          ferrarisTileLayer,
           gewestplanTileLayer,
-          grbTileLayer,
+          orthoTileLayer,
           grb_grTileLayer,
-          ferrarisTileLayer
+          grbTileLayer
         ]
       }));
 
