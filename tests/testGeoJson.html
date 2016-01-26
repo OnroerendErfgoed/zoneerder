@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>test agiv orthofoto's</title>
+  <meta charset="utf-8">
+  <!--jquery-->
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+  <!--openlayers-->
+  <link rel="stylesheet" href="http://openlayers.org/en/v3.12.1/css/ol.css" type="text/css">
+  <link rel="stylesheet" href="http://rawgit.com/walkermatt/ol3-layerswitcher/master/src/ol3-layerswitcher.css" />
+  <script src="./data/Zoneswaargeenarcheologieteverwachtenvalt.js" type="text/javascript"></script>
+  <script src="./data/Zoneswaargeenarcheologieteverwachtenvalt_style.js" type="text/javascript"></script>
+  <script src="http://openlayers.org/en/v3.12.1/build/ol-debug.js" type="text/javascript"></script>
+  <script src="http://rawgit.com/walkermatt/ol3-layerswitcher/master/src/ol3-layerswitcher.js" type="text/javascript"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.6/proj4.js" type="text/javascript"></script>
+  <script src="http://epsg.io/31370.js" type="text/javascript"></script>
+  <style>
+    #map { position: absolute; top:0;bottom:0;right:0;left:0;  background-color: #b0c4de;}
+    #infoDlg { max-height: 400px; width: 290px}
+    #legendeBtn { position: absolute; right: 20px; top: 10px }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+<div id="infoDlg" class="dlg" title="Coördinaten"></div>
+<script type="text/javascript">
+  $( ".dlg" ).dialog({
+    autoOpen: false,  height: 400
+  });
+
+  /*tile layer*/
+  var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
+  var matrixIds = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40'];
+  var extent = [9928.0, 66928.0, 272072.0, 329072.0];
+
+  var grbSource = new ol.source.WMTS({
+    url: 'https://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
+    layer: 'grb_bsk_grijs',
+    matrixSet: 'BPL72VL',
+    format: 'image/png',
+    projection: 'EPSG:31370',
+    style: '',
+    version: '1.0.0',
+    tileGrid: new ol.tilegrid.WMTS({
+      origin: ol.extent.getTopLeft(extent),
+      resolutions: resolutions,
+      matrixIds: matrixIds
+    }),
+    attributions: [
+      new ol.Attribution({
+        html: '© <a href="http://www.agiv.be" title="AGIV" class="copyrightLink copyAgiv">AGIV</a>'
+      })
+    ]
+  });
+
+  var grb_bsk_tile = new ol.layer.Tile({
+    title: 'grb grijs',
+    visible: true,
+    type: 'base',
+    source: grbSource,
+    extent: extent
+  });
+
+  var vectorSource = new ol.source.Vector({
+    features: (new ol.format.GeoJSON()).readFeatures(geojson_Zoneswaargeenarcheologieteverwachtenvalt)
+  });
+
+  var vectorLayer = new ol.layer.Vector({
+    source: vectorSource,
+    style: style_Zoneswaargeenarcheologieteverwachtenvalt,
+    title: 'geojson laag',
+    visible: true
+  });
+
+  var map = new ol.Map({
+    target: 'map',
+    layers: [ grb_bsk_tile, vectorLayer],
+    view: new ol.View({
+      projection: 'EPSG:31370',
+      center: ol.proj.transform([4,51], 'EPSG:4326', 'EPSG:31370'),
+      zoom: 9
+    }),
+    controls: ol.control.defaults({
+      attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+        collapsible: false
+      })
+    }).extend([
+      new ol.control.ScaleLine()
+    ])
+  });
+
+  var layerSwitcher = new ol.control.LayerSwitcher({
+    tipLabel: 'Legende' // Optional label for button
+  });
+  map.addControl(layerSwitcher);
+
+
+  map.on('singleclick', function(evt) {
+    var wgs = ol.proj.transform( evt.coordinate,'EPSG:31370',  'EPSG:4326');
+    var lam = evt.coordinate ;
+
+    var mgs= "Belgische Lambert coordinaten: <br/>";
+    mgs += Math.round( lam[0] ) +" , "+ Math.round( lam[1]) + "<br/>";
+    mgs += "Geografische coördinaten: <br/>";
+    mgs += Math.round( wgs[0] *100 )/100 +"° , "+ Math.round( wgs[1] *100 )/100 + "°<br/>";
+
+    $( "#infoDlg" ).html( mgs );
+    $( "#infoDlg" ).dialog( "open" );
+  });
+</script>
+</body>
+</html>
