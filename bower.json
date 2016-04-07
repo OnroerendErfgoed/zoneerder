@@ -19,9 +19,6 @@
     "ol": "https://github.com/OnroerendErfgoed/ol3-amd.git#0.2.1",
     "font-awesome": "~4.3.0",
     "dgrid": "~0.4.0",
-    "dstore": "1.1.0"
-  },
-  "resolutions": {
-    "dstore": "1.1.0"
+    "dstore": "~1.1.1"
   }
 }
