@@ -24,6 +24,12 @@ Voorbeeld config:
             draw: true,
             help: true
         },
+        tools: {
+            selectBescherming: true,
+            selectPerceel: true,
+            drawPolygon: true,
+            drawWKT: true
+        },        
         onZoneClickPopup: {
         },
         historicLayers: true,
