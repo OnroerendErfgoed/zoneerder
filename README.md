@@ -24,6 +24,8 @@ Voorbeeld config:
             draw: true,
             help: true
         },
+        onZoneClickPopup: {
+        },
         historicLayers: true,
         erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
         niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',
