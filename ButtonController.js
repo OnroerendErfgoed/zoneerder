@@ -47,7 +47,7 @@ define([
     },
 
     _addZoomButtons: function(zoomButtons) {
-      var topPadding = 0.5;
+      var topPadding = 2.4;
       var buttonHeight = 2.2;
 
       if (zoomButtons.fullScreen) {
