@@ -75,7 +75,8 @@ define([
           beschermingWfsUrl: null,
           ogcproxyUrl: null,
           buttons: null,
-          sidebar: null
+          sidebar: null,
+          tools: null
         };
       }
 
@@ -125,6 +126,14 @@ define([
       }));
 
       this.buttonController.startup();
+
+      if (!this.config.tools) {
+        this.config.tools = {};
+      }
+      this._setDefaultParam(this.config.tools, "selectBescherming", true);
+      this._setDefaultParam(this.config.tools, "selectPerceel", true);
+      this._setDefaultParam(this.config.tools, "drawPolygon", true);
+      this._setDefaultParam(this.config.tools, "drawWKT", true);
 
       if (this.config.sidebar) {
         this._setDefaultParam(this.config.sidebar, "layers", false);
@@ -318,7 +327,8 @@ define([
         drawTab.addContent(zoneEditPane);
         var zoneEditor = new ZoneEditor({
           mapController: this.mapController,
-          perceelService: this.perceelService
+          perceelService: this.perceelService,
+          tools: this.config.tools
         }, zoneEditPane);
         drawTab.registerWidget(zoneEditor);
       }
