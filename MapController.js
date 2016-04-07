@@ -326,7 +326,7 @@ define([
 
     _createOsmLayer: function (title) {
       var osmSource = new ol.source.OSM({
-        url: 'https://tile.geofabrik.de/dccc92ba3f2a5a2c17189755134e6b1d/{z}/{x}/{y}.png',
+        url: '//tile.geofabrik.de/dccc92ba3f2a5a2c17189755134e6b1d/{z}/{x}/{y}.png',
         maxZoom: 18,
         attributions: [
           new ol.Attribution({
@@ -350,7 +350,7 @@ define([
       var grbBoundingBoxLamb72 = [20072.35253136637, 153858.40239064768, 259615.89341193732, 247185.8377553355];
 
       var grbSource = new ol.source.WMTS({
-        url: 'http://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
+        url: '//tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
         layer: grbLayerId,
         matrixSet: 'BPL72VL',
         format: 'image/png',
@@ -383,7 +383,7 @@ define([
         title: title,
         extent: this.mapProjection.getExtent(),
         source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-          url: 'http://geoservices.informatievlaanderen.be/raadpleegdiensten/GRB/wms',
+          url: '//geoservices.informatievlaanderen.be/raadpleegdiensten/GRB/wms',
           params: {'LAYERS': wmsLayers ,'TILED': true},
           serverType: 'geoserver'
         })),
