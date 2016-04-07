@@ -23,12 +23,25 @@ define([
     templateString: template,
     baseClass: 'zone-editor',
     mapController: null,
+    tools: null,
     _activeTool: null,
 
     postCreate: function () {
       this.inherited(arguments);
       //console.debug('ZoneEditor::postCreate');
 
+      if (!this.tools.selectBescherming) {
+        domConstruct.destroy(this.selectBeschermingTool);
+      }
+      if (!this.tools.selectPerceel) {
+        domConstruct.destroy(this.selectPerceelTool);
+      }
+      if (!this.tools.drawPolygon) {
+        domConstruct.destroy(this.drawTool);
+      }
+      if (!this.tools.drawWKT) {
+        domConstruct.destroy(this.drawWktTool);
+      }
     },
 
     startup: function () {
