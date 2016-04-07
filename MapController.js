@@ -66,7 +66,7 @@ define([
       this._createPopup();
       //map.on('moveend', this._onMoveEnd);
 
-      this.zoomToExtent(projection.getExtent());
+      this.zoomToExtent([16072, 128624, 272072, 256624]);
     },
 
     _defineProjection: function () {
@@ -87,7 +87,8 @@ define([
       return new ol.Map({
         target: container,
         view: new ol.View({
-          projection: projection
+          projection: projection,
+          extent: projection.getExtent()
         }),
         controls: ol.control.defaults({
           attribution: false,
@@ -347,7 +348,6 @@ define([
       //retrieved with readCapabilties.html
       var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
       var matrixIds = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
-      var grbBoundingBoxLamb72 = [20072.35253136637, 153858.40239064768, 259615.89341193732, 247185.8377553355];
 
       var grbSource = new ol.source.WMTS({
         url: '//tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
@@ -374,7 +374,7 @@ define([
         visible: visible,
         type: 'base',
         source: grbSource,
-        extent: grbBoundingBoxLamb72
+        extent: this.mapProjection.getExtent()
       });
     },
 
