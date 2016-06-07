@@ -36,6 +36,7 @@ define([
     beschermingService: null,
     beschermingUrl: null,
     historicLayers: null,
+    defaultBaseLayer: 'grb_bsk', // default
     _drawPolygonIndex: 1,
 
     postCreate: function () {
@@ -110,15 +111,18 @@ define([
       /* base layers */
       var baseLayers = [];
       if (this.historicLayers) {
-        baseLayers.push(this._createGrbLayer("ferraris", "Ferraris", false));
-        baseLayers.push(this._createGrbLayer("popp", "Popp", false));
-        baseLayers.push(this._createGrbLayer("vandermaelen", "Vandermaelen", false));
-        baseLayers.push(this._createGrbLayer("abw", "Atlas der Buurtwegen", false));
+        baseLayers.push(this._createGrbLayer('ferraris', 'Ferraris', (this.defaultBaseLayer === 'ferraris')));
+        baseLayers.push(this._createGrbLayer('popp', 'Popp', (this.defaultBaseLayer === 'popp')));
+        baseLayers.push(this._createGrbLayer('vandermaelen', 'Vandermaelen',
+          (this.defaultBaseLayer === 'vandermaelen')));
+        baseLayers.push(this._createGrbLayer('abw', 'Atlas der Buurtwegen', (this.defaultBaseLayer === 'abw')));
       }
-      baseLayers.push(this._createGrbLayer("omwrgbmrvl", "Orthofoto's", false));
-      baseLayers.push(this._createGrbLayerWithMaxResolution("gewestplan", "Gewestplan", false, 17));
-      baseLayers.push(this._createGrbLayer("grb_bsk_grijs", "GRB-Basiskaart in grijswaarden", false));
-      baseLayers.push(this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true));
+      baseLayers.push(this._createGrbLayer('omwrgbmrvl', 'Orthofoto\'s', (this.defaultBaseLayer === 'omwrgbmrvl')));
+      baseLayers.push(this._createGrbLayerWithMaxResolution('gewestplan', 'Gewestplan',
+        (this.defaultBaseLayer === 'gewestplan'), 17));
+      baseLayers.push(this._createGrbLayer('grb_bsk_grijs', 'GRB-Basiskaart in grijswaarden',
+        (this.defaultBaseLayer === 'grb_bsk_grijs')));
+      baseLayers.push(this._createGrbLayer('grb_bsk', 'GRB-Basiskaart', (this.defaultBaseLayer === 'grb_bsk')));
 
       map.addLayer(new ol.layer.Group({
         title: 'Basislagen',
