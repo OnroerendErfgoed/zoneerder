@@ -106,7 +106,8 @@ define([
         perceelService: this.perceelService,
         beschermingService: this.beschermingService,
         beschermingUrl: this.config.beschermingUrl,
-        historicLayers: this.config.historicLayers || false
+        historicLayers: this.config.historicLayers || false,
+        defaultBaseLayer: this.config.defaultBaseLayer
       });
 
       this.buttonController = new ButtonController({
