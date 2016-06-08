@@ -36,7 +36,7 @@ define([
     beschermingService: null,
     beschermingUrl: null,
     historicLayers: null,
-    defaultBaseLayer: 'grb_bsk', // default
+    defaultBaseLayer: null,
     _drawPolygonIndex: 1,
 
     postCreate: function () {

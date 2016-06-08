@@ -107,7 +107,7 @@ define([
         beschermingService: this.beschermingService,
         beschermingUrl: this.config.beschermingUrl,
         historicLayers: this.config.historicLayers || false,
-        defaultBaseLayer: this.config.defaultBaseLayer
+        defaultBaseLayer: this.config.defaultBaseLayer || 'grb_bsk' // default
       });
 
       this.buttonController = new ButtonController({
