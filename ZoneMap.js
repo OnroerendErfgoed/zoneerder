@@ -123,7 +123,7 @@ define([
 
       this.mapController.startup();
       this.mapController.on("zonechanged", lang.hitch(this, function(evt) {
-        this.emit("zonechanged", {zone: evt.zone});
+        this.emit("zonechanged", {zone: evt.zone, oppervlakte: evt.oppervlakte});
       }));
 
       this.buttonController.startup();

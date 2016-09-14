@@ -534,6 +534,14 @@ define([
       }
     },
 
+    getZoneArea: function(zone) {
+      if (!zone) {
+        return 0;
+      }
+      var multi = new ol.geom.MultiPolygon(zone.coordinates);
+      return multi ? multi.getArea() : 0;
+    },
+
     getCenterOfExtent: function(Extent){
       var X = Extent[0] + (Extent[2]-Extent[0])/2;
       var Y = Extent[1] + (Extent[3]-Extent[1])/2;
@@ -678,9 +686,9 @@ define([
             console.error(err);
           }
         ).always(function () {
-            onEnd();
-            popup.enable();
-          });
+          onEnd();
+          popup.enable();
+        });
       });
       this.mapInteractions.selectBschermingKey = eventKey;
     },
@@ -725,21 +733,27 @@ define([
         console.debug("ROW delete", event.target);
         this._removePolygonFromZone(event.target.feature);
         if (event.target.id!='zone') {
-          this.emit("zonechanged", {zone: this.getZone()});
+          var zone = this.getZone();
+          var opp = this.getZoneArea(zone);
+          this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
       }));
       store.on('add', lang.hitch(this, function(event){
         console.debug("Row add", event.target);
         this._addPolygonToZone(event.target.feature);
         if (event.target.id!='zone') {
-          this.emit("zonechanged", {zone: this.getZone()});
+          var zone = this.getZone();
+          var opp = this.getZoneArea(zone);
+          this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
       }));
       store.on('update', lang.hitch(this, function(event){
         console.debug("Row 'update'", event.target);
         this._addPolygonToZone(event.target.feature);
         if (event.target.id!='zone') {
-          this.emit("zonechanged", {zone: this.getZone()});
+          var zone = this.getZone();
+          var opp = this.getZoneArea(zone);
+          this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
       }));
     },
