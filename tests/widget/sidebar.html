@@ -87,7 +87,7 @@
     widgetUnderTest.startup();
 
     widgetUnderTest.on("zonechanged", function(event){
-      console.log("zone changed event: ", event.zone);
+      console.log("zone changed event: ", event.zone, event.oppervlakte);
     });
 
     var myButton = new Button({
