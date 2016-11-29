@@ -19,6 +19,7 @@ define([
   'dojo/when',
   'dojo/query',
   'dojo/dom-construct',
+  './widgets/popup/OnZoneClickPopup',
   'dojo/NodeList-dom'
 
 ], function (
@@ -41,7 +42,8 @@ define([
   CrabpyWidget,
   when,
   query,
-  domConstruct
+  domConstruct,
+  OnZoneClickPopup
 ) {
   return declare([WidgetBase, TemplatedMixin], {
 
@@ -51,6 +53,7 @@ define([
     '<div data-dojo-attach-point="popupNode"></div>' +
     '</div>',
     mapController: null,
+    doubleClickPopup: null,
     buttonController: null,
     config: null,
     erfgoedService: null,
@@ -72,7 +75,8 @@ define([
           beschermingWfsUrl: null,
           ogcproxyUrl: null,
           buttons: null,
-          sidebar: null
+          sidebar: null,
+          tools: null
         };
       }
 
@@ -102,7 +106,8 @@ define([
         perceelService: this.perceelService,
         beschermingService: this.beschermingService,
         beschermingUrl: this.config.beschermingUrl,
-        historicLayers: this.config.historicLayers || false
+        historicLayers: this.config.historicLayers || false,
+        defaultBaseLayer: this.config.defaultBaseLayer || 'grb_bsk' // default
       });
 
       this.buttonController = new ButtonController({
@@ -118,10 +123,18 @@ define([
 
       this.mapController.startup();
       this.mapController.on("zonechanged", lang.hitch(this, function(evt) {
-        this.emit("zonechanged", {zone: evt.zone});
+        this.emit("zonechanged", {zone: evt.zone, oppervlakte: evt.oppervlakte});
       }));
 
       this.buttonController.startup();
+
+      if (!this.config.tools) {
+        this.config.tools = {};
+      }
+      this._setDefaultParam(this.config.tools, "selectBescherming", true);
+      this._setDefaultParam(this.config.tools, "selectPerceel", true);
+      this._setDefaultParam(this.config.tools, "drawPolygon", true);
+      this._setDefaultParam(this.config.tools, "drawWKT", true);
 
       if (this.config.sidebar) {
         this._setDefaultParam(this.config.sidebar, "layers", false);
@@ -139,10 +152,30 @@ define([
         }, this.adresNode);
         this._adresZoeken.startup();
       }
+
+      if(this.config.onZoneClickPopup){
+        this.OnZoneClickPopup = new OnZoneClickPopup({
+          map: this.mapController.olMap,
+          layer: this.mapController.oeFeaturesLayer
+        }, this.popupNode);
+      }
     },
 
     resize: function() {
       this.mapController.resize();
+    },
+
+    initOnZoneClickPopup: function(location, html){
+      var map = this.mapController.olMap;
+      map.on("click", lang.hitch(this, function(e) {
+        map.forEachFeatureAtPixel(e.pixel, lang.hitch(this, function (feature) {
+          if(this.OnZoneClickPopup.enabled){
+            this.OnZoneClickPopup.closePopup();
+          } else {
+            this.OnZoneClickPopup.openPopup(this.mapController.getCenterOfExtent(feature.getGeometry().getExtent()), html);
+          }
+        }));
+      }));
     },
 
     getZone: function () {
@@ -189,6 +222,10 @@ define([
       else {
         return  when(console.error("No search service available for niscodes. Please add 'niscodeUrl' to config"));
       }
+    },
+
+    transformGeometryToLambert: function(geometry){
+      return this.mapController.transformGeometryToLambert(geometry);
     },
 
     setFeatures: function(features) {
@@ -291,7 +328,8 @@ define([
         drawTab.addContent(zoneEditPane);
         var zoneEditor = new ZoneEditor({
           mapController: this.mapController,
-          perceelService: this.perceelService
+          perceelService: this.perceelService,
+          tools: this.config.tools
         }, zoneEditPane);
         drawTab.registerWidget(zoneEditor);
       }

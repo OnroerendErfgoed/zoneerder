@@ -4,8 +4,8 @@ define([
   'dojo/_base/lang',
   'dojo/_base/array',
   'dojo/Evented',
-  'dojo/store/Memory',
-  'dojo/store/Observable',
+  'dstore/Memory',
+  'dstore/Trackable',
   'ol',
   './widgets/popup/Popup'
 ], function (
@@ -15,7 +15,7 @@ define([
   array,
   Evented,
   Memory,
-  Observable,
+  Trackable,
   ol,
   Popup
 ) {
@@ -36,12 +36,16 @@ define([
     beschermingService: null,
     beschermingUrl: null,
     historicLayers: null,
+    defaultBaseLayer: null,
     _drawPolygonIndex: 1,
 
     postCreate: function () {
       this.inherited(arguments);
-
-      this.polygonStore = new Observable( new Memory( {data: []} ));
+      var TrackedemoryStore = declare([Memory, Trackable]);
+      this.polygonStore = new TrackedemoryStore({
+        data: [],
+        idProperty: 'id'
+      });
 
       var projection = this.mapProjection = this._defineProjection();
       var map = this.olMap = this._createMap(projection, this.mapContainer);
@@ -49,6 +53,9 @@ define([
 
       this.geoJsonFormatter =  new ol.format.GeoJSON({
         defaultDataProjection: this.mapProjection
+      });
+
+      this.geoJsonFormatterDefault =  new ol.format.GeoJSON({
       });
 
       map.addControl(new ol.control.ScaleLine());
@@ -60,7 +67,7 @@ define([
       this._createPopup();
       //map.on('moveend', this._onMoveEnd);
 
-      this.zoomToExtent(projection.getExtent());
+      this.zoomToExtent([16072, 128624, 272072, 256624]);
     },
 
     _defineProjection: function () {
@@ -81,7 +88,8 @@ define([
       return new ol.Map({
         target: container,
         view: new ol.View({
-          projection: projection
+          projection: projection,
+          extent: projection.getExtent()
         }),
         controls: ol.control.defaults({
           attribution: false,
@@ -92,19 +100,29 @@ define([
       });
     },
 
+    transformGeometryToLambert: function(geometry){
+      var geom = this.geoJsonFormatterDefault.readGeometry(geometry, {
+        featureProjection: 'EPSG:31370'
+      });
+      return this.geoJsonFormatter.writeGeometry(geom);
+    },
+
     _createLayers: function(map) {
       /* base layers */
       var baseLayers = [];
       if (this.historicLayers) {
-        baseLayers.push(this._createGrbLayer("ferraris", "Ferraris", false));
-        baseLayers.push(this._createGrbLayer("popp", "Popp", false));
-        baseLayers.push(this._createGrbLayer("vandermaelen", "Vandermaelen", false));
-        baseLayers.push(this._createGrbLayer("abw", "Atlas der Buurtwegen", false));
+        baseLayers.push(this._createGrbLayer('ferraris', 'Ferraris', (this.defaultBaseLayer === 'ferraris')));
+        baseLayers.push(this._createGrbLayer('popp', 'Popp', (this.defaultBaseLayer === 'popp')));
+        baseLayers.push(this._createGrbLayer('vandermaelen', 'Vandermaelen',
+          (this.defaultBaseLayer === 'vandermaelen')));
+        baseLayers.push(this._createGrbLayer('abw', 'Atlas der Buurtwegen', (this.defaultBaseLayer === 'abw')));
       }
-      baseLayers.push(this._createGrbLayer("omwrgbmrvl", "Orthofoto's", false));
-      baseLayers.push(this._createGrbLayerWithMaxResolution("gewestplan", "Gewestplan", false, 17));
-      baseLayers.push(this._createGrbLayer("grb_bsk_grijs", "GRB-Basiskaart in grijswaarden", false));
-      baseLayers.push(this._createGrbLayer("grb_bsk", "GRB-Basiskaart", true));
+      baseLayers.push(this._createGrbLayer('omwrgbmrvl', 'Orthofoto\'s', (this.defaultBaseLayer === 'omwrgbmrvl')));
+      baseLayers.push(this._createGrbLayerWithMaxResolution('gewestplan', 'Gewestplan',
+        (this.defaultBaseLayer === 'gewestplan'), 17));
+      baseLayers.push(this._createGrbLayer('grb_bsk_grijs', 'GRB-Basiskaart in grijswaarden',
+        (this.defaultBaseLayer === 'grb_bsk_grijs')));
+      baseLayers.push(this._createGrbLayer('grb_bsk', 'GRB-Basiskaart', (this.defaultBaseLayer === 'grb_bsk')));
 
       map.addLayer(new ol.layer.Group({
         title: 'Basislagen',
@@ -189,7 +207,7 @@ define([
     startup: function () {
       this.inherited(arguments);
       this.popup.startup();
-      this._observePolygonStore();
+      this._observePolygonStore(this.polygonStore);
     },
 
     resize: function () {
@@ -205,7 +223,7 @@ define([
     },
 
     clearZone: function () {
-      this.polygonStore.query().forEach(function (polygon) {
+      this.polygonStore.filter().forEach(function (polygon) {
         this.polygonStore.remove(polygon.id);
       }, this);
     },
@@ -313,7 +331,7 @@ define([
 
     _createOsmLayer: function (title) {
       var osmSource = new ol.source.OSM({
-        url: 'https://tile.geofabrik.de/dccc92ba3f2a5a2c17189755134e6b1d/{z}/{x}/{y}.png',
+        url: '//tile.geofabrik.de/dccc92ba3f2a5a2c17189755134e6b1d/{z}/{x}/{y}.png',
         maxZoom: 18,
         attributions: [
           new ol.Attribution({
@@ -334,10 +352,9 @@ define([
       //retrieved with readCapabilties.html
       var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
       var matrixIds = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
-      var grbBoundingBoxLamb72 = [20072.35253136637, 153858.40239064768, 259615.89341193732, 247185.8377553355];
 
       var grbSource = new ol.source.WMTS({
-        url: 'http://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
+        url: '//tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
         layer: grbLayerId,
         matrixSet: 'BPL72VL',
         format: 'image/png',
@@ -361,7 +378,7 @@ define([
         visible: visible,
         type: 'base',
         source: grbSource,
-        extent: grbBoundingBoxLamb72
+        extent: this.mapProjection.getExtent()
       });
     },
 
@@ -370,7 +387,7 @@ define([
         title: title,
         extent: this.mapProjection.getExtent(),
         source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-          url: 'http://geoservices.informatievlaanderen.be/raadpleegdiensten/GRB/wms',
+          url: '//geoservices.informatievlaanderen.be/raadpleegdiensten/GRB/wms',
           params: {'LAYERS': wmsLayers ,'TILED': true},
           serverType: 'geoserver'
         })),
@@ -517,6 +534,25 @@ define([
       }
     },
 
+    getZoneArea: function(zone) {
+      if (!zone) {
+        return 0;
+      }
+      var multi = new ol.geom.MultiPolygon(zone.coordinates);
+      return multi ? multi.getArea() : 0;
+    },
+
+    getCenterOfExtent: function(Extent){
+      var X = Extent[0] + (Extent[2]-Extent[0])/2;
+      var Y = Extent[1] + (Extent[3]-Extent[1])/2;
+      return [X, Y];
+    },
+
+    readGeomtryFromGeoJson: function(geoJson){
+      var format = new ol.format.GeoJSON();
+      return format.readGeometry(geoJson);
+    },
+
     getFeatures: function () {
       return this.erfgoedFeatures;
     },
@@ -650,9 +686,9 @@ define([
             console.error(err);
           }
         ).always(function () {
-            onEnd();
-            popup.enable();
-          });
+          onEnd();
+          popup.enable();
+        });
       });
       this.mapInteractions.selectBschermingKey = eventKey;
     },
@@ -692,17 +728,32 @@ define([
       }, this.popupContainer);
     },
 
-    _observePolygonStore: function () {
-      var results = this.polygonStore.query({});
-      results.observe(lang.hitch(this, function(object, removedFrom, insertedInto){
-        if(removedFrom > -1){ // existing object removed
-          this._removePolygonFromZone(object.feature);
+    _observePolygonStore: function (store) {
+      store.on('delete', lang.hitch(this, function(event){
+        console.debug("ROW delete", event.target);
+        this._removePolygonFromZone(event.target.feature);
+        if (event.target.id!='zone') {
+          var zone = this.getZone();
+          var opp = this.getZoneArea(zone);
+          this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
-        else if(insertedInto > -1){ // new or updated object inserted
-          this._addPolygonToZone(object.feature);
+      }));
+      store.on('add', lang.hitch(this, function(event){
+        console.debug("Row add", event.target);
+        this._addPolygonToZone(event.target.feature);
+        if (event.target.id!='zone') {
+          var zone = this.getZone();
+          var opp = this.getZoneArea(zone);
+          this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
-        if (object.id!='zone') {
-          this.emit("zonechanged", {zone: this.getZone()});
+      }));
+      store.on('update', lang.hitch(this, function(event){
+        console.debug("Row 'update'", event.target);
+        this._addPolygonToZone(event.target.feature);
+        if (event.target.id!='zone') {
+          var zone = this.getZone();
+          var opp = this.getZoneArea(zone);
+          this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
       }));
     },

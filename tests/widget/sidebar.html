@@ -7,6 +7,7 @@
   <title>zoneerder met sidebar</title>
 
   <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../../dgrid/css/dgrid.css">
   <link rel="stylesheet" href="../resources/pyoes-compiled-app.css">
   <link rel="stylesheet" href="../../resources/zoneerder.css" />
   <link rel="stylesheet" href="../../ol/ol.css" />
@@ -61,7 +62,14 @@
         draw: true,
         help: true
       },
+      tools: {
+        selectBescherming: false,
+        selectPerceel: true,
+        drawPolygon: true,
+        drawWKT: true
+      },
       historicLayers: true,
+      defaultBaseLayer: 'grb_bsk_grijs',
       zoekenadres: true,
       erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
       niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',
@@ -79,7 +87,7 @@
     widgetUnderTest.startup();
 
     widgetUnderTest.on("zonechanged", function(event){
-      console.log("zone changed event: ", event.zone);
+      console.log("zone changed event: ", event.zone, event.oppervlakte);
     });
 
     var myButton = new Button({
