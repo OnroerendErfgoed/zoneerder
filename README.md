@@ -1,5 +1,6 @@
 zoneerder
 ===========
+UPDATE: master is nu de 0.4 versie.
 
 Opgelet: er zijn nu 2 versies 0.3 en 0.4. De 0.4 versie gebruikt dgrid v0.4 en dstore.
 
