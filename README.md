@@ -31,8 +31,7 @@ Voorbeeld config:
             drawPolygon: true,
             drawWKT: true
         },        
-        onZoneClickPopup: {
-        },
+        onZoneClickPopup: true,
         historicLayers: true,
         erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
         niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',

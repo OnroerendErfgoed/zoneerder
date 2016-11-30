@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>zoneerder</title>
+  <title>zoneerder</title>
 
-    <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../resources/pyoes-compiled-app.css">
-    <link rel="stylesheet" href="../../resources/zoneerder.css" />
-    <link rel="stylesheet" href="../../ol/ol.css" />
-    <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-        #widgetNode {
-            width: 800px;
-            height: 600px;
-        }
-    </style>
-    <script src="../../proj4/dist/proj4.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="../../font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="../resources/pyoes-compiled-app.css">
+  <link rel="stylesheet" href="../../resources/zoneerder.css" />
+  <link rel="stylesheet" href="../../ol/ol.css" />
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #widgetNode {
+      width: 800px;
+      height: 600px;
+    }
+  </style>
+  <script src="../../proj4/dist/proj4.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -34,26 +34,25 @@
 <script type="text/javascript" src="../../dojo/dojo.js"></script>
 
 <script>
-    require([
-        "zoneerder/ZoneMap",
-        "dojo/domReady!"
-    ], function (ZoneMap) {
-      var testzone = {"type":"MultiPolygon","coordinates":[[[[123796.3989870126,161922.68658473343],[125855.60320366417,162033.58173123002],[126451.84609249674,157270.33629081864],[126158.4321447326,156715.58044047095],[125322.48775104273,156816.1542271264],[123796.3989870126,161922.68658473343]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
-      var zoneMapConfig = {
-        onZoneClickPopup: {
-          }
-        };
+  require([
+    "zoneerder/ZoneMap",
+    "dojo/domReady!"
+  ], function (ZoneMap) {
+    var testzone = {"type":"MultiPolygon","coordinates":[[[[123796.3989870126,161922.68658473343],[125855.60320366417,162033.58173123002],[126451.84609249674,157270.33629081864],[126158.4321447326,156715.58044047095],[125322.48775104273,156816.1542271264],[123796.3989870126,161922.68658473343]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
+    var zoneMapConfig = {
+      onZoneClickPopup: true
+    };
 
-        // init widget
-        var widgetUnderTest = new ZoneMap({
-            config: zoneMapConfig
-        }, 'widgetNode');
-        widgetUnderTest.startup();
-        widgetUnderTest.setZone(testzone);
-      widgetUnderTest.mapController.zoomToZone(testzone);
-      var html = "<h5>" + 'title' + "</h5><br/>" + 'info';
-      widgetUnderTest.initOnZoneClickPopup(testzone, html);
-    });
+    // init widget
+    var widgetUnderTest = new ZoneMap({
+      config: zoneMapConfig
+    }, 'widgetNode');
+    widgetUnderTest.startup();
+    widgetUnderTest.setZone(testzone);
+    widgetUnderTest.mapController.zoomToZone(testzone);
+    var html = "<h5>Titel: " + 'testzone' + "</h5><br/>Type: " + testzone.type;
+    widgetUnderTest.initOnZoneClickPopup(testzone, html);
+  });
 
 </script>
 </body>
