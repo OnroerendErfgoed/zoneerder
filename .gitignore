@@ -2,6 +2,7 @@
 .idea
 
 # javascript libraries
+node_modules/
 crabpy_dojo
 dojo
 dijit
