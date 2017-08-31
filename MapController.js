@@ -258,7 +258,7 @@ define([
 
     drawPerceel: function (olFeature) {
       if (olFeature) {
-        var xyCoords = this._transformXyzToXy(olFeature.getGeometry().getCoordinates());
+        var xyCoords = this._transformXyzToXy(olFeature.getGeometry());
         var xyGeom = new ol.geom.MultiPolygon(xyCoords, 'XY');
         var name = "Perceel " + olFeature.get('CAPAKEY');
         olFeature.set('name', name);
@@ -557,22 +557,36 @@ define([
       return this.erfgoedFeatures;
     },
 
-    _transformXyzToXy: function (xyzCoords) {
-      var xyCoords = [];
-      //make coordinates 'XY' instead of 'XYZ'. coordinates: Array.<Array.<Array.<ol.Coordinate>>>
-      array.forEach(xyzCoords, function (level1) {
-        var level1Array = [];
-        xyCoords.push(level1Array);
-        array.forEach(level1, function (level2) {
-          var level2Array = [];
-          level1Array.push(level2Array);
-          array.forEach(level2, function (xyzCoords) {
-            var xyArray = [xyzCoords[0], xyzCoords[1]];
-            level2Array.push(xyArray);
+    _transformXyzToXy: function (geom) {
+      console.debug('MapController::_transformXyzToXy', geom.getType(), geom.getLayout());
+      var coords = geom.getCoordinates();
+      if (geom.getLayout() === 'XYZ') {
+        var xyCoords = [];
+        // //make coordinates 'XY' instead of 'XYZ'. coordinates: Array.<Array.<ol.Coordinate>>
+        array.forEach(coords, function (level1) {
+          var level1Array = [];
+          xyCoords.push(level1Array);
+          array.forEach(level1, function (level2) {
+            if (geom.getType() === 'Polygon') {
+              level1Array.push([level2[0], level2[1]]);
+            }
+            else {
+             var level2Array = [];
+              level1Array.push(level2Array);
+              array.forEach(level2, function (level3) {
+                level2Array.push([level3[0], level3[1]]);
+              });
+            }
           });
         });
-      });
-      return xyCoords;
+        if (geom.getType() === 'Polygon') {
+          return [xyCoords];
+        } else {
+          return xyCoords;
+        }
+      } else {
+        return coords;
+      }
     },
 
 
