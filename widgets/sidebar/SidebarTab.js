@@ -48,7 +48,7 @@ define([
       //console.debug('SidebarTab::refresh', this.label);
       array.forEach(this.children, function (child) {
         if (child.refresh) {
-          child.refresh();
+          setTimeout(function(){ child.refresh(); }, 100);
         }
       })
     },
