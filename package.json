@@ -1,15 +1,23 @@
 {
-    "name": "zoneerder",
-    "description": "Configureerbare widget om zones in te tekenen.",
-    "keywords": ["JavaScript", "Dojo", "Widget", "Openlayers"],
-    "version": "0.4.5",
-    "repository": {
-        "type":"git",
-        "url":"https://github.com/OnroerendErfgoed/zoneerder"
-    },
-    "main": "./ZoneMap",
-    "dojoBuild": "package.js",
-    "directories": {
-        "lib": "."
-    }
+  "name": "zoneerder",
+  "description": "Configureerbare widget om zones in te tekenen.",
+  "keywords": [
+    "JavaScript",
+    "Dojo",
+    "Widget",
+    "Openlayers"
+  ],
+  "version": "0.5.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OnroerendErfgoed/zoneerder"
+  },
+  "main": "./ZoneMap",
+  "dojoBuild": "package.js",
+  "directories": {
+    "lib": "."
+  },
+  "devDependencies": {
+    "http-server": "^0.10.0"
+  }
 }

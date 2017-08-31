@@ -30,7 +30,7 @@ define([
         'maxFeatures="10" ' +
         'xsi:schemaLocation="http://www.opengis.net/wfs ' +
         'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">' +
-        '<wfs:Query typeName="grb:GRB_-_Adp_-_administratief_perceel">' +
+        '<wfs:Query typeName="GRB:ADP">' +
         '<ogc:Filter>' +
         '<ogc:Contains>' +
         '<ogc:PropertyName>SHAPE</ogc:PropertyName>' +
@@ -53,8 +53,8 @@ define([
 
     readWfs: function (wfs) {
       var formatter = new ol.format.WFS({
-        featureNS: "https://geo.agiv.be/ogc/wfs/grb",
-        featureType: "GRB_-_Adp_-_administratief_perceel"
+        featureNS: "informatievlaanderen.be/grb",
+        featureType: "ADP"
       });
       var features = formatter.readFeatures(wfs, {});
       return features[0];
