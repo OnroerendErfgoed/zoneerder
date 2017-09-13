@@ -31,8 +31,9 @@ define([
             if (zone && zone.coordinates.length > 0) {
                 var url = this.url;
                 var data = {
-                    categorie: "objecten",
-                    geometrie: zone
+                    categorie: "aanduidingsobjecten",
+                    geometrie: zone,
+                    'geef_geometrie': 0
                 };
                 return xhr.post(url, {
 									  handleAs:"json",
