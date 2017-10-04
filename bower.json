@@ -12,14 +12,18 @@
     "README.md"
   ],
   "dependencies": {
-    "dojo": "~1.10.4",
-    "dijit": "~1.10.4",
-    "proj4": "2.3.6",
+    "dojo": "~1.12.3",
+    "dijit": "~1.12.3",
+    "proj4": "2.3.15",
     "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git#0.2.0",
     "ol": "https://github.com/OnroerendErfgoed/ol3-amd.git#0.2.1",
-    "font-awesome": "~4.3.0",
-    "dgrid": "~0.3.17",
+    "font-awesome": "~4.6.3",
+    "dgrid": "~0.3.19",
     "put-selector": "~0.3.6",
     "xstyle": "~0.2.1"
+  },
+  "resolutions": {
+    "dijit": "~1.12.3",
+    "dojo": "~1.12.3"
   }
 }
