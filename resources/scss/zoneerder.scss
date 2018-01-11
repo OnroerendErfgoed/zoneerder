@@ -407,16 +407,16 @@ div.ol-control.left-bar button {
 }
 
 .zoekenAdres input::-webkit-input-placeholder {
-    color:    #fff !important;
+  color:    #fff !important;
 }
 .zoekenAdres input:-moz-placeholder {
-    color:    #fff !important;
+  color:    #fff !important;
 }
 .zoekenAdres input::-moz-placeholder {
-    color:    #fff !important;
+  color:    #fff !important;
 }
 .zoekenAdres input:-ms-input-placeholder {
-    color:    #fff !important;
+  color:    #fff !important;
 }
 
 .zoekenAdresContainer .searchBoxIcon {
@@ -442,4 +442,14 @@ div.ol-control.left-bar button {
 
 .dijitTooltipContainer {
   display: none;
+}
+
+/* FIX voor https://github.com/OnroerendErfgoed/zoneerder/issues/109 */
+.ol-touch .ol-control button {
+  font-size: 1.2em !important;
+}
+
+.sidebar-tabs > li {
+  overflow: unset;
+  line-height: 1em;
 }
