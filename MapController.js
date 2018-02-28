@@ -118,8 +118,8 @@ define([
         baseLayers.push(this._createGrbLayer('abw', 'Atlas der Buurtwegen', (this.defaultBaseLayer === 'abw')));
       }
       baseLayers.push(this._createGrbLayer('omwrgbmrvl', 'Orthofoto\'s', (this.defaultBaseLayer === 'omwrgbmrvl')));
-      baseLayers.push(this._createGrbLayerWithMaxResolution('gewestplan', 'Gewestplan',
-        (this.defaultBaseLayer === 'gewestplan'), 17));
+      baseLayers.push(this._createMercatorWmtsLayer('lu:lu_gwp_rv_raster', 'Gewestplan',
+        (this.defaultBaseLayer === 'gewestplan')));
       baseLayers.push(this._createGrbLayer('grb_bsk_grijs', 'GRB-Basiskaart in grijswaarden',
         (this.defaultBaseLayer === 'grb_bsk_grijs')));
       baseLayers.push(this._createGrbLayer('grb_bsk', 'GRB-Basiskaart', (this.defaultBaseLayer === 'grb_bsk')));
@@ -378,6 +378,42 @@ define([
         visible: visible,
         type: 'base',
         source: grbSource,
+        extent: this.mapProjection.getExtent()
+      });
+    },
+
+    _createMercatorWmtsLayer: function (layerId, title, visible) {
+      //retrieved with readCapabilties.html
+      var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
+      var matrixIds = ['BPL72VL:0','BPL72VL:1','BPL72VL:2','BPL72VL:3','BPL72VL:4','BPL72VL:5','BPL72VL:6','BPL72VL:7','BPL72VL:8','BPL72VL:9','BPL72VL:10','BPL72VL:11','BPL72VL:12','BPL72VL:13','BPL72VL:14','BPL72VL:15'];
+
+      var mercatorSource = new ol.source.WMTS({
+        url: '//www.mercator.vlaanderen.be/raadpleegdienstenmercatorgeocachepubliek/service/wmts/',
+        layer: layerId,
+        matrixSet: 'BPL72VL',
+        format: 'image/png',
+        projection: this.mapProjection,
+        requestEncoding: 'KVP',
+        wrapX: false,
+        tileGrid: new ol.tilegrid.WMTS({
+          origin: ol.extent.getTopLeft(this.mapProjection.getExtent()),
+          resolutions: resolutions,
+          matrixIds: matrixIds,
+          maxZoom: 15,
+          minZoom: 0
+        }),
+        attributions: [
+          new ol.Attribution({
+            html: '© <a href="http://www.agiv.be" title="AGIV" class="copyrightLink copyAgiv">AGIV</a>'
+          })
+        ]
+      });
+
+      return new ol.layer.Tile({
+        title: title,
+        visible: visible,
+        type: 'base',
+        source: mercatorSource,
         extent: this.mapProjection.getExtent()
       });
     },
