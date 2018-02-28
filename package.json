@@ -7,7 +7,7 @@
     "Widget",
     "Openlayers"
   ],
-  "version": "0.5.0",
+  "version": "0.5.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/OnroerendErfgoed/zoneerder"
