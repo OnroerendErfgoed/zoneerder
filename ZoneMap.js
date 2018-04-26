@@ -283,6 +283,9 @@ define([
             var bbox = crabZoomer.getBbox();
             if (bbox) {
               self.mapController.zoomToExtent(bbox);
+              if (self.mapController.olMap.getView().getZoom() > 15) {
+                self.mapController.olMap.getView().setZoom(15);
+              }
               crabZoomer.reset();
               sidebar.collapse();
             }
