@@ -1,7 +1,7 @@
 {
   "name": "zoneerder",
   "description": "A configurable openlayers 3 map wrapped in a dojo widget",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "main": "ZoneMap.js",
   "ignore": [
     "doc",
