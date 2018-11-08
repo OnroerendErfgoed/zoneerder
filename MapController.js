@@ -570,12 +570,12 @@ define([
       }
     },
 
-    getZoneArea: function(zone) {
-      if (!zone) {
-        return 0;
-      }
-      var multi = new ol.geom.MultiPolygon(zone.coordinates);
-      return multi ? multi.getArea() : 0;
+    getZoneArea: function() {
+      var area = 0;
+      array.forEach(this.zoneLayer.getSource().getFeatures(), function (feature) {
+        area += feature.getGeometry().getArea();
+      });
+      return area;
     },
 
     getCenterOfExtent: function(Extent){
@@ -784,7 +784,7 @@ define([
         this._removePolygonFromZone(event.target.feature);
         if (event.target.id!='zone') {
           var zone = this.getZone();
-          var opp = this.getZoneArea(zone);
+          var opp = this.getZoneArea();
           this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
       }));
@@ -793,7 +793,7 @@ define([
         this._addPolygonToZone(event.target.feature);
         if (event.target.id!='zone') {
           var zone = this.getZone();
-          var opp = this.getZoneArea(zone);
+          var opp = this.getZoneArea();
           this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
       }));
@@ -802,7 +802,7 @@ define([
         this._addPolygonToZone(event.target.feature);
         if (event.target.id!='zone') {
           var zone = this.getZone();
-          var opp = this.getZoneArea(zone);
+          var opp = this.getZoneArea();
           this.emit("zonechanged", {zone: zone, oppervlakte: opp});
         }
       }));
