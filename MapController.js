@@ -38,6 +38,8 @@ define([
     historicLayers: null,
     defaultBaseLayer: null,
     _drawPolygonIndex: 1,
+    _informatieVlaanderenAttribution: '© <a href="https://overheid.vlaanderen.be/informatie-vlaanderen" ' +
+      'title="Informatie Vlaanderen" class="copyrightLink copyAgiv"> Informatie Vlaanderen</a>',
 
     postCreate: function () {
       this.inherited(arguments);
@@ -368,7 +370,7 @@ define([
         }),
         attributions: [
           new ol.Attribution({
-            html: '© <a href="http://www.agiv.be" title="AGIV" class="copyrightLink copyAgiv">AGIV</a>'
+            html: this._informatieVlaanderenAttribution
           })
         ]
       });
@@ -404,7 +406,7 @@ define([
         }),
         attributions: [
           new ol.Attribution({
-            html: '© <a href="http://www.agiv.be" title="AGIV" class="copyrightLink copyAgiv">AGIV</a>'
+            html: this._informatieVlaanderenAttribution
           })
         ]
       });
