@@ -144,14 +144,12 @@ define([
         source: new ol.source.TileWMS(({
           url: this.beschermingUrl,
           params: {
-            'LAYERS': 'vioe_geoportaal:beschermde_landschappen,' +
-            'vioe_geoportaal:beschermde_dorps_en_stadsgezichten,' +
-            'vioe_geoportaal:beschermde_archeologische_zones,' +
-            'vioe_geoportaal:beschermde_monumenten,' +
-            'vioe_geoportaal:dibe_geheel,' +
-            'vioe_geoportaal:dibe_relict,' +
-            'vioe_geoportaal:ile_park,' +
-            'vioe_geoportaal:ile_boom',
+            'LAYERS': 'vioe_geoportaal:bes_landschap,' +
+            'vioe_geoportaal:bes_sd_gezicht,' +
+            'vioe_geoportaal:bes_arch_site,' +
+            'vioe_geoportaal:bes_monument,' +
+            'vioe_geoportaal:bes_overgangszone,' +
+            'vioe_geoportaal:erfgoedls',
             'TILED': true
           },
           attributions: [new ol.Attribution({
