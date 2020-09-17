@@ -22,7 +22,6 @@ define([
       //console.debug('searchBeschermingenGet', coordinate, srsname);
 
       var featureTypes = [
-        'vioe_geoportaal:bes_landschap',
         'vioe_geoportaal:bes_sd_gezicht',
         'vioe_geoportaal:bes_arch_site',
         'vioe_geoportaal:bes_monument'
@@ -44,7 +43,6 @@ define([
       //console.debug('searchBeschermingenPost', coordinate, srsname);
 
       var featureTypes = [
-        'bes_landschap',
         'bes_sd_gezicht',
         'bes_arch_site',
         'bes_monument'
@@ -75,7 +73,6 @@ define([
         return new ol.format.WFS({
           featureNS: "http://www.erfgoed.net/geoportaal",
           featureType: [
-            'bes_landschap',
             'bes_sd_gezicht',
             'bes_arch_site',
             'bes_monument'
