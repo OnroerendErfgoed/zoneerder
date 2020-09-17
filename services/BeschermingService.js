@@ -22,10 +22,9 @@ define([
       //console.debug('searchBeschermingenGet', coordinate, srsname);
 
       var featureTypes = [
-        'vioe_geoportaal:beschermde_landschappen',
-        'vioe_geoportaal:beschermde_dorps_en_stadsgezichten',
-        'vioe_geoportaal:beschermde_archeologische_zones',
-        'vioe_geoportaal:beschermde_monumenten'
+        'vioe_geoportaal:bes_sd_gezicht',
+        'vioe_geoportaal:bes_arch_site',
+        'vioe_geoportaal:bes_monument'
       ];
 
       var getUrl = this.beschermingWfsUrl + "?service=wfs&version=1.1.0&request=GetFeature";
@@ -44,10 +43,9 @@ define([
       //console.debug('searchBeschermingenPost', coordinate, srsname);
 
       var featureTypes = [
-        'beschermde_landschappen',
-        'beschermde_dorps_en_stadsgezichten',
-        'beschermde_archeologische_zones',
-        'beschermde_monumenten'
+        'bes_sd_gezicht',
+        'bes_arch_site',
+        'bes_monument'
       ];
 
       var getFeature = new ol.format.WFS().writeGetFeature({
@@ -75,10 +73,9 @@ define([
         return new ol.format.WFS({
           featureNS: "http://www.erfgoed.net/geoportaal",
           featureType: [
-            'beschermde_landschappen',
-            'beschermde_dorps_en_stadsgezichten',
-            'beschermde_archeologische_zones',
-            'beschermde_monumenten'
+            'bes_sd_gezicht',
+            'bes_arch_site',
+            'bes_monument'
           ]
         }).readFeatures(wfs, {});
       } catch (e) {
