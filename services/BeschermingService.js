@@ -24,7 +24,8 @@ define([
       var featureTypes = [
         'vioe_geoportaal:bes_sd_gezicht',
         'vioe_geoportaal:bes_arch_site',
-        'vioe_geoportaal:bes_monument'
+        'vioe_geoportaal:bes_monument',
+        'vioe_geoportaal:erfgoedls'
       ];
 
       var getUrl = this.beschermingWfsUrl + "?service=wfs&version=1.1.0&request=GetFeature";
@@ -45,7 +46,8 @@ define([
       var featureTypes = [
         'bes_sd_gezicht',
         'bes_arch_site',
-        'bes_monument'
+        'bes_monument',
+        'erfgoedls'
       ];
 
       var getFeature = new ol.format.WFS().writeGetFeature({
@@ -75,7 +77,8 @@ define([
           featureType: [
             'bes_sd_gezicht',
             'bes_arch_site',
-            'bes_monument'
+            'bes_monument',
+            'erfgoedls'
           ]
         }).readFeatures(wfs, {});
       } catch (e) {
