@@ -144,7 +144,8 @@ define([
         source: new ol.source.TileWMS(({
           url: this.beschermingUrl,
           params: {
-            'LAYERS': 'vioe_geoportaal:bes_sd_gezicht,' +
+            'LAYERS': 'vioe_geoportaal:bes_landschap,' +
+            'vioe_geoportaal:bes_sd_gezicht,' +
             'vioe_geoportaal:bes_arch_site,' +
             'vioe_geoportaal:bes_monument,' +
             'vioe_geoportaal:bes_overgangszone,' +
