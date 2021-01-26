@@ -41,37 +41,6 @@ define([
       });
     },
 
-    searchBeschermingenPost: function (coordinate, srsname) {
-      //console.debug('searchBeschermingenPost', coordinate, srsname);
-
-      var featureTypes = [
-        'bes_landschap',
-        'bes_sd_gezicht',
-        'bes_arch_site',
-        'bes_monument',
-        'erfgoedls'
-      ];
-
-      var getFeature = new ol.format.WFS().writeGetFeature({
-        featureTypes: featureTypes,
-        featureNS: 'http://www.erfgoed.net/geoportaal',
-        featurePrefix: 'vioe_geoportaal',
-        srsName: srsname,
-        bbox: this._createBbox(coordinate),
-        geometryName: 'geom'
-      });
-
-      var postUrl = this.ogcproxyUrl + this.beschermingWfsUrl;
-
-      return xhr.post(postUrl, {
-        data: new XMLSerializer().serializeToString(getFeature),
-        headers: {
-          "X-Requested-With": "",
-          "Content-Type": "application/xml"
-        }
-      });
-    },
-
     readWfs: function (wfs) {
       try {
         return new ol.format.WFS({
