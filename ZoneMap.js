@@ -73,7 +73,6 @@ define([
           crabpyUrl: null,
           beschermingUrl: null,
           beschermingWfsUrl: null,
-          ogcproxyUrl: null,
           buttons: null,
           sidebar: null,
           tools: null
@@ -92,19 +91,11 @@ define([
         this.perceelService = new PerceelService({ url: this.config.perceelUrl });
       }
 
-      if (this.config.beschermingWfsUrl && this.config.ogcproxyUrl) {
-        this.beschermingService = new BeschermingService({
-          beschermingWfsUrl: this.config.beschermingWfsUrl,
-          ogcproxyUrl: this.config.ogcproxyUrl
-        });
-      }
-
 
       this.mapController = new MapController({
         mapContainer: this.mapNode,
         popupContainer: this.popupNode,
         perceelService: this.perceelService,
-        beschermingService: this.beschermingService,
         beschermingUrl: this.config.beschermingUrl,
         historicLayers: this.config.historicLayers || false,
         defaultBaseLayer: this.config.defaultBaseLayer || 'grb_bsk' // default
