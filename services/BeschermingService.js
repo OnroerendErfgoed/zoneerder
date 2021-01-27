@@ -8,7 +8,6 @@ define([
   return declare([WidgetBase], {
 
     beschermingWfsUrl: null,
-    ogcproxyUrl: null,
 
     postCreate: function () {
       this.inherited(arguments);
