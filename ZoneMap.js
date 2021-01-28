@@ -73,7 +73,6 @@ define([
           crabpyUrl: null,
           beschermingUrl: null,
           beschermingWfsUrl: null,
-          ogcproxyUrl: null,
           buttons: null,
           sidebar: null,
           tools: null
@@ -92,10 +91,9 @@ define([
         this.perceelService = new PerceelService({ url: this.config.perceelUrl });
       }
 
-      if (this.config.beschermingWfsUrl && this.config.ogcproxyUrl) {
+      if (this.config.beschermingWfsUrl) {
         this.beschermingService = new BeschermingService({
-          beschermingWfsUrl: this.config.beschermingWfsUrl,
-          ogcproxyUrl: this.config.ogcproxyUrl
+          beschermingWfsUrl: this.config.beschermingWfsUrl
         });
       }
 

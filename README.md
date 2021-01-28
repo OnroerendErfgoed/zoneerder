@@ -33,7 +33,6 @@ Voorbeeld config:
         perceelUrl: 'https://geoservices.informatievlaanderen.be/overdrachtdiensten/GRB/wfs',
         crabpyUrl: 'https://dev-geo.onroerenderfgoed.be',
         beschermingUrl: 'https://dev-geo.onroerenderfgoed.be/geoserver/wms',
-        beschermingWfsUrl: 'https://dev-geo.onroerenderfgoed.be/geoserver/wfs',
-        ogcproxyUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url='
+        beschermingWfsUrl: 'https://dev-geo.onroerenderfgoed.be/geoserver/wfs'
     };
 ```
