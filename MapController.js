@@ -35,6 +35,7 @@ define([
     perceelService: null,
     beschermingService: null,
     beschermingUrl: null,
+    ggaLayer: false,
     historicLayers: null,
     defaultBaseLayer: null,
     _drawPolygonIndex: 1,
@@ -171,7 +172,7 @@ define([
           })]
         })),
         type: 'overlay',
-        visible: true
+        visible: this.ggaLayer
       });
 
       var zoneLayer = this._createVectorLayer({
