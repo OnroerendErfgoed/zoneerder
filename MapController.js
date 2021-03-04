@@ -172,7 +172,7 @@ define([
           })]
         })),
         type: 'overlay',
-        visible: this.ggaLayer
+        visible: !!this.ggaLayer
       });
 
       var zoneLayer = this._createVectorLayer({
