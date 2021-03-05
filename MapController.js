@@ -35,6 +35,7 @@ define([
     perceelService: null,
     beschermingService: null,
     beschermingUrl: null,
+    ggaLayer: false,
     historicLayers: null,
     defaultBaseLayer: null,
     _drawPolygonIndex: 1,
@@ -159,6 +160,21 @@ define([
         type: 'overlay',
         visible: false
       });
+
+      var gebiedenGeenArcheologieLayer = new ol.layer.Tile({
+        title: 'Gebieden geen archeologie',
+        extent: this.mapProjection.getExtent(),
+        source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */({
+          url: this.beschermingUrl,
+          params: { 'LAYERS': 'vioe_geoportaal:gga_gewestelijk,vioe_geoportaal:gga_gemeentelijk', 'TILED': true }, 
+          attributions: [new ol.Attribution({
+            html: '© <a href="https://www.onroerenderfgoed.be">Onroerend Erfgoed</a>'
+          })]
+        })),
+        type: 'overlay',
+        visible: !!this.ggaLayer
+      });
+
       var zoneLayer = this._createVectorLayer({
         title: 'Zone',
         color: 'rgb(39, 146, 195)',
@@ -179,6 +195,7 @@ define([
           grb_gbgTileLayer,
           grb_adpTileLayer,
           beschermdWmsLayer,
+          gebiedenGeenArcheologieLayer,
           zoneLayer,
           oeFeaturesLayer
         ]

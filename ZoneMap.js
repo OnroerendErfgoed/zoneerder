@@ -97,13 +97,13 @@ define([
         });
       }
 
-
       this.mapController = new MapController({
         mapContainer: this.mapNode,
         popupContainer: this.popupNode,
         perceelService: this.perceelService,
         beschermingService: this.beschermingService,
         beschermingUrl: this.config.beschermingUrl,
+        ggaLayer: this.config.ggaLayer,
         historicLayers: this.config.historicLayers || false,
         defaultBaseLayer: this.config.defaultBaseLayer || 'grb_bsk' // default
       });
