@@ -167,7 +167,7 @@ define([
           case 'selectPerceel':
             iList.removeClass('fa-hand-o-up');
             spanList.innerHTML('Annuleer perceel selecteren');
-            this.mapController.startParcelSelect(lang.hitch(this, this._resetTools));
+            this.mapController.startParcelSelect();
             break;
           case 'selectBescherming':
             iList.removeClass('fa-hand-o-up');

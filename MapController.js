@@ -702,7 +702,7 @@ define([
       this.popup.enable();
     },
 
-    startParcelSelect: function (onEnd) {
+    startParcelSelect: function () {
       this.popup.disable();
 
       var controller = this,
@@ -711,14 +711,12 @@ define([
         perceelService = this.perceelService;
 
       var eventKey = map.on('click', function (evt) {
-        map.unByKey(eventKey);
         perceelService.searchPerceel(evt.coordinate).then(function (wfsresponse) {
           var perceel = perceelService.readWfs(wfsresponse);
           controller.drawPerceel(perceel);
         }, function (err) {
           console.error(err);
         }).always(function () {
-          onEnd();
           popup.enable();
         });
       });
