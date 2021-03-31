@@ -667,7 +667,7 @@ define([
       this.zoomToExtent(polygon.getGeometry().getExtent());
     },
 
-    startDraw: function (onEnd) {
+    startDraw: function () {
       //console.debug('Mapcontroller::startDraw');
       this.popup.disable();
       this.drawLayer.getSource().clear();
@@ -675,7 +675,7 @@ define([
       var drawInteraction = this.mapInteractions.draw;
       drawInteraction.setActive(true);
 
-      this.mapInteractions.drawKey = drawInteraction.once('drawend', function (evt) {
+      this.mapInteractions.drawKey = drawInteraction.on('drawend', function (evt) {
         //console.debug('Mapcontroller::startDraw::drawend');
         var name = 'Polygoon ' + this._drawPolygonIndex++;
         evt.feature.setProperties({
@@ -683,9 +683,8 @@ define([
         });
         this.polygonStore.put({id: name, naam: name, feature: evt.feature});
         window.setTimeout(lang.hitch(this, function () { //set timeout to prevent zoom after double click to end drawing
-          this.stopDraw();
+          this.drawLayer.getSource().clear();
           this.popup.enable();
-          onEnd();
         }, 0));
       }, this);
     },
@@ -730,7 +729,7 @@ define([
       this.popup.enable();
     },
 
-    startBeschermingSelect: function (onEnd) {
+    startBeschermingSelect: function () {
       this.popup.disable();
 
       var controller = this,
@@ -751,7 +750,6 @@ define([
             console.error(err);
           }
         ).always(function () {
-          onEnd();
           popup.enable();
         });
       });
