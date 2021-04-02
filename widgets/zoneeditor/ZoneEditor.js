@@ -162,17 +162,17 @@ define([
           case 'draw':
             iList.removeClass('fa-pencil');
             spanList.innerHTML('Annuleer tekenen');
-            this.mapController.startDraw(lang.hitch(this, this._resetTools));
+            this.mapController.startDraw();
             break;
           case 'selectPerceel':
             iList.removeClass('fa-hand-o-up');
             spanList.innerHTML('Annuleer perceel selecteren');
-            this.mapController.startParcelSelect(lang.hitch(this, this._resetTools));
+            this.mapController.startParcelSelect();
             break;
           case 'selectBescherming':
             iList.removeClass('fa-hand-o-up');
             spanList.innerHTML('Annuleer bescherming selecteren');
-            this.mapController.startBeschermingSelect(lang.hitch(this, this._resetTools));
+            this.mapController.startBeschermingSelect();
             break;
           case 'drawWkt':
             break;
