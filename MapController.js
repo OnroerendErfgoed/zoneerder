@@ -120,6 +120,8 @@ define([
           (this.defaultBaseLayer === 'vandermaelen')));
         baseLayers.push(this._createGrbLayer('abw', 'Atlas der Buurtwegen', (this.defaultBaseLayer === 'abw')));
       }
+      baseLayers.push(this._createGrbLayer('DHMV_II_HILL_25cm', 'DHMV II, multidirectionale hillshade 0,25m', (this.defaultBaseLayer === 'DHMV_II_HILL_25cm')));
+      baseLayers.push(this._createGrbLayer('DHMV_II_SVF_25cm', 'DHMV II, skyview factor 0,25m', (this.defaultBaseLayer === 'DHMV_II_SVF_25cm')));
       baseLayers.push(this._createGrbLayer('omwrgbmrvl', 'Orthofoto\'s', (this.defaultBaseLayer === 'omwrgbmrvl')));
       baseLayers.push(this._createMercatorWmtsLayer('lu:lu_gwp_rv_raster', 'Gewestplan',
         (this.defaultBaseLayer === 'gewestplan')));
