@@ -30,7 +30,7 @@ Voorbeeld config:
         historicLayers: true,
         erfgoedUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/afbakeningen',
         niscodeUrl: 'https://dev-geo.onroerenderfgoed.be/zoekdiensten/administratievegrenzen',
-        perceelUrl: 'https://geoservices.informatievlaanderen.be/overdrachtdiensten/GRB/wfs',
+        perceelUrl: 'https://geo.api.vlaanderen.be/GRB/wfs',
         crabpyUrl: 'https://dev-geo.onroerenderfgoed.be',
         beschermingUrl: 'https://dev-geo.onroerenderfgoed.be/geoserver/wms',
         beschermingWfsUrl: 'https://dev-geo.onroerenderfgoed.be/geoserver/wfs'
