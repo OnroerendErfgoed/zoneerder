@@ -53,7 +53,7 @@ define([
 
     readWfs: function (wfs) {
       var formatter = new ol.format.WFS({
-        featureNS: "informatievlaanderen.be/grb",
+        featureNS: "https://geo.api.vlaanderen.be/GRB",
         featureType: "ADP"
       });
       var features = formatter.readFeatures(wfs, {});
