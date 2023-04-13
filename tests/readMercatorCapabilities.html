@@ -50,7 +50,6 @@
     proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#31370', proj4.defs('EPSG:31370'));
 
 
-    //var ngiUrl = "http://www.ngi.be/cartoweb/1.0.0/WMTSCapabilities.xml";
     html.set(dom.byId("testNode"), "reading xml...");
     xhr('./resources/marcator.wmts.getcapabilities .xml', {
       handleAs: "xml"
