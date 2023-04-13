@@ -1,404 +1,1206 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <Capabilities xmlns="http://www.opengis.net/wmts/1.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml" xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs_ows11/1.0" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xsi:schemaLocation="http://www.opengis.net/wmts/1.0 http://schemas.opengis.net/wmts/1.0/wmtsGetCapabilities_response.xsd http://inspire.ec.europa.eu/schemas/inspire_vs_ows11/1.0 http://inspire.ec.europa.eu/schemas/inspire_vs_ows11/1.0/inspire_vs_ows_11.xsd http://inspire.ec.europa.eu/schemas/common/1.0 http://inspire.ec.europa.eu/schemas/common/1.0/common.xsd" version="1.0.0">
-<ows:ServiceIdentification>
-<ows:Title xml:lang="nl">Viewservice WMTS</ows:Title>
-<ows:Title xml:lang="fr">Service de visualisation WMTS</ows:Title>
-<ows:Abstract xml:lang="nl">
-CartoWeb is een webservice (Web Map Tile Service) met kaartweergaven op 11 verschillende schaalniveaus (1:2500 - 1:4 000 000).De kaartvoorstelling die hiervoor werd ontwikkeld, is specifiek aangepast voor weergave op het scherm en bestrijkt 11 schaalniveaus (1:2500 tot 1:4 000 000). Cartoweb biedt een kaartvoorstelling van de meest bijgewerkte vectoriële referentiedatasets van het NGI. Er zijn twee versies beschikbaar: 1) een TOPO-laag, met een kaartweergave op alle schalen. 2) een OVERLAY-laag, die bedoeld is om als overdruk op andere achtergrondgegevens gelegd te worden.Deze laag bevat alleen maar de symbolisatie van enkele thema’s.
-</ows:Abstract>
-<ows:Abstract xml:lang="fr">
-CartoWeb est un web-service (Web Map Tile Service) comprenant des représentations cartographiques qui couvrent 11 niveaux d’échelle différents (1 :2 500 - 1 :4 000 000). CartoWeb offre une représentation cartographique, spécifiquement développée pour une visualisation à l’écran, des sets de données vectoriels de référence les plus à jour de l'IGN. Deux versions sont disponibles : 1) une couche TOPO, reprenant une représentation cartographique à toutes les échelles. 2) une couche OVERLAY, destinée à être appliquée en surcharge à d'autres données en fond (des orthophotos par exemple). Cette couche ne reprend la symbolisation que de quelques thèmes uniquement.
-</ows:Abstract>
-<ows:Keywords>
-<ows:Keyword xml:lang="fr">Carte topographique de base</ows:Keyword>
-<ows:Keyword xml:lang="fr">Bâtiments</ows:Keyword>
-<ows:Keyword xml:lang="fr">Hydrographie</ows:Keyword>
-<ows:Keyword xml:lang="fr">Réseaux (Routes, Rails)</ows:Keyword>
-<ows:Keyword xml:lang="fr">Unités administratives</ows:Keyword>
-<ows:Keyword xml:lang="fr">LandCover</ows:Keyword>
-<ows:Keyword xml:lang="fr">Réseau haute tension</ows:Keyword>
-<ows:Keyword xml:lang="fr">Altimétrie</ows:Keyword>
-<ows:Keyword xml:lang="fr">Toponymie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Topografische basiskaart</ows:Keyword>
-<ows:Keyword xml:lang="nl">Gebouwen</ows:Keyword>
-<ows:Keyword xml:lang="nl">Hydrografie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Netwerken (wegen, spoorwegen)</ows:Keyword>
-<ows:Keyword xml:lang="nl">Administratieve eenheden</ows:Keyword>
-<ows:Keyword xml:lang="nl">LandCover</ows:Keyword>
-<ows:Keyword xml:lang="nl">Hoogspanningsnetwerk</ows:Keyword>
-<ows:Keyword xml:lang="nl">Altimetrie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Toponymie</ows:Keyword>
-</ows:Keywords>
-<ows:ServiceType>OGC WMTS</ows:ServiceType>
-<ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
-<ows:AccessConstraints>
-http://www.ngi.be/cartoweb/cartoweb_gebruiksvoorwaarden.pdf - http://www.ngi.be/cartoweb/cartoweb_conditions.pdf
-</ows:AccessConstraints>
-</ows:ServiceIdentification>
-<ows:ServiceProvider>
-<ows:ProviderName>NGI - IGN</ows:ProviderName>
-<ows:ProviderSite xlink:href="http://www.ngi.be"/>
-<ows:ServiceContact>
-<ows:ContactInfo>
-<ows:Address>
-<ows:ElectronicMailAddress>cartoweb@ngi.be</ows:ElectronicMailAddress>
-</ows:Address>
-</ows:ContactInfo>
-</ows:ServiceContact>
-</ows:ServiceProvider>
-<!-- START custom edit - this was added manually!!! -->
-<ows:OperationsMetadata>
-<ows:Operation name="GetCapabilities">
-<ows:DCP>
-<ows:HTTP>
-<ows:Get xlink:href="http://www.ngi.be/cartoweb/1.0.0/WMTSCapabilities.xml">
-<ows:Constraint name="GetEncoding">
-<ows:AllowedValues>
-<ows:Value>REST</ows:Value>
-</ows:AllowedValues>
-</ows:Constraint>
-</ows:Get>
-</ows:HTTP>
-</ows:DCP>
-</ows:Operation>
-<ows:Operation name="GetTile">
-<ows:DCP>
-<ows:HTTP>
-<ows:Get xlink:href="http://www.ngi.be/cartoweb/1.0.0/">
-<ows:Constraint name="GetEncoding">
-<ows:AllowedValues>
-<ows:Value>RESTful</ows:Value>
-</ows:AllowedValues>
-</ows:Constraint>
-</ows:Get>
-</ows:HTTP>
-</ows:DCP>
-</ows:Operation>
-</ows:OperationsMetadata>
-<!-- END edit -->
-<Contents>
-<Layer>
-<ows:Title xml:lang="nl">CartoWeb-TOPO</ows:Title>
-<ows:Title xml:lang="fr">CartoWeb-TOPO</ows:Title>
-<ows:Abstract xml:lang="nl">
-De TOPO-laag lijkt op een “traditionele” kaartweergave, die alle schalen bestrijkt (1:4 000 000, 1:2 000 000, 1:800 000, 1:500 000, 1:250 000, 1:100 000, 1:50 000, 1:25 000, 1:10 000, 1:5 000, 1:2 500). Dankzij deze verschillende schalen kunnen verschillende types informatie weergegeven worden : Op de kleinste schalen maken de zeer gegeneraliseerde kaarten het mogelijk slechts één thema te benadrukken, zoals de administratieve eenheden of de belangrijkste netwerken. Op de middenschalige weergaven vindt men de typische topografische kaarten van het Nationaal Geografisch Instituut. Deze kaarten zijn dus middelen waarmee men het terrein kan interpreteren, zijn positie kan bepalen en zich oriënteren. De grootste schalen, die zeer gedetailleerd zijn, lijken meer op plannen. Ze hebben hun eigen specifiek nut maar geven geen goed globaal beeld van het landschap.
-</ows:Abstract>
-<ows:Abstract xml:lang="fr">
-La coucheTOPO s’apparente à une représentation cartographique « traditionnelle », couvrant toutes les échelles (1:4 000 000, 1:2 000 000, 1:800 000, 1:500 000, 1:250 000, 1:100 000, 1:50 000, 1:25 000, 1:10 000, 1:5 000, 1:2 500). Cette diversité d’échelles a permis de représenter différents types d’informations : Aux plus petites échelles, les cartes très généralisées permettent de ne mettre en évidence qu’un thème ou l’autre tel que les entités administratives ou les réseaux principaux, tandis que les échelles intermédiaires offrent des cartes topographiques caractéristiques de l’Institut géographique national. Ces cartes sont donc des outils permettant d’interpréter le terrain, de se localiser, et de s’orienter. Les plus grandes échelles, extrêmement détaillées, s’apparentent plus à des plans, ayant leur utilité spécifique mais ne permettant pas d’avoir un bon aperçu global du paysage.
-</ows:Abstract>
-<ows:Keywords>
-<ows:Keyword xml:lang="fr">Carte topographique de base</ows:Keyword>
-<ows:Keyword xml:lang="fr">Bâtiments</ows:Keyword>
-<ows:Keyword xml:lang="fr">Hydrographie</ows:Keyword>
-<ows:Keyword xml:lang="fr">Réseaux (Routes, Rails)</ows:Keyword>
-<ows:Keyword xml:lang="fr">Unités administratives</ows:Keyword>
-<ows:Keyword xml:lang="fr">LandCover</ows:Keyword>
-<ows:Keyword xml:lang="fr">Réseau haute tension</ows:Keyword>
-<ows:Keyword xml:lang="fr">Altimétrie</ows:Keyword>
-<ows:Keyword xml:lang="fr">Toponymie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Topografische basiskaart</ows:Keyword>
-<ows:Keyword xml:lang="nl">Gebouwen</ows:Keyword>
-<ows:Keyword xml:lang="nl">Hydrografie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Netwerken (wegen, spoorwegen)</ows:Keyword>
-<ows:Keyword xml:lang="nl">Administratieve eenheden</ows:Keyword>
-<ows:Keyword xml:lang="nl">LandCover</ows:Keyword>
-<ows:Keyword xml:lang="nl">Hoogspanningsnetwerk</ows:Keyword>
-<ows:Keyword xml:lang="nl">Altimetrie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Toponymie</ows:Keyword>
-</ows:Keywords>
-<ows:WGS84BoundingBox>
-<ows:LowerCorner>2.54 49.49</ows:LowerCorner>
-<ows:UpperCorner>6.41 51.51</ows:UpperCorner>
-</ows:WGS84BoundingBox>
-<ows:Identifier>topo</ows:Identifier>
-<Style isDefault="true">
-<ows:Identifier>default</ows:Identifier>
-<LegendURL format="image/png" xlink:href="http://www.ngi.be/cartoweb/legend/topo/default/nl.png"/>
-<LegendURL format="image/png" xlink:href="http://www.ngi.be/cartoweb/legend/topo/default/fr.png"/>
-</Style>
-<Format>image/png</Format>
-<InfoFormat>text/plain</InfoFormat>
-<TileMatrixSetLink>
-<TileMatrixSet>3812</TileMatrixSet>
-</TileMatrixSetLink>
-<TileMatrixSetLink>
-<TileMatrixSet>3857</TileMatrixSet>
-<TileMatrixSetLimits>
-<TileMatrixLimits>
-<TileMatrix>7</TileMatrix>
-<MinTileRow>40</MinTileRow>
-<MaxTileRow>43</MaxTileRow>
-<MinTileCol>64</MinTileCol>
-<MaxTileCol>66</MaxTileCol>
-</TileMatrixLimits>
-</TileMatrixSetLimits>
-</TileMatrixSetLink>
-<ResourceURL resourceType="tile" template="http://www.ngi.be/cartoweb/1.0.0/topo/{style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" format="image/png"/>
-</Layer>
-<Layer>
-<ows:Title xml:lang="nl">CartoWeb-OVERLAY</ows:Title>
-<ows:Title xml:lang="fr">CartoWeb-OVERLAY</ows:Title>
-<ows:Abstract xml:lang="nl">
-De OVERLAY-laag, die alleen voor de vier grootste schalen beschikbaar is (1:25 000, 1:10 000, 1:5 000, 1:2 500).Deze versie bevat alleen de symbolisatie van enkele thema’s (wegennet, gebouwen, bodemgebruik (gedeeltelijk), hydrografie, toponymie), waardoor deze laag doeltreffend over andere gegevens zoals orthofoto’s gelegd kan worden.
-</ows:Abstract>
-<ows:Abstract xml:lang="fr">
-La couche OVERLAY, disponible uniquement aux 4 plus grandes échelles (1:25 000, 1:10 000, 1:5 000, 1:2 500). Cette version reprend la symbolisation cartographique de quelques thèmes uniquement (Réseau routier, bâtiments, partiellement l’occupation du sol, hydrographie, toponymie), ce qui permet de superposer efficacement cette couche à d’autres données, notamment de type orthophotos.
-</ows:Abstract>
-<ows:Keywords>
-<ows:Keyword xml:lang="fr">Carte topographique de base</ows:Keyword>
-<ows:Keyword xml:lang="fr">Bâtiments</ows:Keyword>
-<ows:Keyword xml:lang="fr">Hydrographie</ows:Keyword>
-<ows:Keyword xml:lang="fr">Réseaux (Routes, Rails)</ows:Keyword>
-<ows:Keyword xml:lang="fr">Unités administratives</ows:Keyword>
-<ows:Keyword xml:lang="fr">LandCover</ows:Keyword>
-<ows:Keyword xml:lang="fr">Réseau haute tension</ows:Keyword>
-<ows:Keyword xml:lang="fr">Altimétrie</ows:Keyword>
-<ows:Keyword xml:lang="fr">Toponymie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Topografische basiskaart</ows:Keyword>
-<ows:Keyword xml:lang="nl">Gebouwen</ows:Keyword>
-<ows:Keyword xml:lang="nl">Hydrografie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Netwerken (wegen, spoorwegen)</ows:Keyword>
-<ows:Keyword xml:lang="nl">Administratieve eenheden</ows:Keyword>
-<ows:Keyword xml:lang="nl">LandCover</ows:Keyword>
-<ows:Keyword xml:lang="nl">Hoogspanningsnetwerk</ows:Keyword>
-<ows:Keyword xml:lang="nl">Altimetrie</ows:Keyword>
-<ows:Keyword xml:lang="nl">Toponymie</ows:Keyword>
-</ows:Keywords>
-<ows:WGS84BoundingBox>
-<ows:LowerCorner>2.5400 49.5100</ows:LowerCorner>
-<ows:UpperCorner>6.4 51.500</ows:UpperCorner>
-</ows:WGS84BoundingBox>
-<ows:Identifier>overlay</ows:Identifier>
-<Style isDefault="true">
-<ows:Identifier>default</ows:Identifier>
-<LegendURL format="image/png" xlink:href="http://www.ngi.be/cartoweb/legend/overlay/default/nl.png"/>
-<LegendURL format="image/png" xlink:href="http://www.ngi.be/cartoweb/legend/overlay/default/fr.png"/>
-</Style>
-<Format>image/png</Format>
-<InfoFormat>text/plain</InfoFormat>
-<TileMatrixSetLink>
-<TileMatrixSet>3812</TileMatrixSet>
-</TileMatrixSetLink>
-<TileMatrixSetLink>
-<TileMatrixSet>3857</TileMatrixSet>
-<TileMatrixSetLimits>
-<TileMatrixLimits>
-<TileMatrix>7</TileMatrix>
-<MinTileRow>40</MinTileRow>
-<MaxTileRow>43</MaxTileRow>
-<MinTileCol>64</MinTileCol>
-<MaxTileCol>66</MaxTileCol>
-</TileMatrixLimits>
-</TileMatrixSetLimits>
-</TileMatrixSetLink>
-<ResourceURL resourceType="tile" template="http://www.ngi.be/cartoweb/1.0.0/overlay/{style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" format="image/png"/>
-</Layer>
-<TileMatrixSet>
-<ows:Identifier>3812</ows:Identifier>
-<ows:SupportedCRS>urn:ogc:def:crs:EPSG::3812</ows:SupportedCRS>
-<TileMatrix>
-<ows:Identifier>0</ows:Identifier>
-<ScaleDenominator>3779761.90476</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>8</MatrixWidth>
-<MatrixHeight>8</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>1</ows:Identifier>
-<ScaleDenominator>1889880.95238</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>8</MatrixWidth>
-<MatrixHeight>8</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>2</ows:Identifier>
-<ScaleDenominator>755952.380952</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>8</MatrixWidth>
-<MatrixHeight>8</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>3</ows:Identifier>
-<ScaleDenominator>472470.238095</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>16</MatrixWidth>
-<MatrixHeight>16</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>4</ows:Identifier>
-<ScaleDenominator>236235.119048</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>32</MatrixWidth>
-<MatrixHeight>32</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>5</ows:Identifier>
-<ScaleDenominator>94494.047619</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>64</MatrixWidth>
-<MatrixHeight>64</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>6</ows:Identifier>
-<ScaleDenominator>47247.0238095</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>128</MatrixWidth>
-<MatrixHeight>128</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>7</ows:Identifier>
-<ScaleDenominator>23623.5119048</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>256</MatrixWidth>
-<MatrixHeight>256</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>8</ows:Identifier>
-<ScaleDenominator>9449.4047619</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>512</MatrixWidth>
-<MatrixHeight>512</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>9</ows:Identifier>
-<ScaleDenominator>4724.70238095</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>1024</MatrixWidth>
-<MatrixHeight>1024</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>10</ows:Identifier>
-<ScaleDenominator>2362.35119048</ScaleDenominator>
-<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>2048</MatrixWidth>
-<MatrixHeight>2048</MatrixHeight>
-</TileMatrix>
-</TileMatrixSet>
-<TileMatrixSet>
-<ows:Identifier>3857</ows:Identifier>
-<ows:SupportedCRS>urn:ogc:def:crs:EPSG::3857</ows:SupportedCRS>
-<TileMatrix>
-<ows:Identifier>7</ows:Identifier>
-<ScaleDenominator>4367830.189732144</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>67</MatrixWidth>
-<MatrixHeight>44</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>8</ows:Identifier>
-<ScaleDenominator>2183915.094866072</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>133</MatrixWidth>
-<MatrixHeight>88</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>9</ows:Identifier>
-<ScaleDenominator>1091957.547433036</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>266</MatrixWidth>
-<MatrixHeight>175</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>10</ows:Identifier>
-<ScaleDenominator>545978.773716518</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>531</MatrixWidth>
-<MatrixHeight>350</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>11</ows:Identifier>
-<ScaleDenominator>272989.386858259</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>1061</MatrixWidth>
-<MatrixHeight>700</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>12</ows:Identifier>
-<ScaleDenominator>136494.6934291295</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>2122</MatrixWidth>
-<MatrixHeight>1400</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>13</ows:Identifier>
-<ScaleDenominator>68247.34671456474</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>4243</MatrixWidth>
-<MatrixHeight>2799</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>14</ows:Identifier>
-<ScaleDenominator>34123.67335728237</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>8486</MatrixWidth>
-<MatrixHeight>5597</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>15</ows:Identifier>
-<ScaleDenominator>17061.836678641186</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>16972</MatrixWidth>
-<MatrixHeight>11193</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>16</ows:Identifier>
-<ScaleDenominator>8530.918339320593</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>33944</MatrixWidth>
-<MatrixHeight>22386</MatrixHeight>
-</TileMatrix>
-<TileMatrix>
-<ows:Identifier>17</ows:Identifier>
-<ScaleDenominator>4265.4591696602965</ScaleDenominator>
-<TopLeftCorner>-20037508.3427870013 20037508.3427870013</TopLeftCorner>
-<TileWidth>256</TileWidth>
-<TileHeight>256</TileHeight>
-<MatrixWidth>67888</MatrixWidth>
-<MatrixHeight>44771</MatrixHeight>
-</TileMatrix>
-</TileMatrixSet>
-</Contents>
-<!-- Mandatory in resource oriented architectural style -->
-<ServiceMetadataURL xlink:href="http://www.ngi.be/cartoweb/1.0.0/WMTSCapabilities.xml"/>
+	<ows:ServiceIdentification>
+		<ows:Title>CartoWeb.be</ows:Title>
+		<ows:Abstract xml:lang="nl">CartoWeb.be is een webservice (WMTS/WMS) met kaartweergaven op 11 verschillende schaalniveaus. De kaartvoorstelling die hiervoor werd ontwikkeld, is specifiek aangepast voor weergave op het scherm en bestrijkt 11 schaalniveaus. CartoWeb.be biedt een kaartvoorstelling van de meest bijgewerkte vectoriële referentiedatasets van het NGI. Er zijn drie versies beschikbaar voor het Belgische grondgebied: 1) een TOPO-laag, met een kaartweergave op alle schalen. 2) een GREY-laag, die de « grisé »-versie is van de TOPO-laag. Zij vormt een perfecte kaartachtergrond. 3) een OVERLAY-laag, die bedoeld is om als overdruk op andere achtergrondgegevens gelegd te worden. Deze laag bevat alleen maar de symbolisatie van enkele thema’s. Er is een vierde laag, CROSSBORDER, beschikbaar om de België in zijn Europese context weer te geven (alleen op de kleine schalen).</ows:Abstract>
+		<ows:Abstract xml:lang="fr">CartoWeb.be est un web-service (WMTS/WMS) comprenant des représentations cartographiques qui couvrent 11 niveaux d’échelle différents (1 :2 500 - 1 :4 000 000). CartoWeb.be offre une représentation cartographique, spécifiquement développée pour une visualisation à l’écran, des sets de données vectoriels de référence les plus à jour de l’IGN. Trois versions sont disponibles pour le territoire belge: 1) une couche TOPO, reprenant une représentation cartographique à toutes les échelles. 2) une couche GREY, qui est la version « grisée » de la couche TOPO, elle convient parfaitement comme fond de carte 3) une couche OVERLAY, destinée à être appliquée en surcharge à d’autres données en fond (des orthophotos par exemple). Cette couche ne reprend la symbolisation que de quelques thèmes uniquement. Une quatrième couche permet aux petites échelles de visualiser le contexte européen dans lequel s’inscrit la Belgique.</ows:Abstract>
+		<ows:Abstract xml:lang="en">CartoWeb.be is a Web Service (WMTS/WMS) containing cartographic representations covering 11 scale levels. CartoWeb.be offers a cartographic representation which has been developed specifically for on-screen viewing of the NGI’s most recent vector data sets. Three versions are available for the Belgian territory: 1) a TOPO layer containing a cartographic representation at all scales; 2) a GREY layer, which is the symbolisation in different shades of grey and blue of the TOPO layer. It constitutes an ideal map background; 3) an OVERLAY layer destined to be used as an overlay on other data (orthophotographs for instance). This layer contains the symbolisation of a few layers only. A fourth layer, CROSSBORDER, is available in order to allow viewing (only on the smallest scales) the European context of Belgium.</ows:Abstract>
+		<ows:Abstract xml:lang="de">CartoWeb.be ist ein Webservice (WMTS/WMS) mit kartographischen Darstellungen, die 11 verschiedene Maßstabsebenen deckt. CartoWeb.be bietet eine speziell bildschirmangepasste kartographische Darstellung der aktuellsten Referenzvektordatasets des NGI. Vier Versionen sind verfügbar das belgische Territorium: 1) eine TOPO-Schicht mit einer kartographischen Darstellung auf aller Maßstäben. 2) eine GREY-Schicht, die die grau unterlegte Graustufen-Version der TOPO-Schicht ist. Sie ist ideal als Kartenuntergrund 3) eine OVERLAY-Schicht, zur Benutzung als Überdruck auf anderen Untergrundsdaten (zum Beispiel Orthophotos). Diese Schicht nimmt die Symbolisierung von nur einigen Themen auf. Eine vierte Schicht, nämlich CROSSBORDER, gibt die Möglichkeit (nur auf den kleinen Maßstäben) Belgien in seinem europäischen Kontext zu visualisieren.</ows:Abstract>
+		<ows:Keywords>
+			<ows:Keyword xml:lang="nl">bebouwde omgeving</ows:Keyword>
+			<ows:Keyword xml:lang="fr">environnement bâti</ows:Keyword>
+			<ows:Keyword xml:lang="en">built environment</ows:Keyword>
+			<ows:Keyword xml:lang="de">Gebaute Umwelt</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">hydrografie</ows:Keyword>
+			<ows:Keyword xml:lang="fr">hydrographie</ows:Keyword>
+			<ows:Keyword xml:lang="en">hydrography</ows:Keyword>
+			<ows:Keyword xml:lang="de">Hydrographie</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">wegennet</ows:Keyword>
+			<ows:Keyword xml:lang="fr">réseau routier</ows:Keyword>
+			<ows:Keyword xml:lang="en">road network</ows:Keyword>
+			<ows:Keyword xml:lang="de">Straßennetz</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">spoorwegnet</ows:Keyword>
+			<ows:Keyword xml:lang="fr">réseau ferroviaire</ows:Keyword>
+			<ows:Keyword xml:lang="en">railway network</ows:Keyword>
+			<ows:Keyword xml:lang="de">Eisenbahnnetz</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">bestuurlijke grens</ows:Keyword>
+			<ows:Keyword xml:lang="fr">limite administrative</ows:Keyword>
+			<ows:Keyword xml:lang="en">administrative boundary</ows:Keyword>
+			<ows:Keyword xml:lang="de">Verwaltungsgrenze</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">landgebruik</ows:Keyword>
+			<ows:Keyword xml:lang="fr">occupation du sol</ows:Keyword>
+			<ows:Keyword xml:lang="en">land occupation</ows:Keyword>
+			<ows:Keyword xml:lang="de">Flächennutzung</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">hoogspanningsleiding</ows:Keyword>
+			<ows:Keyword xml:lang="fr">ligne à haute tension</ows:Keyword>
+			<ows:Keyword xml:lang="en">high voltage line</ows:Keyword>
+			<ows:Keyword xml:lang="de">Hochspannungsleitung</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">hoogte</ows:Keyword>
+			<ows:Keyword xml:lang="fr">altitude</ows:Keyword>
+			<ows:Keyword xml:lang="en">altitude</ows:Keyword>
+			<ows:Keyword xml:lang="de">Höhe</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">nomenclatuur</ows:Keyword>
+			<ows:Keyword xml:lang="fr">nomenclature</ows:Keyword>
+			<ows:Keyword xml:lang="en">nomenclature</ows:Keyword>
+			<ows:Keyword xml:lang="de">Nomenklatur</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">landsgrens</ows:Keyword>
+			<ows:Keyword xml:lang="fr">frontière nationale</ows:Keyword>
+			<ows:Keyword xml:lang="en">national boundary</ows:Keyword>
+			<ows:Keyword xml:lang="de">Staatsgrenze</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">federale regering</ows:Keyword>
+			<ows:Keyword xml:lang="fr">gouvernement fédéral</ows:Keyword>
+			<ows:Keyword xml:lang="en">federal government</ows:Keyword>
+			<ows:Keyword xml:lang="de">Bundesregierung</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">reliëf</ows:Keyword>
+			<ows:Keyword xml:lang="fr">relief</ows:Keyword>
+			<ows:Keyword xml:lang="en">relief (land)</ows:Keyword>
+			<ows:Keyword xml:lang="de">Relief</ows:Keyword>
+
+			<ows:Keyword xml:lang="nl">binnengrens</ows:Keyword>
+			<ows:Keyword xml:lang="fr">frontière infranationale</ows:Keyword>
+			<ows:Keyword xml:lang="en">sub-national boundary</ows:Keyword>
+			<ows:Keyword xml:lang="de">Innerstaatliche Grenze</ows:Keyword>
+		</ows:Keywords>
+		<ows:ServiceType>OGC WMTS</ows:ServiceType>
+		<ows:ServiceTypeVersion>1.0.0</ows:ServiceTypeVersion>
+		<ows:AccessConstraints>
+			nl: https://www.ngi.be/website/gebruiksvoorwaarden-cartoweb-be/ | fr: https://www.ngi.be/website/fr/conditions-dutilisation-pour-le-service-cartoweb-be/
+		</ows:AccessConstraints>
+	</ows:ServiceIdentification>
+	<ows:ServiceProvider>
+		<ows:ProviderName>NGI - IGN</ows:ProviderName>
+		<ows:ProviderSite xlink:href="http://www.ngi.be"/>
+		<ows:ServiceContact>
+			<ows:ContactInfo>
+				<ows:Address>
+					<ows:ElectronicMailAddress>cartoweb@ngi.be</ows:ElectronicMailAddress>
+				</ows:Address>
+			</ows:ContactInfo>
+		</ows:ServiceContact>
+	</ows:ServiceProvider>
+	<Contents>
+		<Layer>
+			<ows:Title>CartoWeb-CROSSBORDER</ows:Title>
+			<ows:Abstract xml:lang="nl">De CROSSBORDER-laag van de dienst CartoWeb.be (WMS/WMTS) is beschikbaar op 6 schaalniveaus (1:100 000 – 1:4 000 000). Ze bevat een symbolisatie die vergelijkbaar is met die van de TOPO-laag, toegepast op de Europese gegevens (EuroGeographics) en overdekt een oppervlakte die het mogelijk maakt België in zijn Europese context te tonen. Deze laag wordt het best bekeken “onder” de TOPO-laag.</ows:Abstract>
+			<ows:Abstract xml:lang="fr">La couche CROSSBORDER du service CartoWeb.be (WMS/WMTS) est disponible sur 6 niveaux d’échelles (1:100 000 – 1:4 000 000). Elle reprend une symbolisation similaire à celle de la couche TOPO, appliquée aux données européennes (EuroGeographics), sur une emprise limitée permettant d’inscrire la Belgique dans son contexte européen. Idéalement, cette couche doit être visualisée en étant placée « sous » la couche TOPO.</ows:Abstract>
+			<ows:Abstract xml:lang="en">The CROSSBORDER layer of the CartoWeb.be service (WMS/WMTS) is available in 6 scale levels (1:100 000 – 1:4 000 000). It uses a symbolization similar to the one used by the TOPO layer and applied to European data (EuroGeographics). It has a limited crossborder extent meant to situate Belgium within the European context. Ideally, this layer shall be viewed as placed “under” the TOPO layer.</ows:Abstract>
+			<ows:Abstract xml:lang="de">Die CROSSBORDER-Schicht des Service CartoWeb.be (WMS/WMTS) ist auf 6 Maßstabsebenen (1:100 000 – 1:4 000 000) verfügbar. Sie verwendet eine Symbolisierung, die mit der Symbolisierung der TOPO-Schicht vergleichbar ist und, die auf die europäischen Daten (EuroGeographics) angewendet wird. Sie deckt eine begrenzte grenzüberschreitende Grundfläche, womit der europäische Kontext Belgiens deutlich gemacht wird. Ideal soll diese Schicht als „Unterdruck“ der TOPO-Schicht sichtbar gemacht werden.</ows:Abstract>
+			<ows:Keywords>
+				<ows:Keyword xml:lang="nl">bebouwde omgeving</ows:Keyword>
+				<ows:Keyword xml:lang="fr">environnement bâti</ows:Keyword>
+				<ows:Keyword xml:lang="en">built environment</ows:Keyword>
+				<ows:Keyword xml:lang="de">Gebaute Umwelt</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hydrografie</ows:Keyword>
+				<ows:Keyword xml:lang="fr">hydrographie</ows:Keyword>
+				<ows:Keyword xml:lang="en">hydrography</ows:Keyword>
+				<ows:Keyword xml:lang="de">Hydrographie</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">wegennet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau routier</ows:Keyword>
+				<ows:Keyword xml:lang="en">road network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Straßennetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">spoorwegnet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau ferroviaire</ows:Keyword>
+				<ows:Keyword xml:lang="en">railway network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Eisenbahnnetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">bestuurlijke grens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">limite administrative</ows:Keyword>
+				<ows:Keyword xml:lang="en">administrative boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Verwaltungsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landgebruik</ows:Keyword>
+				<ows:Keyword xml:lang="fr">occupation du sol</ows:Keyword>
+				<ows:Keyword xml:lang="en">land occupation</ows:Keyword>
+				<ows:Keyword xml:lang="de">Flächennutzung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">nomenclatuur</ows:Keyword>
+				<ows:Keyword xml:lang="fr">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="en">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="de">Nomenklatur</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landsgrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière nationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Staatsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">binnengrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière infranationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">sub-national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Innerstaatliche Grenze</ows:Keyword>
+			</ows:Keywords>
+			<ows:WGS84BoundingBox>
+				<ows:LowerCorner>-5.63367890602 46.7301966169</ows:LowerCorner>
+				<ows:UpperCorner>14.3740682877 54.7456830692</ows:UpperCorner>
+			</ows:WGS84BoundingBox>
+			<ows:Identifier>crossborder</ows:Identifier>
+			<Style isDefault="true">
+				<ows:Identifier>default</ows:Identifier>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_nl.png"/>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_fr.png"/>
+			</Style>
+			<Format>image/png</Format>
+			<InfoFormat>text/plain</InfoFormat>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3812_crossborder</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>0</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>4</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>5</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>1</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>7</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>10</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>2</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>16</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>24</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>3</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>26</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>39</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>4</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>51</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>77</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>5</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>127</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>192</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3857</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>7</TileMatrix>
+						<MinTileRow>40</MinTileRow>
+						<MaxTileRow>46</MaxTileRow>
+						<MinTileCol>61</MinTileCol>
+						<MaxTileCol>70</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>8</TileMatrix>
+						<MinTileRow>81</MinTileRow>
+						<MaxTileRow>91</MaxTileRow>
+						<MinTileCol>123</MinTileCol>
+						<MaxTileCol>139</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>9</TileMatrix>
+						<MinTileRow>162</MinTileRow>
+						<MaxTileRow>181</MaxTileRow>
+						<MinTileCol>247</MinTileCol>
+						<MaxTileCol>277</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>10</TileMatrix>
+						<MinTileRow>325</MinTileRow>
+						<MaxTileRow>362</MaxTileRow>
+						<MinTileCol>495</MinTileCol>
+						<MaxTileCol>553</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>11</TileMatrix>
+						<MinTileRow>650</MinTileRow>
+						<MaxTileRow>723</MaxTileRow>
+						<MinTileCol>991</MinTileCol>
+						<MaxTileCol>1106</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>12</TileMatrix>
+						<MinTileRow>1300</MinTileRow>
+						<MaxTileRow>1446</MaxTileRow>
+						<MinTileCol>1983</MinTileCol>
+						<MaxTileCol>2212</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<ResourceURL resourceType="tile" template="https://cartoweb.wmts.ngi.be/1.0.0/crossborder/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" format="image/png"/>
+			</Layer>
+		<Layer>
+			<ows:Title>CartoWeb-OVERLAY</ows:Title>
+			<ows:Abstract xml:lang="nl">De OVERLAY-laag van de dienst CartoWeb.be (WMS/WMTS) is beschikbaar op 4 schaalniveaus (1:2500 1:25 000). Ze bevat alleen een symbolisatie van enkele thema’s en is bestemd om geplaatst te worden boven andere gegevens van de gebruiker, zoals orthofoto’s. Ze overdekt alleen het Belgische grondgebied.</ows:Abstract>
+			<ows:Abstract xml:lang="fr">La couche OVERLAY du service CartoWeb.be (WMS/WMTS) est disponible sur 4 niveaux d’échelles (1:2 500 – 1:25 000). Elle reprend une symbolisation de quelques thèmes uniquement et est destinée à être utilisée en superposition d’autres données en possession de l’utilisateur telles que des orthophotos. Son emprise est limitée à la Belgique.</ows:Abstract>
+			<ows:Abstract xml:lang="en">The OVERLAY layer of the CartoWeb.be service (WMS/WMTS) is available in 4 scale levels (1:2 500 – 1:25 000). It applies a limited symbolization of a few themes and is meant to be used as surcharge on other data owned by the user such as orthophotographs. Its extent is limited to the Belgian territory.</ows:Abstract>
+			<ows:Abstract xml:lang="de">Die OVERLAY-Schicht des Service CartoWeb.be (WMS/WMTS) ist auf 4 Maßstabsebenen (1:2 500 – 1:25 000) verfügbar. Sie verwendet eine Symbolisierung von nur einigen Themen und soll als Überdruck auf anderen Daten des Benutzers (wie zum B. Orthophotos) benutzt werden. Sie deckt nur das belgische Territorium.</ows:Abstract>
+			<ows:Keywords>
+				<ows:Keyword xml:lang="nl">bebouwde omgeving</ows:Keyword>
+				<ows:Keyword xml:lang="fr">environnement bâti</ows:Keyword>
+				<ows:Keyword xml:lang="en">built environment</ows:Keyword>
+				<ows:Keyword xml:lang="de">Gebaute Umwelt</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hydrografie</ows:Keyword>
+				<ows:Keyword xml:lang="fr">hydrographie</ows:Keyword>
+				<ows:Keyword xml:lang="en">hydrography</ows:Keyword>
+				<ows:Keyword xml:lang="de">Hydrographie</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">wegennet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau routier</ows:Keyword>
+				<ows:Keyword xml:lang="en">road network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Straßennetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">spoorwegnet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau ferroviaire</ows:Keyword>
+				<ows:Keyword xml:lang="en">railway network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Eisenbahnnetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">bestuurlijke grens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">limite administrative</ows:Keyword>
+				<ows:Keyword xml:lang="en">administrative boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Verwaltungsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landgebruik</ows:Keyword>
+				<ows:Keyword xml:lang="fr">occupation du sol</ows:Keyword>
+				<ows:Keyword xml:lang="en">land occupation</ows:Keyword>
+				<ows:Keyword xml:lang="de">Flächennutzung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hoogspanningsleiding</ows:Keyword>
+				<ows:Keyword xml:lang="fr">ligne à haute tension</ows:Keyword>
+				<ows:Keyword xml:lang="en">high voltage line</ows:Keyword>
+				<ows:Keyword xml:lang="de">Hochspannungsleitung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">nomenclatuur</ows:Keyword>
+				<ows:Keyword xml:lang="fr">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="en">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="de">Nomenklatur</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landsgrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière nationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Staatsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">federale regering</ows:Keyword>
+				<ows:Keyword xml:lang="fr">gouvernement fédéral</ows:Keyword>
+				<ows:Keyword xml:lang="en">federal government</ows:Keyword>
+				<ows:Keyword xml:lang="de">Bundesregierung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">binnengrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière infranationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">sub-national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Innerstaatliche Grenze</ows:Keyword>
+			</ows:Keywords>
+			<ows:WGS84BoundingBox>
+				<ows:LowerCorner>2.51141671277 49.4542277635</ows:LowerCorner>
+				<ows:UpperCorner>6.57174320725 51.5056073315</ows:UpperCorner>
+			</ows:WGS84BoundingBox>
+			<ows:Identifier>overlay</ows:Identifier>
+			<Style isDefault="true">
+				<ows:Identifier>default</ows:Identifier>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_nl.png"/>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_fr.png"/>
+			</Style>
+			<Format>image/png</Format>
+			<InfoFormat>text/plain</InfoFormat>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3812</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>7</TileMatrix>
+						<MinTileRow>33</MinTileRow>
+						<MaxTileRow>167</MaxTileRow>
+						<MinTileCol>41</MinTileCol>
+						<MaxTileCol>209</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>8</TileMatrix>
+						<MinTileRow>82</MinTileRow>
+						<MaxTileRow>417</MaxTileRow>
+						<MinTileCol>104</MinTileCol>
+						<MaxTileCol>522</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>9</TileMatrix>
+						<MinTileRow>165</MinTileRow>
+						<MaxTileRow>833</MaxTileRow>
+						<MinTileCol>209</MinTileCol>
+						<MaxTileCol>1043</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>10</TileMatrix>
+						<MinTileRow>330</MinTileRow>
+						<MaxTileRow>1666</MaxTileRow>
+						<MinTileCol>419</MinTileCol>
+						<MaxTileCol>2085</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3857</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>14</TileMatrix>
+						<MinTileRow>5448</MinTileRow>
+						<MaxTileRow>5595</MaxTileRow>
+						<MinTileCol>8306</MinTileCol>
+						<MaxTileCol>8492</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>15</TileMatrix>
+						<MinTileRow>10896</MinTileRow>
+						<MaxTileRow>11190</MaxTileRow>
+						<MinTileCol>16612</MinTileCol>
+						<MaxTileCol>16983</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>16</TileMatrix>
+						<MinTileRow>21792</MinTileRow>
+						<MaxTileRow>22380</MaxTileRow>
+						<MinTileCol>33225</MinTileCol>
+						<MaxTileCol>33965</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>17</TileMatrix>
+						<MinTileRow>43585</MinTileRow>
+						<MaxTileRow>44760</MaxTileRow>
+						<MinTileCol>66450</MinTileCol>
+						<MaxTileCol>67929</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<ResourceURL resourceType="tile" template="https://cartoweb.wmts.ngi.be/1.0.0/overlay/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" format="image/png"/>
+			</Layer>
+		<Layer>
+			<ows:Title>CartoWeb-TOPO</ows:Title>
+			<ows:Abstract xml:lang="nl">De TOPO-laag van de dienst CartoWeb.be (WMS/WMTS) is beschikbaar op 11 schaalniveaus – 1:4 000 000) (1:2500. Ze bevat een klassieke cartografische symbolisatie van de meest recente gegevens van het NGI. Ze overdekt alleen het Belgische grondgebied.</ows:Abstract>
+			<ows:Abstract xml:lang="fr">La couche TOPO du service CartoWeb.be (WMS/WMTS) est disponible sur 11 niveaux d’échelles (1:2 500 – 1:4 000 000). Elle reprend une symbolisation cartographique classique des données vectorielles les plus à jour de l’IGN. Son emprise est limitée à la Belgique.</ows:Abstract>
+			<ows:Abstract xml:lang="en">The TOPO layer of the CartoWeb.be service (WMS/WMTS) is available in 11 scale levels (1:2 500 – 1:4 000 000). It uses a traditional cartographic symbolization of NGI’s most up-to-date vector data and its extent is limited to the Belgian territory.</ows:Abstract>
+			<ows:Abstract xml:lang="de">Die TOPO-Schicht des Service CartoWeb.be (WMS/WMTS) ist auf 11 verschiedenen Maßstabsebenen (1:2 500 – 1:4 000 000) verfügbar. Sie benutzt eine traditionelle Symbolisierung der aktuellsten Vektordaten des NGI und deckt nur das belgische Territorium.</ows:Abstract>
+			<ows:Keywords>
+				<ows:Keyword xml:lang="nl">bebouwde omgeving</ows:Keyword>
+				<ows:Keyword xml:lang="fr">environnement bâti</ows:Keyword>
+				<ows:Keyword xml:lang="en">built environment</ows:Keyword>
+				<ows:Keyword xml:lang="de">Gebaute Umwelt</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hydrografie</ows:Keyword>
+				<ows:Keyword xml:lang="fr">hydrographie</ows:Keyword>
+				<ows:Keyword xml:lang="en">hydrography</ows:Keyword>
+				<ows:Keyword xml:lang="de">Hydrographie</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">wegennet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau routier</ows:Keyword>
+				<ows:Keyword xml:lang="en">road network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Straßennetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">spoorwegnet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau ferroviaire</ows:Keyword>
+				<ows:Keyword xml:lang="en">railway network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Eisenbahnnetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">bestuurlijke grens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">limite administrative</ows:Keyword>
+				<ows:Keyword xml:lang="en">administrative boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Verwaltungsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landgebruik</ows:Keyword>
+				<ows:Keyword xml:lang="fr">occupation du sol</ows:Keyword>
+				<ows:Keyword xml:lang="en">land occupation</ows:Keyword>
+				<ows:Keyword xml:lang="de">Flächennutzung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hoogspanningsleiding</ows:Keyword>
+				<ows:Keyword xml:lang="fr">ligne à haute tension</ows:Keyword>
+				<ows:Keyword xml:lang="en">high voltage line</ows:Keyword>
+				<ows:Keyword xml:lang="de">Hochspannungsleitung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hoogte</ows:Keyword>
+				<ows:Keyword xml:lang="fr">altitude</ows:Keyword>
+				<ows:Keyword xml:lang="en">altitude</ows:Keyword>
+				<ows:Keyword xml:lang="de">Höhe</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">nomenclatuur</ows:Keyword>
+				<ows:Keyword xml:lang="fr">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="en">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="de">Nomenklatur</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landsgrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière nationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Staatsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">federale regering</ows:Keyword>
+				<ows:Keyword xml:lang="fr">gouvernement fédéral</ows:Keyword>
+				<ows:Keyword xml:lang="en">federal government</ows:Keyword>
+				<ows:Keyword xml:lang="de">Bundesregierung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">reliëf</ows:Keyword>
+				<ows:Keyword xml:lang="fr">relief</ows:Keyword>
+				<ows:Keyword xml:lang="en">relief (land)</ows:Keyword>
+				<ows:Keyword xml:lang="de">Relief</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">binnengrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière infranationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">sub-national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Innerstaatliche Grenze</ows:Keyword>
+			</ows:Keywords>
+			<ows:WGS84BoundingBox>
+				<ows:LowerCorner>2.51141671277 49.4542277635</ows:LowerCorner>
+				<ows:UpperCorner>6.57174320725 51.5056073315</ows:UpperCorner>
+			</ows:WGS84BoundingBox>
+			<ows:Identifier>topo</ows:Identifier>
+			<Style isDefault="true">
+				<ows:Identifier>default</ows:Identifier>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_nl.png"/>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_fr.png"/>
+			</Style>
+			<Format>image/png</Format>
+			<InfoFormat>text/plain</InfoFormat>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3812</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>0</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>2</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>2</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>1</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>3</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>3</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>2</TileMatrix>
+						<MinTileRow>1</MinTileRow>
+						<MaxTileRow>6</MaxTileRow>
+						<MinTileCol>1</MinTileCol>
+						<MaxTileCol>7</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>3</TileMatrix>
+						<MinTileRow>1</MinTileRow>
+						<MaxTileRow>9</MaxTileRow>
+						<MinTileCol>2</MinTileCol>
+						<MaxTileCol>11</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>4</TileMatrix>
+						<MinTileRow>3</MinTileRow>
+						<MaxTileRow>17</MaxTileRow>
+						<MinTileCol>4</MinTileCol>
+						<MaxTileCol>21</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>5</TileMatrix>
+						<MinTileRow>8</MinTileRow>
+						<MaxTileRow>42</MaxTileRow>
+						<MinTileCol>10</MinTileCol>
+						<MaxTileCol>53</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>6</TileMatrix>
+						<MinTileRow>16</MinTileRow>
+						<MaxTileRow>84</MaxTileRow>
+						<MinTileCol>20</MinTileCol>
+						<MaxTileCol>105</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>7</TileMatrix>
+						<MinTileRow>33</MinTileRow>
+						<MaxTileRow>167</MaxTileRow>
+						<MinTileCol>41</MinTileCol>
+						<MaxTileCol>209</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>8</TileMatrix>
+						<MinTileRow>82</MinTileRow>
+						<MaxTileRow>417</MaxTileRow>
+						<MinTileCol>104</MinTileCol>
+						<MaxTileCol>522</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>9</TileMatrix>
+						<MinTileRow>165</MinTileRow>
+						<MaxTileRow>833</MaxTileRow>
+						<MinTileCol>209</MinTileCol>
+						<MaxTileCol>1043</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>10</TileMatrix>
+						<MinTileRow>330</MinTileRow>
+						<MaxTileRow>1666</MaxTileRow>
+						<MinTileCol>419</MinTileCol>
+						<MaxTileCol>2085</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3857</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>7</TileMatrix>
+						<MinTileRow>42</MinTileRow>
+						<MaxTileRow>44</MaxTileRow>
+						<MinTileCol>64</MinTileCol>
+						<MaxTileCol>67</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>8</TileMatrix>
+						<MinTileRow>85</MinTileRow>
+						<MaxTileRow>88</MaxTileRow>
+						<MinTileCol>129</MinTileCol>
+						<MaxTileCol>133</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>9</TileMatrix>
+						<MinTileRow>170</MinTileRow>
+						<MaxTileRow>175</MaxTileRow>
+						<MinTileCol>259</MinTileCol>
+						<MaxTileCol>266</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>10</TileMatrix>
+						<MinTileRow>340</MinTileRow>
+						<MaxTileRow>350</MaxTileRow>
+						<MinTileCol>519</MinTileCol>
+						<MaxTileCol>531</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>11</TileMatrix>
+						<MinTileRow>681</MinTileRow>
+						<MaxTileRow>700</MaxTileRow>
+						<MinTileCol>1038</MinTileCol>
+						<MaxTileCol>1062</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>12</TileMatrix>
+						<MinTileRow>1362</MinTileRow>
+						<MaxTileRow>1399</MaxTileRow>
+						<MinTileCol>2076</MinTileCol>
+						<MaxTileCol>2123</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>13</TileMatrix>
+						<MinTileRow>2724</MinTileRow>
+						<MaxTileRow>2798</MaxTileRow>
+						<MinTileCol>4153</MinTileCol>
+						<MaxTileCol>4246</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>14</TileMatrix>
+						<MinTileRow>5448</MinTileRow>
+						<MaxTileRow>5595</MaxTileRow>
+						<MinTileCol>8306</MinTileCol>
+						<MaxTileCol>8492</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>15</TileMatrix>
+						<MinTileRow>10896</MinTileRow>
+						<MaxTileRow>11190</MaxTileRow>
+						<MinTileCol>16612</MinTileCol>
+						<MaxTileCol>16983</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>16</TileMatrix>
+						<MinTileRow>21792</MinTileRow>
+						<MaxTileRow>22380</MaxTileRow>
+						<MinTileCol>33225</MinTileCol>
+						<MaxTileCol>33965</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>17</TileMatrix>
+						<MinTileRow>43585</MinTileRow>
+						<MaxTileRow>44760</MaxTileRow>
+						<MinTileCol>66450</MinTileCol>
+						<MaxTileCol>67929</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<ResourceURL resourceType="tile" template="https://cartoweb.wmts.ngi.be/1.0.0/topo/default/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" format="image/png"/>
+			</Layer>
+		<Layer>
+			<ows:Title>CartoWeb-GREY</ows:Title>
+			<ows:Abstract xml:lang="nl">De GREY-laag van de CartoWeb.be service (WMS/WMTS) is beschikbaar op 11 schaalniveaus (1:2 500 – 1:4 000 000). Ze bevat een cartografische symbolisatie in verschillende tinten grijs en blauw van de meest recente vectorgegevens van het NGI. Ze is alleen beschikbaar voor het Belgische grondgebied. Haar inhoud is identiek aan die van de TOPO-laag, maar haar symbolisatie is verschillend.</ows:Abstract>
+			<ows:Abstract xml:lang="fr">La couche GREY du service CartoWeb.be (WMS/WMTS) est disponible sur 11 niveaux d’échelles (1:2 500 – 1:4 000 000). Elle reprend une symbolisation cartographique en différents tons de gris et bleus des données vectorielles les plus à jour de l’IGN. Son emprise est limitée à la Belgique. Son contenu est identique à celui de la couche TOPO, sa symbolisation est différente</ows:Abstract>
+			<ows:Abstract xml:lang="en">The GREY layer of the CartoWeb.be service (WMS/WMTS) is available at 11 scale levels (1:2 500 – 1:4 000 000). It contains a cartographic symbolisation in different shades of grey and blue of the NGI’s most recent vector data. Its contents are identical to those of the TOPO layer, but its symbolisation is different</ows:Abstract>
+			<ows:Abstract xml:lang="de">Die GREY-Schicht des CartoWeb.be-Service (WMS/WMTS) ist für 11 Maßstabsebenen (1:2 500 – 1:4 000 000) vorhanden. Sie enthält eine kartographische Symbolisierung in verschiedenen Grau- und Blautönen der aktuellsten Vektordaten des NGI. Ihre Weite beschränkt sich auf Belgien. Sie hat denselben Inhalt wie die TOPO-Schicht aber eine andere Symbolisierung.</ows:Abstract>
+			<ows:Keywords>
+				<ows:Keyword xml:lang="nl">bebouwde omgeving</ows:Keyword>
+				<ows:Keyword xml:lang="fr">environnement bâti</ows:Keyword>
+				<ows:Keyword xml:lang="en">built environment</ows:Keyword>
+				<ows:Keyword xml:lang="de">Gebaute Umwelt</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hydrografie</ows:Keyword>
+				<ows:Keyword xml:lang="fr">hydrographie</ows:Keyword>
+				<ows:Keyword xml:lang="en">hydrography</ows:Keyword>
+				<ows:Keyword xml:lang="de">Hydrographie</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">wegennet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau routier</ows:Keyword>
+				<ows:Keyword xml:lang="en">road network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Straßennetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">spoorwegnet</ows:Keyword>
+				<ows:Keyword xml:lang="fr">réseau ferroviaire</ows:Keyword>
+				<ows:Keyword xml:lang="en">railway network</ows:Keyword>
+				<ows:Keyword xml:lang="de">Eisenbahnnetz</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">bestuurlijke grens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">limite administrative</ows:Keyword>
+				<ows:Keyword xml:lang="en">administrative boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Verwaltungsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landgebruik</ows:Keyword>
+				<ows:Keyword xml:lang="fr">occupation du sol</ows:Keyword>
+				<ows:Keyword xml:lang="en">land occupation</ows:Keyword>
+				<ows:Keyword xml:lang="de">Flächennutzung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hoogspanningsleiding</ows:Keyword>
+				<ows:Keyword xml:lang="fr">ligne à haute tension</ows:Keyword>
+				<ows:Keyword xml:lang="en">high voltage line</ows:Keyword>
+				<ows:Keyword xml:lang="de">Hochspannungsleitung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">hoogte</ows:Keyword>
+				<ows:Keyword xml:lang="fr">altitude</ows:Keyword>
+				<ows:Keyword xml:lang="en">altitude</ows:Keyword>
+				<ows:Keyword xml:lang="de">Höhe</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">nomenclatuur</ows:Keyword>
+				<ows:Keyword xml:lang="fr">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="en">nomenclature</ows:Keyword>
+				<ows:Keyword xml:lang="de">Nomenklatur</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">landsgrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière nationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Staatsgrenze</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">federale regering</ows:Keyword>
+				<ows:Keyword xml:lang="fr">gouvernement fédéral</ows:Keyword>
+				<ows:Keyword xml:lang="en">federal government</ows:Keyword>
+				<ows:Keyword xml:lang="de">Bundesregierung</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">reliëf</ows:Keyword>
+				<ows:Keyword xml:lang="fr">relief</ows:Keyword>
+				<ows:Keyword xml:lang="en">relief (land)</ows:Keyword>
+				<ows:Keyword xml:lang="de">Relief</ows:Keyword>
+
+				<ows:Keyword xml:lang="nl">binnengrens</ows:Keyword>
+				<ows:Keyword xml:lang="fr">frontière infranationale</ows:Keyword>
+				<ows:Keyword xml:lang="en">sub-national boundary</ows:Keyword>
+				<ows:Keyword xml:lang="de">Innerstaatliche Grenze</ows:Keyword>
+			</ows:Keywords>
+			<ows:WGS84BoundingBox>
+				<ows:LowerCorner>2.51141671277 49.4542277635</ows:LowerCorner>
+				<ows:UpperCorner>6.57174320725 51.5056073315</ows:UpperCorner>
+			</ows:WGS84BoundingBox>
+			<ows:Identifier>topo_grey</ows:Identifier>
+			<Style isDefault="true">
+				<ows:Identifier>default</ows:Identifier>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_nl.png"/>
+				<LegendURL format="image/png" xlink:href="https://cartoweb.wmts.ngi.be/legend/topo/default/legende_fr.png"/>
+			</Style>
+			<Format>image/png</Format>
+			<InfoFormat>text/plain</InfoFormat>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3812</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>0</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>2</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>2</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>1</TileMatrix>
+						<MinTileRow>0</MinTileRow>
+						<MaxTileRow>3</MaxTileRow>
+						<MinTileCol>0</MinTileCol>
+						<MaxTileCol>3</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>2</TileMatrix>
+						<MinTileRow>1</MinTileRow>
+						<MaxTileRow>6</MaxTileRow>
+						<MinTileCol>1</MinTileCol>
+						<MaxTileCol>7</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>3</TileMatrix>
+						<MinTileRow>1</MinTileRow>
+						<MaxTileRow>9</MaxTileRow>
+						<MinTileCol>2</MinTileCol>
+						<MaxTileCol>11</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>4</TileMatrix>
+						<MinTileRow>3</MinTileRow>
+						<MaxTileRow>17</MaxTileRow>
+						<MinTileCol>4</MinTileCol>
+						<MaxTileCol>21</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>5</TileMatrix>
+						<MinTileRow>8</MinTileRow>
+						<MaxTileRow>42</MaxTileRow>
+						<MinTileCol>10</MinTileCol>
+						<MaxTileCol>53</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>6</TileMatrix>
+						<MinTileRow>16</MinTileRow>
+						<MaxTileRow>84</MaxTileRow>
+						<MinTileCol>20</MinTileCol>
+						<MaxTileCol>105</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>7</TileMatrix>
+						<MinTileRow>33</MinTileRow>
+						<MaxTileRow>167</MaxTileRow>
+						<MinTileCol>41</MinTileCol>
+						<MaxTileCol>209</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>8</TileMatrix>
+						<MinTileRow>82</MinTileRow>
+						<MaxTileRow>417</MaxTileRow>
+						<MinTileCol>104</MinTileCol>
+						<MaxTileCol>522</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>9</TileMatrix>
+						<MinTileRow>165</MinTileRow>
+						<MaxTileRow>833</MaxTileRow>
+						<MinTileCol>209</MinTileCol>
+						<MaxTileCol>1043</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>10</TileMatrix>
+						<MinTileRow>330</MinTileRow>
+						<MaxTileRow>1666</MaxTileRow>
+						<MinTileCol>419</MinTileCol>
+						<MaxTileCol>2085</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<TileMatrixSetLink>
+				<TileMatrixSet>3857</TileMatrixSet>
+				<TileMatrixSetLimits>
+					<TileMatrixLimits>
+						<TileMatrix>7</TileMatrix>
+						<MinTileRow>42</MinTileRow>
+						<MaxTileRow>44</MaxTileRow>
+						<MinTileCol>64</MinTileCol>
+						<MaxTileCol>67</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>8</TileMatrix>
+						<MinTileRow>85</MinTileRow>
+						<MaxTileRow>88</MaxTileRow>
+						<MinTileCol>129</MinTileCol>
+						<MaxTileCol>133</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>9</TileMatrix>
+						<MinTileRow>170</MinTileRow>
+						<MaxTileRow>175</MaxTileRow>
+						<MinTileCol>259</MinTileCol>
+						<MaxTileCol>266</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>10</TileMatrix>
+						<MinTileRow>340</MinTileRow>
+						<MaxTileRow>350</MaxTileRow>
+						<MinTileCol>519</MinTileCol>
+						<MaxTileCol>531</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>11</TileMatrix>
+						<MinTileRow>681</MinTileRow>
+						<MaxTileRow>700</MaxTileRow>
+						<MinTileCol>1038</MinTileCol>
+						<MaxTileCol>1062</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>12</TileMatrix>
+						<MinTileRow>1362</MinTileRow>
+						<MaxTileRow>1399</MaxTileRow>
+						<MinTileCol>2076</MinTileCol>
+						<MaxTileCol>2123</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>13</TileMatrix>
+						<MinTileRow>2724</MinTileRow>
+						<MaxTileRow>2798</MaxTileRow>
+						<MinTileCol>4153</MinTileCol>
+						<MaxTileCol>4246</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>14</TileMatrix>
+						<MinTileRow>5448</MinTileRow>
+						<MaxTileRow>5595</MaxTileRow>
+						<MinTileCol>8306</MinTileCol>
+						<MaxTileCol>8492</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>15</TileMatrix>
+						<MinTileRow>10896</MinTileRow>
+						<MaxTileRow>11190</MaxTileRow>
+						<MinTileCol>16612</MinTileCol>
+						<MaxTileCol>16983</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>16</TileMatrix>
+						<MinTileRow>21792</MinTileRow>
+						<MaxTileRow>22380</MaxTileRow>
+						<MinTileCol>33225</MinTileCol>
+						<MaxTileCol>33965</MaxTileCol>
+					</TileMatrixLimits>
+					<TileMatrixLimits>
+						<TileMatrix>17</TileMatrix>
+						<MinTileRow>43585</MinTileRow>
+						<MaxTileRow>44760</MaxTileRow>
+						<MinTileCol>66450</MinTileCol>
+						<MaxTileCol>67929</MaxTileCol>
+					</TileMatrixLimits>
+				</TileMatrixSetLimits>
+			</TileMatrixSetLink>
+			<ResourceURL resourceType="tile" template="https://cartoweb.wmts.ngi.be/1.0.0/topo/default_bw/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png" format="image/png"/>
+			</Layer>
+		<TileMatrixSet>
+			<ows:Identifier>3812</ows:Identifier>
+			<ows:SupportedCRS>urn:ogc:def:crs:EPSG::3812</ows:SupportedCRS>
+			<TileMatrix>
+				<ows:Identifier>0</ows:Identifier>
+				<ScaleDenominator>3779761.90476</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>2</MatrixWidth>
+				<MatrixHeight>2</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>1</ows:Identifier>
+				<ScaleDenominator>1889880.95238</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>3</MatrixWidth>
+				<MatrixHeight>3</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>2</ows:Identifier>
+				<ScaleDenominator>755952.380952</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>7</MatrixWidth>
+				<MatrixHeight>6</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>3</ows:Identifier>
+				<ScaleDenominator>472470.238095</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>11</MatrixWidth>
+				<MatrixHeight>9</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>4</ows:Identifier>
+				<ScaleDenominator>236235.119048</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>21</MatrixWidth>
+				<MatrixHeight>17</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>5</ows:Identifier>
+				<ScaleDenominator>94494.047619</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>53</MatrixWidth>
+				<MatrixHeight>42</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>6</ows:Identifier>
+				<ScaleDenominator>47247.0238095</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>105</MatrixWidth>
+				<MatrixHeight>84</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>7</ows:Identifier>
+				<ScaleDenominator>23623.5119048</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>209</MatrixWidth>
+				<MatrixHeight>167</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>8</ows:Identifier>
+				<ScaleDenominator>9449.4047619</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>522</MatrixWidth>
+				<MatrixHeight>417</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>9</ows:Identifier>
+				<ScaleDenominator>4724.70238095</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>1043</MatrixWidth>
+				<MatrixHeight>833</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>10</ows:Identifier>
+				<ScaleDenominator>2362.35119048</ScaleDenominator>
+				<TopLeftCorner>450000.0 800000.0</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>2085</MatrixWidth>
+				<MatrixHeight>1666</MatrixHeight>
+			</TileMatrix>
+		</TileMatrixSet>
+		<TileMatrixSet>
+			<ows:Identifier>3857</ows:Identifier>
+			<ows:SupportedCRS>urn:ogc:def:crs:EPSG::3857</ows:SupportedCRS>
+			<TileMatrix>
+				<ows:Identifier>7</ows:Identifier>
+				<ScaleDenominator>4367830.18772</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>70</MatrixWidth>
+				<MatrixHeight>46</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>8</ows:Identifier>
+				<ScaleDenominator>2183915.09386</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>139</MatrixWidth>
+				<MatrixHeight>91</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>9</ows:Identifier>
+				<ScaleDenominator>1091957.54693</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>277</MatrixWidth>
+				<MatrixHeight>181</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>10</ows:Identifier>
+				<ScaleDenominator>545978.773466</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>553</MatrixWidth>
+				<MatrixHeight>362</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>11</ows:Identifier>
+				<ScaleDenominator>272989.386733</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>1106</MatrixWidth>
+				<MatrixHeight>723</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>12</ows:Identifier>
+				<ScaleDenominator>136494.693366</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>2212</MatrixWidth>
+				<MatrixHeight>1446</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>13</ows:Identifier>
+				<ScaleDenominator>68247.3466832</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>4424</MatrixWidth>
+				<MatrixHeight>2891</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>14</ows:Identifier>
+				<ScaleDenominator>34123.6733416</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>8847</MatrixWidth>
+				<MatrixHeight>5781</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>15</ows:Identifier>
+				<ScaleDenominator>17061.8366708</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>17693</MatrixWidth>
+				<MatrixHeight>11562</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>16</ows:Identifier>
+				<ScaleDenominator>8530.9183354</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>35385</MatrixWidth>
+				<MatrixHeight>23123</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>17</ows:Identifier>
+				<ScaleDenominator>4265.4591677</ScaleDenominator>
+				<TopLeftCorner>-20037508.3428 20037508.3428</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>70770</MatrixWidth>
+				<MatrixHeight>46246</MatrixHeight>
+			</TileMatrix>
+		</TileMatrixSet>
+		<TileMatrixSet>
+			<ows:Identifier>3812_crossborder</ows:Identifier>
+			<ows:SupportedCRS>urn:ogc:def:crs:EPSG::3812</ows:SupportedCRS>
+			<TileMatrix>
+				<ows:Identifier>0</ows:Identifier>
+				<ScaleDenominator>3779761.90476</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>5</MatrixWidth>
+				<MatrixHeight>4</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>1</ows:Identifier>
+				<ScaleDenominator>1889880.95238</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>10</MatrixWidth>
+				<MatrixHeight>7</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>2</ows:Identifier>
+				<ScaleDenominator>755952.380952</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>24</MatrixWidth>
+				<MatrixHeight>16</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>3</ows:Identifier>
+				<ScaleDenominator>472470.238095</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>39</MatrixWidth>
+				<MatrixHeight>26</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>4</ows:Identifier>
+				<ScaleDenominator>236235.119048</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>77</MatrixWidth>
+				<MatrixHeight>51</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>5</ows:Identifier>
+				<ScaleDenominator>94494.047619</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>192</MatrixWidth>
+				<MatrixHeight>127</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>6</ows:Identifier>
+				<ScaleDenominator>47247.0238095</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>384</MatrixWidth>
+				<MatrixHeight>253</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>7</ows:Identifier>
+				<ScaleDenominator>23623.5119048</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>768</MatrixWidth>
+				<MatrixHeight>505</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>8</ows:Identifier>
+				<ScaleDenominator>9449.4047619</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>1920</MatrixWidth>
+				<MatrixHeight>1263</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>9</ows:Identifier>
+				<ScaleDenominator>4724.70238095</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>3839</MatrixWidth>
+				<MatrixHeight>2525</MatrixHeight>
+			</TileMatrix>
+			<TileMatrix>
+				<ows:Identifier>10</ows:Identifier>
+				<ScaleDenominator>2362.35119048</ScaleDenominator>
+				<TopLeftCorner>100 1105000</TopLeftCorner>
+				<TileWidth>256</TileWidth>
+				<TileHeight>256</TileHeight>
+				<MatrixWidth>7677</MatrixWidth>
+				<MatrixHeight>5050</MatrixHeight>
+			</TileMatrix>
+		</TileMatrixSet>
+	</Contents>
+	<ServiceMetadataURL xlink:href="https://cartoweb.wmts.ngi.be/1.0.0/WMTSCapabilities.xml"/>
 </Capabilities>

@@ -30,7 +30,7 @@
       var matrixIds = ["7","8","9","10","11","12","13","14","15","16","17"];
 
       var ngiSource = new ol.source.WMTS({
-        urls: ['http://www.ngi.be/cartoweb/1.0.0/topo/{style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png'],
+        urls: ['https://cartoweb.wmts.ngi.be/1.0.0/{layer}/{style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png'],
         requestEncoding: 'REST',
         layer: 'topo',
         matrixSet: '3857',
