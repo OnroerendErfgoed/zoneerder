@@ -39,8 +39,8 @@ define([
     historicLayers: null,
     defaultBaseLayer: null,
     _drawPolygonIndex: 1,
-    _informatieVlaanderenAttribution: '© <a href="https://overheid.vlaanderen.be/informatie-vlaanderen" ' +
-      'title="Informatie Vlaanderen" class="copyrightLink copyAgiv"> Informatie Vlaanderen</a>',
+    _informatieVlaanderenAttribution: '© <a href="https://www.vlaanderen.be/digitaal-vlaanderen" ' +
+      'title="Informatie Vlaanderen" class="copyrightLink copyAgiv"> Digitaal Vlaanderen</a>',
 
     postCreate: function () {
       this.inherited(arguments);
@@ -114,20 +114,31 @@ define([
       /* base layers */
       var baseLayers = [];
       if (this.historicLayers) {
-        baseLayers.push(this._createGrbLayer('ferraris', 'Ferraris', (this.defaultBaseLayer === 'ferraris')));
-        baseLayers.push(this._createGrbLayer('popp', 'Popp', (this.defaultBaseLayer === 'popp')));
-        baseLayers.push(this._createGrbLayer('vandermaelen', 'Vandermaelen',
-          (this.defaultBaseLayer === 'vandermaelen')));
-        baseLayers.push(this._createGrbLayer('abw', 'Atlas der Buurtwegen', (this.defaultBaseLayer === 'abw')));
+        baseLayers.push(this._createGrbLayer('ferraris', 'HISTCART', 'Ferraris',
+          this.defaultBaseLayer === 'ferraris'));
+        baseLayers.push(this._createGrbLayer('popp', 'HISTCART', 'Popp',
+          this.defaultBaseLayer === 'popp'));
+        baseLayers.push(this._createGrbLayer('vandermaelen', 'HISTCART', 'Vandermaelen',
+          this.defaultBaseLayer === 'vandermaelen'));
+        baseLayers.push(this._createGrbLayer('abw', 'HISTCART', 'Atlas der Buurtwegen',
+          this.defaultBaseLayer === 'abw'));
       }
-      baseLayers.push(this._createGrbLayer('DHMV_II_HILL_25cm', 'DHMV II, multidirectionale hillshade 0,25m', (this.defaultBaseLayer === 'DHMV_II_HILL_25cm')));
-      baseLayers.push(this._createGrbLayer('DHMV_II_SVF_25cm', 'DHMV II, skyview factor 0,25m', (this.defaultBaseLayer === 'DHMV_II_SVF_25cm')));
-      baseLayers.push(this._createGrbLayer('omwrgbmrvl', 'Orthofoto\'s', (this.defaultBaseLayer === 'omwrgbmrvl')));
+      // DHMV layers
+      baseLayers.push(this._createGrbLayer('DHMV_II_HILL_25cm', 'DHMV', 'DHMV II, multidirectionale hillshade 0,25m',
+        this.defaultBaseLayer === 'DHMV_II_HILL_25cm'));
+      baseLayers.push(this._createGrbLayer('DHMV_II_SVF_25cm', 'DHMV', 'DHMV II, skyview factor 0,25m',
+        this.defaultBaseLayer === 'DHMV_II_SVF_25cm'));
+      // ORTHO layer
+      baseLayers.push(this._createGrbLayer('omwrgbmrvl', 'OMWRGBMRVL', 'Orthofoto\'s',
+        this.defaultBaseLayer === 'omwrgbmrvl'));
+      // GEWESTPLAN layer
       baseLayers.push(this._createMercatorWmtsLayer('lu:lu_gwp_rv_raster', 'Gewestplan',
-        (this.defaultBaseLayer === 'gewestplan')));
-      baseLayers.push(this._createGrbLayer('grb_bsk_grijs', 'GRB-Basiskaart in grijswaarden',
-        (this.defaultBaseLayer === 'grb_bsk_grijs')));
-      baseLayers.push(this._createGrbLayer('grb_bsk', 'GRB-Basiskaart', (this.defaultBaseLayer === 'grb_bsk')));
+        this.defaultBaseLayer === 'gewestplan'));
+      // GRB layers
+      baseLayers.push(this._createGrbLayer('grb_bsk_grijs', 'GRB', 'GRB-Basiskaart in grijswaarden',
+        this.defaultBaseLayer === 'grb_bsk_grijs'));
+      baseLayers.push(this._createGrbLayer('grb_bsk', 'GRB', 'GRB-Basiskaart',
+        this.defaultBaseLayer === 'grb_bsk'));
 
       map.addLayer(new ol.layer.Group({
         title: 'Basislagen',
@@ -148,11 +159,11 @@ define([
           url: this.beschermingUrl,
           params: {
             'LAYERS': 'vioe_geoportaal:bes_landschap,' +
-            'vioe_geoportaal:bes_sd_gezicht,' +
-            'vioe_geoportaal:bes_arch_site,' +
-            'vioe_geoportaal:bes_monument,' +
-            'vioe_geoportaal:bes_overgangszone,' +
-            'vioe_geoportaal:erfgoedls',
+              'vioe_geoportaal:bes_sd_gezicht,' +
+              'vioe_geoportaal:bes_arch_site,' +
+              'vioe_geoportaal:bes_monument,' +
+              'vioe_geoportaal:bes_overgangszone,' +
+              'vioe_geoportaal:erfgoedls',
             'TILED': true
           },
           attributions: [new ol.Attribution({
@@ -168,7 +179,7 @@ define([
         extent: this.mapProjection.getExtent(),
         source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */({
           url: this.beschermingUrl,
-          params: { 'LAYERS': 'vioe_geoportaal:gga_gewestelijk,vioe_geoportaal:gga_gemeentelijk', 'TILED': true }, 
+          params: { 'LAYERS': 'vioe_geoportaal:gga_gewestelijk,vioe_geoportaal:gga_gemeentelijk', 'TILED': true },
           attributions: [new ol.Attribution({
             html: '© <a href="https://www.onroerenderfgoed.be">Onroerend Erfgoed</a>'
           })]
@@ -367,13 +378,13 @@ define([
       });
     },
 
-    _createGrbLayer: function (grbLayerId, title, visible) {
+    _createGrbLayer: function (grbLayerId, type, title, visible) {
       //retrieved with readCapabilties.html
       var resolutions = [1024,512,256,128,64,32,16,8,4,2,1,0.5,0.25,0.125,0.0625,0.03125];
       var matrixIds = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15'];
 
       var grbSource = new ol.source.WMTS({
-        url: '//tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts/',
+        url: '//geo.api.vlaanderen.be/' + type + '/wmts',
         layer: grbLayerId,
         matrixSet: 'BPL72VL',
         format: 'image/png',
@@ -450,30 +461,6 @@ define([
         maxResolution: 2000,
         visible: false
       });
-    },
-
-    _createGrbLayerWithMaxResolution: function (grbLayerId, title, visible, resolution) {
-
-      var grbLayer = this._createGrbLayer(grbLayerId, '', true);
-      grbLayer.unset('title');
-      grbLayer.unset('type');
-      grbLayer.set('maxResolution', resolution);
-
-      var fillLayer = this._createGrbWMSLayer('AGROND,GEM_GRENS,TOPONIEM', '', true);
-      fillLayer.unset('title');
-      fillLayer.unset('type');
-      fillLayer.set('minResolution', resolution);
-      fillLayer.set('visible', true);
-
-      return new ol.layer.Group({
-        title: title,
-        visible: visible,
-        type: 'base',
-        layers: [
-          grbLayer,
-          fillLayer
-        ]
-      })
     },
 
     _createVectorLayer: function (options) {
@@ -626,7 +613,7 @@ define([
               level1Array.push([level2[0], level2[1]]);
             }
             else {
-             var level2Array = [];
+              var level2Array = [];
               level1Array.push(level2Array);
               array.forEach(level2, function (level3) {
                 level2Array.push([level3[0], level3[1]]);

@@ -41,23 +41,15 @@
   ], function (xhr, ol, html, dom, JSON) {
 
     var parser = new ol.format.WMTSCapabilities();
-    proj4.defs("EPSG:3857","+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +wktext  +no_defs");
-    var ngiUrl = "https://cartoweb.wmts.ngi.be/1.0.0/WMTSCapabilities.xml";
+    var agivUrl = "http://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts?request=getcapabilities&service=wmts&version=1.0.0";
     html.set(dom.byId("testNode"), "reading xml...");
-    xhr('./resources/ngi.cartoweb.capabilities.xml', {
+    xhr('./resources/grbv3.agiv.wmts.capabilities.xml', {
       handleAs: "xml"
     }).then(function(response){
 
       var capabilities = parser.read(response);
-      console.log('capabilities', capabilities);
       try {
-        var options = ol.source.WMTS.optionsFromCapabilities(capabilities, {
-          layer: 'topo',
-          matrixSet: '3857',
-          style: 'default',
-          format: 'image/png',
-          requestEncoding: 'RESTful'
-        });
+        var options = ol.source.WMTS.optionsFromCapabilities(capabilities, {layer: 'grb_bsk', matrixSet: 'GoogleMapsVL'});
         console.debug("optionsFromCapabilities: ", options);
         html.set(dom.byId("testNode"), "options" + JSON.stringify(options));
       }
@@ -67,7 +59,7 @@
       }
 
     }, function(err) {
-      console.error('Error getting capabilities from ngi', err);
+      console.error('Error getting capabilities from agiv', err);
       html.set(dom.byId("testNode"), err);
     });
 
