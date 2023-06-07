@@ -453,7 +453,7 @@ define([
         title: title,
         extent: this.mapProjection.getExtent(),
         source: new ol.source.TileWMS(/** @type {olx.source.TileWMSOptions} */ ({
-          url: '//geoservices.informatievlaanderen.be/raadpleegdiensten/GRB/wms',
+          url: '//geo.api.vlaanderen.be/GRB/wms',
           params: {'LAYERS': wmsLayers ,'TILED': true},
           serverType: 'geoserver'
         })),
