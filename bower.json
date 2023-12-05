@@ -14,7 +14,7 @@
     "dojo": "~1.12.1",
     "dijit": "~1.12.1",
     "proj4": "~2.3.15",
-    "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git#1.4.0",
+    "crabpy_dojo": "https://github.com/OnroerendErfgoed/crabpy_dojo.git#1.4.3",
     "ol": "https://github.com/OnroerendErfgoed/ol3-amd.git#0.2.1",
     "font-awesome": "~4.6.3",
     "dgrid": "~1.1.0",
