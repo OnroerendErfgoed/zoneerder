@@ -269,6 +269,7 @@ define([
         var crabNode = domConstruct.create("div");
         ZoomTab.addContent(crabNode);
         var crabZoomer = crabpyWidget.createCrabZoomer(crabNode);
+        crabZoomer.startup();
         var self = this;
 
         var zoomButton = domConstruct.create("a", {
@@ -276,18 +277,19 @@ define([
           title: "Zoom naar adres",
           'class': "button tiny expand",
           innerHTML: "Zoom naar adres",
-          onclick: function (evt) {
+          onclick: lang.hitch(this, function (evt) {
             evt.preventDefault();
-            var bbox = crabZoomer.getBbox();
-            if (bbox) {
-              self.mapController.zoomToExtent(bbox);
-              if (self.mapController.olMap.getView().getZoom() > 15) {
-                self.mapController.olMap.getView().setZoom(15);
+            var bboxobject = crabZoomer.getBbox();
+            if (bboxobject) {
+              var bbox = this.mapController.transformBoundingboxToMapExtent(bboxobject);
+              this.mapController.zoomToExtent(bbox);
+              if (this.mapController.olMap.getView().getZoom() > 15) {
+                this.mapController.olMap.getView().setZoom(15);
               }
               crabZoomer.reset();
               sidebar.collapse();
             }
-          }
+          })
         });
         ZoomTab.addContent(zoomButton);
 
@@ -313,7 +315,7 @@ define([
       }
 
       if (this.config.sidebar.draw) {
-        var drawTab = sidebar.createTab('Bepaal zone', 'fa-connectdevelop', 'Bepaal hier de zone.');
+        var drawTab = sidebar.createTab('Bepaal zone', 'fa-pencil', 'Bepaal hier de zone.');
 
         /* ZONE */
         var zonePane = domConstruct.create('div');
