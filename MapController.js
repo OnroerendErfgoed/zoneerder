@@ -110,6 +110,18 @@ define([
       return this.geoJsonFormatter.writeGeometry(geom);
     },
 
+    transformBoundingboxToMapExtent: function(boundingbox) {
+      var lowerleft = this.transformLatLonToPoint(boundingbox.lowerleft.lat, boundingbox.lowerleft.lon);
+      var upperright = this.transformLatLonToPoint(boundingbox.upperright.lat, boundingbox.upperright.lon);
+      return ([lowerleft.getCoordinates()[0], lowerleft.getCoordinates()[1],
+        upperright.getCoordinates()[0], upperright.getCoordinates()[1]]);
+    },
+
+    transformLatLonToPoint: function(lat, lon) {
+      var point = new ol.geom.Point([ lon, lat ]);
+      return (point.transform('EPSG:4326', 'EPSG:31370'));
+    },
+
     _createLayers: function(map) {
       /* base layers */
       var baseLayers = [];
