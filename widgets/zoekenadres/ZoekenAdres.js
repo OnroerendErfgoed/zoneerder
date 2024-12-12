@@ -80,7 +80,7 @@ define(
                   width: 200
                 },
                 easing: easing.quadInOut
-              }).play()
+              }).play();
             })
           }, this.zoekenAdresNode);
           zoekenAdres.startup();
